@@ -1,0 +1,144 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.user-panel .img-circle {
+  min-height: 30px !important;
+}
+
+.wrapper {
+  height: auto !important;
+  min-height: 100% !important;
+}
+
+.content-wrapper {
+  height: calc(100vh - 101px) !important;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+table {
+  margin-bottom: 0 !important;
+}
+
+.table-responsive {
+  overflow-y: auto;
+  max-height: 300px;
+  margin-bottom: 15px;
+}
+
+.table-fixed thead tr {
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+.table-fixed tbody {
+  max-height: 200px;
+}
+
+.table-container {
+  position: relative;
+}
+
+.table-loader {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.5);
+  padding-top: 37px;
+  z-index: 4;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.comp-custom-datatable-page-length {
+  display: flex;
+}
+
+.margin-10 {
+  margin: 10px 0;
+}
+
+.display-flex {
+  display: flex;
+}
+
+.flex-direction-column {
+  flex-direction: column;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-end {
+  justify-content: flex-end;
+}
+
+
+.select2-dropdown {
+  //position: static !important;
+}
+.select2-dropdown .select2-dropdown--above {
+  margin-top: 336px !important;
+}
+
+
+
+.react-autosuggest__container--open {
+  position: relative;
+}
+
+.react-autosuggest__suggestions-container {
+  display: none;
+}
+
+.react-autosuggest__suggestions-container--open {
+  display: block;
+  position: absolute;
+  background: white;
+  z-index: 4;
+  width: 100%;
+}
+
+.react-autosuggest__suggestions-list {
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 14px;
+  text-align: left;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 0 0 4px 4px;
+}
+
+.react-autosuggest__suggestion {
+  cursor: pointer;
+  padding: 6px 12px;
+}
+
+.react-autosuggest__suggestion--highlighted {
+  background-color: #3c8dbc;
+  color: white;
+}
+
+.react-autosuggest__suggestion--first,
+.react-autosuggest__suggestion--first.react-autosuggest__suggestion--highlighted {
+  background-color: #ddd;
+  color: #444;
+}
