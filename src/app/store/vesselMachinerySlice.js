@@ -1,10 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {
-  fetchAll,
-  add,
-  edit,
-  editSubCategories
-} from '../services/vesselMachineryService';
+import {add, edit, editSubCategories, fetchAll} from '../services/vesselMachineryService';
 import VesselMachinery from '../core/models/VesselMachinery';
 import Meta from '../core/models/Meta';
 import Transform from '../utils/Transformer';

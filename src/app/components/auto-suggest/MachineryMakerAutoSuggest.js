@@ -7,7 +7,18 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 function MachineryMakerAutoSuggest(props) {
-  const {type = 'text', name, id, label, labelPosition = 'none', value = '', disabled, validation, help, onChange} = props;
+  const {
+    type = 'text',
+    name,
+    id,
+    label,
+    labelPosition = 'none',
+    value = '',
+    disabled,
+    validation,
+    help,
+    onChange
+  } = props;
   const {defaultSuggestions} = props;
 
   const dispatch = useDispatch();
@@ -30,7 +41,7 @@ function MachineryMakerAutoSuggest(props) {
     }
   }, [debouncedLocalValue]);
 
-  const handleInputChange = (e, { newValue }) => {
+  const handleInputChange = (e, {newValue}) => {
     onChange({target: {name, value: newValue}});
   };
 
@@ -84,7 +95,7 @@ function MachineryMakerAutoSuggest(props) {
           onSuggestionsClearRequested={onSuggestionsClearRequested}
           getSuggestionValue={getSuggestionValue}
           renderSuggestion={renderSuggestion}
-          inputProps={inputProps} />
+          inputProps={inputProps}/>
       </div>
       {help && <p className="help-block">{help}</p>}
     </div>

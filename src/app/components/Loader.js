@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {BarLoader, ClipLoader, BeatLoader, PulseLoader, HashLoader} from 'react-spinners';
+import {BarLoader, BeatLoader, HashLoader} from 'react-spinners';
 import {css} from '@emotion/react'
 
 const override = css`

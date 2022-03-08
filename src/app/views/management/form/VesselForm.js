@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {Inputs, Button} from 'adminlte-2-react';
+import {Button, Inputs} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
 import Vessel from '../../../core/models/Vessel';
 import ReeValidate from 'ree-validate';
@@ -160,7 +160,7 @@ function VesselForm({data: vessel}) {
       dispatch(vesselAddAsync(formData));
     }
   };
-  
+
   return (
     <Row>
       <Col xs={6}>
@@ -384,7 +384,7 @@ function VesselForm({data: vessel}) {
           </Col>
         </Row>
       </Col>
-      <Col xs={12}><Divider type="line" /></Col>
+      <Col xs={12}><Divider type="line"/></Col>
       <Col xs={12}>
         <Row>
           <Col xs={3}/>
@@ -551,7 +551,7 @@ function VesselForm({data: vessel}) {
           </Col>
         </Row>
       </Col>
-      <Col xs={12}><Divider type="line" /></Col>
+      <Col xs={12}><Divider type="line"/></Col>
       <Col xs={12}>
         <Col xs={4}></Col>
         <Col xs={4}><label>F</label></Col>
@@ -600,27 +600,27 @@ function VesselForm({data: vessel}) {
         </Row>
       </Col>
       <Col xs={12}>
-          <Row>
-            <Col xs={4}><label>Normal Ballast Drafts (M)</label></Col>
-            <Col xs={4}>
-              <Text name="normal_ballast_drafts_f"
-                    id="normalBallastDraftsFFormInput"
-                    labelPosition="none"
-                    value={formData.normal_ballast_drafts_f}
-                    onChange={handleInputChange}
-              />
-            </Col>
-            <Col xs={4}>
-              <Text name="normal_ballast_drafts_a"
-                    id="normalBallastDraftsAFormInput"
-                    labelPosition="none"
-                    value={formData.normal_ballast_drafts_a}
-                    onChange={handleInputChange}
-              />
-            </Col>
-          </Row>
-        </Col>
-      <Col xs={12}><Divider type="line" /></Col>
+        <Row>
+          <Col xs={4}><label>Normal Ballast Drafts (M)</label></Col>
+          <Col xs={4}>
+            <Text name="normal_ballast_drafts_f"
+                  id="normalBallastDraftsFFormInput"
+                  labelPosition="none"
+                  value={formData.normal_ballast_drafts_f}
+                  onChange={handleInputChange}
+            />
+          </Col>
+          <Col xs={4}>
+            <Text name="normal_ballast_drafts_a"
+                  id="normalBallastDraftsAFormInput"
+                  labelPosition="none"
+                  value={formData.normal_ballast_drafts_a}
+                  onChange={handleInputChange}
+            />
+          </Col>
+        </Row>
+      </Col>
+      <Col xs={12}><Divider type="line"/></Col>
       <Col xs={12}>
         <Row>
           <Col xs={2}><label>G.T/N.T</label></Col>

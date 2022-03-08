@@ -1,11 +1,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import Interval from '../core/models/Interval';
 import Meta from '../core/models/Meta';
-import {
-  fetchAll,
-  add,
-  edit
-} from '../services/intervalService';
+import {add, edit, fetchAll} from '../services/intervalService';
 import Transform from '../utils/Transformer';
 
 const initialState = {

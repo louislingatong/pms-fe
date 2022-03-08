@@ -1,15 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
-import {Inputs, Button} from 'adminlte-2-react';
+import {Button, Inputs} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
 import Transform from '../../../utils/Transformer';
 import {reqDoneListStatus, workAddAsync} from '../../../store/workSlice';
-import moment from "moment";
+import moment from 'moment';
 
 const validator = new ReeValidate({
   last_done: 'required',
+  running_hours: '',
   instructions: '',
   remarks: '',
 });
@@ -22,6 +23,7 @@ function WorkForm({ids}) {
 
   const [formData, setFormData] = useState({
     last_done: moment().format("DD-MMM-YYYY"),
+    running_hours: '',
     instructions: '',
     remarks: ''
   });
@@ -85,6 +87,16 @@ function WorkForm({ids}) {
           value={moment(formData.last_done)}
           type={formErrors['last_done'] ? 'error' : ''}
           help={formErrors['last_done']}
+        />
+      </Col>
+      <Col xs={12}>
+        <Text
+          name="running_hours"
+          id="runningHoursInput"
+          label="Running Hours"
+          labelPosition="above"
+          onChange={handleInputChange}
+          value={formData.running_hours}
         />
       </Col>
       <Col xs={12}>

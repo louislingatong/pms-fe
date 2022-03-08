@@ -4,7 +4,7 @@ import {useHistory} from 'react-router-dom';
 import {Sidebar} from 'adminlte-2-react';
 import user from '../../../assets/images/user2-160x160.jpg';
 import {profileData} from '../../store/profileSlice';
-import {Item} from "../../components/";
+import {Item} from '../../components/';
 
 function SidebarMenu() {
   const history = useHistory();

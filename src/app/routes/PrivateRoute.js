@@ -27,7 +27,7 @@ function PrivateRoutes({component: Component, ...rest}) {
       return (
         <Suspense fallback={<Loader/>}>
           <Layout>
-            <Component {...props} path={rest.path} name={rest.name} />
+            <Component {...props} path={rest.path} name={rest.name}/>
           </Layout>
         </Suspense>
       )

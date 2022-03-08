@@ -5,11 +5,11 @@ import {usePrevious} from '../../../utils/Hooks';
 import {Box, Button, Content} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
 import {
-  vesselData,
-  vesselList,
   metaData,
   reqListStatus,
   setVesselData,
+  vesselData,
+  vesselList,
   vesselListAsync,
 } from '../../../store/vesselSlice';
 import {DataTable, Divider, Modal} from '../../../components';
@@ -182,7 +182,7 @@ function VesselList({name}) {
           closeButton
           onHide={handleModalClose}
         >
-          <VesselForm data={new Vessel()} />
+          <VesselForm data={new Vessel()}/>
         </Modal>
       </Content>
     </React.Fragment>

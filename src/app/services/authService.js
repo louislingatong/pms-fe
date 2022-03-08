@@ -7,7 +7,7 @@ export function login(credentials) {
     client_secret: process.env.REACT_APP_CLIENT_SECRET,
   };
 
-  const data = { ...credentials, ...config };
+  const data = {...credentials, ...config};
 
   return new Promise((resolve, reject) => {
     Http.post('oauth/token', data)

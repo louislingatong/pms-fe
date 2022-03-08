@@ -16,7 +16,7 @@ export const loginAsync = createAsyncThunk(
     localStorage.setItem('accessToken', access_token);
     localStorage.setItem('refreshToken', refresh_token);
 
-    Http.defaults.headers.common[ 'Authorization' ] = `Bearer ${access_token}`;
+    Http.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
   }
 );
 

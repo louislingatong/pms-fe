@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Col, Row} from 'react-bootstrap';
-import {Inputs, Button} from 'adminlte-2-react';
+import {Button, Inputs} from 'adminlte-2-react';
 import ReeValidate from 'ree-validate';
 import {loginAsync, reqLoginStatus} from '../../../store/authSlice';
 import Transform from '../../../utils/Transformer';

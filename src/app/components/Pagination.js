@@ -22,7 +22,7 @@ function Pagination({meta, onPageChange}) {
       if (firstFourPages) {
         links = links.concat(getIntermediate(1, 5));
         links.push(
-          <BsPagination.Ellipsis key="page_none" />
+          <BsPagination.Ellipsis key="page_none"/>
         );
         links.push(
           <BsPagination.Item
@@ -44,7 +44,7 @@ function Pagination({meta, onPageChange}) {
           </BsPagination.Item>,
         );
         links.push(
-          <BsPagination.Ellipsis key="page_none" />,
+          <BsPagination.Ellipsis key="page_none"/>,
         );
         links = links.concat(getIntermediate(totalPages - 5, totalPages));
       } else {
@@ -58,11 +58,11 @@ function Pagination({meta, onPageChange}) {
           </BsPagination.Item>,
         );
         links.push(
-          <BsPagination.Ellipsis key="page_none" />,
+          <BsPagination.Ellipsis key="page_none"/>,
         );
         links = links.concat(getIntermediate((activePage - 1) - 1, activePage + 2));
         links.push(
-          <BsPagination.Ellipsis key="page_none_1" />,
+          <BsPagination.Ellipsis key="page_none_1"/>,
         );
         links.push(
           <BsPagination.Item
@@ -75,7 +75,7 @@ function Pagination({meta, onPageChange}) {
         );
       }
     }
-    return links.map((item)=>item);
+    return links.map((item) => item);
   };
 
   const getIntermediate = (from, to) => {

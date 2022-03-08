@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 function VesselSubCategoryForm(props) {
   const {machineryCode, subCategories, defaultVesselSubCategories, vesselMachineryId} = props;
@@ -7,7 +7,7 @@ function VesselSubCategoryForm(props) {
     return subCategories.map((item, i) => (
       <tr key={item.id}>
         <td>
-          <input type="checkbox" />
+          <input type="checkbox"/>
         </td>
         <td>
           {`${machineryCode}-${(i + 1).toString().padStart(3, 0)}`}
@@ -16,20 +16,24 @@ function VesselSubCategoryForm(props) {
           {item.name}
         </td>
         <td>
-          <textarea className="form-control" rows="3" />
+          <textarea className="form-control" rows="3"/>
         </td>
         <td>
-          <input className="form-control" id="inputInterval" />
+          <input className="form-control" id="inputInterval"/>
         </td>
         <td>
-          <input className="form-control" id="inputInstallationDate" />
+          <input className="form-control" id="inputInstallationDate"/>
         </td>
       </tr>
     ))
   }
 
-  const loadingItem = () => <tr><td colSpan={6} className="text-center">Loading...</td></tr>
-  const noItemAvailable = () => <tr><td colSpan={6}>No sub categories available</td></tr>
+  const loadingItem = () => <tr>
+    <td colSpan={6} className="text-center">Loading...</td>
+  </tr>
+  const noItemAvailable = () => <tr>
+    <td colSpan={6}>No sub categories available</td>
+  </tr>
 
   return (
     <React.Fragment>
@@ -38,7 +42,7 @@ function VesselSubCategoryForm(props) {
           <thead>
           <tr>
             <th>
-              <input type="checkbox" />
+              <input type="checkbox"/>
             </th>
             <th>Code</th>
             <th>Sub Category</th>
@@ -54,7 +58,7 @@ function VesselSubCategoryForm(props) {
       </div>
       <div className="card-footer">
         <button type="button" className="btn btn-primary float-right">
-          <i className="fas fa-save mr-2" />
+          <i className="fas fa-save mr-2"/>
           Save
         </button>
       </div>

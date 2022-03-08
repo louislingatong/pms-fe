@@ -1,6 +1,6 @@
 import Machinery from './Machinery';
 import RunningHour from './RunningHour';
-import Vessel from "./Vessel";
+import Vessel from './Vessel';
 
 export default function VesselMachineryRunningHour(data = {}) {
   this.id = data.id ? data.id : 0;

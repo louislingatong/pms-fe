@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useWindowScroll} from 'react-use';
-import { FaArrowAltCircleUp } from 'react-icons/fa'
+import {FaArrowAltCircleUp} from 'react-icons/fa'
 
 function ScrollTop() {
   const {y: pageYOffset} = useWindowScroll();
@@ -24,7 +24,7 @@ function ScrollTop() {
 
   return (
     <div className="scroll-to-top-wrapper" onClick={scrollToTop}>
-      <FaArrowAltCircleUp size={40} />
+      <FaArrowAltCircleUp size={40}/>
     </div>
   );
 }

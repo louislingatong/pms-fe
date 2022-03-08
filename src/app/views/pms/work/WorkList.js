@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useHistory} from 'react-router-dom';
-import {workDoneList, workList, metaData, reqListStatus, workListAsync} from '../../../store/workSlice';
+import {metaData, reqListStatus, workDoneList, workList, workListAsync} from '../../../store/workSlice';
 import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
-import {Box, Button, Col, Content, Row, Inputs} from 'adminlte-2-react';
+import {Box, Button, Col, Content, Inputs, Row} from 'adminlte-2-react';
 import DataTable from '../../../components/DataTable';
 import {usePrevious} from '../../../utils/Hooks';
 import {Divider, Modal} from '../../../components';
@@ -45,13 +45,13 @@ function WorkList({name}) {
       delete newState.status;
       history.replace({...history.location, newState});
     }
-    if (activeVessel && activeVessel.id) {
-      setFilters({status: state.status})
-    }
+    // if (activeVessel && activeVessel.id) {
+    //   setFilters({status: state.status})
+    // }
   }, []);
 
   useEffect(() => {
-    if (activeVessel && activeVessel.id && !localWorks.length) {
+    if (activeVessel && activeVessel.id) {
       setParams({vessel: activeVessel.name});
     }
   }, [activeVessel]);
@@ -173,8 +173,13 @@ function WorkList({name}) {
     },
     {
       title: 'Last Done',
-      data: 'current_work',
-      render: currentWork => currentWork.last_done,
+      data: 'last_done',
+      render: (lastDone, row) => row.current_work.last_done,
+    },
+    {
+      title: 'Running Hours',
+      data: 'running_hours',
+      render: (runningHours, row) => row.current_work.running_hours,
     },
     {
       title: 'Due Date',
@@ -234,7 +239,7 @@ function WorkList({name}) {
                     id="statusFilterSelect"
                     placeholder="Status"
                     labelPosition="none"
-                    options={['WARNING','DUE','OVERDUE']}
+                    options={['WARNING', 'DUE', 'OVERDUE']}
                     allowClear={true}
                     value={filters.status}
                     onChange={handleFilterChange}
@@ -269,7 +274,7 @@ function WorkList({name}) {
                     isLoading={isLoading}
                   />
                 </Col>
-                <Divider />
+                <Divider/>
                 <Col xs={12}>
                   {
                     !!Object.keys(selectedRows).length
@@ -287,7 +292,7 @@ function WorkList({name}) {
           closeButton
           onHide={handleWorkModalClose}
         >
-          <WorkView rows={selectedRows} />
+          <WorkView rows={selectedRows}/>
         </Modal>
         <Modal
           show={workHistoryModalShow}
@@ -303,7 +308,7 @@ function WorkList({name}) {
                 <Col xs={6}><label>Encode By</label></Col>
               </Row>
             </Col>
-            <Col xs={12}><Divider type="line" /></Col>
+            <Col xs={12}><Divider type="line"/></Col>
             {
               workHistory.map((work) => (
                 <React.Fragment>
@@ -313,7 +318,7 @@ function WorkList({name}) {
                       <Col xs={6}>{work.creator}</Col>
                     </Row>
                   </Col>
-                  <Col xs={12}><Divider type="line" /></Col>
+                  <Col xs={12}><Divider type="line"/></Col>
                 </React.Fragment>
               ))
             }

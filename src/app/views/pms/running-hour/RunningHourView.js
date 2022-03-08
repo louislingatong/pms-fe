@@ -1,7 +1,6 @@
 import React from 'react';
 import {Col, Row} from 'react-bootstrap';
 import {Inputs} from 'adminlte-2-react';
-import {Divider} from '../../../components';
 import RunningHourForm from '../form/RunningHourForm';
 
 function IntervalDetail({data: vesselMachineryRunningHour}) {

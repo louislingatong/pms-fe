@@ -3,21 +3,16 @@ import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
 import {Col, Row} from 'react-bootstrap';
-import {Inputs, Button} from 'adminlte-2-react';
-import {machineryAddAsync, machineryEditAsync} from '../../../store/machinerySlice';
+import {Button, Inputs} from 'adminlte-2-react';
+import {machineryAddAsync, machineryEditAsync, reqDataStatus} from '../../../store/machinerySlice';
 import Transform from '../../../utils/Transformer';
 import Machinery from '../../../core/models/Machinery';
-import {reqDataStatus} from '../../../store/machinerySlice';
 import VesselDepartmentSelect from '../../../components/select/VesselDepartmentSelect';
-import MachineryModelAutoSuggest from '../../../components/auto-suggest/MachineryModelAutoSuggest';
-import MachineryMakerAutoSuggest from '../../../components/auto-suggest/MachineryMakerAutoSuggest';
 
 const validator = new ReeValidate({
   department: 'required',
   name: 'required',
-  code: 'required',
-  model: '',
-  maker: '',
+  code: 'required'
 });
 
 function MachineryForm({data: localMachinery}) {
@@ -31,8 +26,6 @@ function MachineryForm({data: localMachinery}) {
     department: localMachinery.department.name,
     code_name: localMachinery.code_name,
     name: localMachinery.name,
-    model: localMachinery.model.name,
-    maker: localMachinery.maker.name
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -132,35 +125,9 @@ function MachineryForm({data: localMachinery}) {
         </Row>
       </Col>
       <Col xs={12}>
-        <Row>
-          <Col xs={12} md={4}>
-            <MachineryModelAutoSuggest
-              name="model"
-              id="modelInput"
-              label="Model"
-              labelPosition="above"
-              value={formData.model}
-              onChange={handleInputChange}
-              disabled={isViewing}
-            />
-          </Col>
-          <Col xs={12} md={4}>
-            <MachineryMakerAutoSuggest
-              name="maker"
-              id="makerInput"
-              label="Maker"
-              labelPosition="above"
-              value={formData.maker}
-              onChange={handleInputChange}
-              disabled={isViewing}
-            />
-          </Col>
-        </Row>
-      </Col>
-      <Col xs={12}>
         {
           isViewing
-            ? <Button type="primary" text="Edit" onClick={() =>  setIsViewing(false)} pullRight/>
+            ? <Button type="primary" text="Edit" onClick={() => setIsViewing(false)} pullRight/>
             : <Button type="primary"
                       text={localMachinery.id ? 'Save' : 'Add'}
                       onClick={handleSubmitForm}

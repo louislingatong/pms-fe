@@ -27,7 +27,7 @@ function Entry(props) {
   return (
     <li className={listClasses} onClick={onClick}>
       <a href="/" data-toggle="dropdown">
-        {hasIcon && <FontAwesomeIcon icon={localIcon} className="margin-r-5" />}
+        {hasIcon && <FontAwesomeIcon icon={localIcon} className="margin-r-5"/>}
         {hasLabel && label}
       </a>
       {

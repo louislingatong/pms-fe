@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Col, Row} from 'adminlte-2-react';
+import {Button, Col, Inputs, Row} from 'adminlte-2-react';
 import PropTypes from 'prop-types';
 import Meta from '../core/models/Meta';
-import {Button, Inputs} from 'adminlte-2-react';
 import Pagination from './Pagination';
 import {useDebounce, usePrevious} from '../utils/Hooks';
 import classnames from 'classnames';
@@ -11,7 +10,18 @@ import {PulseLoader} from 'react-spinners';
 function DataTable(props) {
   const {Text, Select} = Inputs;
 
-  const {data = [], columns, selectedRowIds = [], condensed, striped, hover, border, responsive, fixed, noMargin} = props;
+  const {
+    data = [],
+    columns,
+    selectedRowIds = [],
+    condensed,
+    striped,
+    hover,
+    border,
+    responsive,
+    fixed,
+    noMargin
+  } = props;
   const {api, options = {}, meta, multiple = false, rowSelect = false, isLoading = false} = props;
   const {onPageLengthChange, onSearchChange, onPageChange, onSelect} = props;
   const {page, pageInfo, search, pageLength} = options;
@@ -31,7 +41,7 @@ function DataTable(props) {
   const [localSelectedRowIds, setLocalSelectedRowIds] = useState([]);
   const [localUnselectedRowIds, setLocalUnselectedRowIds] = useState([]);
   const [checkedRowId, setCheckedRowId] = useState(0);
-  const [checkedAction, setCheckedAction] = useState('unchecked_all');
+  const [checkedAction, setCheckedAction] = useState('');
 
   const debouncedSearchString = useDebounce(searchString, 1000);
   const prevLocalMeta = usePrevious(localMeta);
@@ -194,7 +204,7 @@ function DataTable(props) {
       newLocalSelectedIds.push(row.id);
     } else {
       action = 'unchecked'
-      newLocalSelectedIds.splice(index,1);
+      newLocalSelectedIds.splice(index, 1);
     }
     setCheckedRowId(row.id);
     setCheckedAction(action);
@@ -211,7 +221,8 @@ function DataTable(props) {
   };
 
   const checkColumn = [{
-    title: <div className="text-center"><input type="checkbox" checked={allRowsChecked()} onChange={handleAllRowsCheck}/></div>,
+    title: <div className="text-center"><input type="checkbox" checked={allRowsChecked()}
+                                               onChange={handleAllRowsCheck}/></div>,
     data: 'check',
     width: 10
   }];
@@ -232,7 +243,7 @@ function DataTable(props) {
       return (
         <td key={`${column.data}-${rowIdx}`} style={{width: `${column.width}%`}}>
           <div className="text-center">
-            <input type="checkbox" checked={rowChecked(rowData)} onChange={() => handleRowCheck(rowData)} />
+            <input type="checkbox" checked={rowChecked(rowData)} onChange={() => handleRowCheck(rowData)}/>
           </div>
         </td>
       );
@@ -265,18 +276,18 @@ function DataTable(props) {
     return (
       rowSelect
         ? (
-            <td key={`${column.data}-${rowIdx}`}
-                onClick={() => data !== 'check' && onSelect(rowData)}
-                style={{cursor: 'pointer', width: `${column.width}%`}}
-            >
-              {data}
-            </td>
-          )
+          <td key={`${column.data}-${rowIdx}`}
+              onClick={() => data !== 'check' && onSelect(rowData)}
+              style={{cursor: 'pointer', width: `${column.width}%`}}
+          >
+            {data}
+          </td>
+        )
         : (
-            <td key={`${column.data}-${rowIdx}`} style={{width: `${column.width}%`}}>
-              {data}
-            </td>
-          )
+          <td key={`${column.data}-${rowIdx}`} style={{width: `${column.width}%`}}>
+            {data}
+          </td>
+        )
     );
   }
 
@@ -293,9 +304,9 @@ function DataTable(props) {
                   id="pageLengthSelect"
                   labelPosition="none"
                   options={[
-                    { text: '20', value: 20 },
-                    { text: '50', value: 50 },
-                    { text: '100', value: 100 },
+                    {text: '20', value: 20},
+                    {text: '50', value: 50},
+                    {text: '100', value: 100},
                   ]}
                   value={pageSize || 20}
                   onChange={handlePageLengthChange}
@@ -314,7 +325,7 @@ function DataTable(props) {
                   name="search"
                   id="searchInput"
                   labelPosition="none"
-                  buttonRight={<Button flat icon="fa-search" onClick={handleSearch} />}
+                  buttonRight={<Button flat icon="fa-search" onClick={handleSearch}/>}
                   onChange={handleSearchChange}
                   width={250}
                 />
@@ -326,7 +337,7 @@ function DataTable(props) {
       <Row>
         <Col sm={12}>
           <div className="table-container">
-            <div className={classnames( {'table-responsive': responsive})}>
+            <div className={classnames({'table-responsive': responsive})}>
               <table className={classNames}>
                 {
                   hasHeaders && (

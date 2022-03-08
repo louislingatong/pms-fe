@@ -41,6 +41,7 @@ function IntervalSelect(props) {
     const currentLocalDefaultOptions = localDefaultOptions.current;
     const params = {};
     if (!data.searchValue && !currentLocalValue && !preLocalValue && currentLocalDefaultOptions.length) {
+      console.log(currentLocalDefaultOptions);
       success(currentLocalDefaultOptions);
       return;
     }

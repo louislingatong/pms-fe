@@ -2,12 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
-import {Inputs, Button} from 'adminlte-2-react';
+import {Button, Inputs} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
 import Transform from '../../../utils/Transformer';
-import {reqDataStatus, intervalEditAsync, intervalAddAsync} from '../../../store/intervalSlice';
+import {intervalAddAsync, intervalEditAsync, reqDataStatus} from '../../../store/intervalSlice';
 import Interval from '../../../core/models/Interval';
-import IntervalUnitSelect from "../../../components/select/IntervalUnitSelect";
+import IntervalUnitSelect from '../../../components/select/IntervalUnitSelect';
 
 const validator = new ReeValidate({
   value: 'required|numeric|min_value:1',
@@ -112,7 +112,7 @@ function IntervalForm({data: localInterval}) {
       <Col xs={12}>
         {
           isViewing
-            ? <Button type="primary" text="Edit" onClick={() =>  setIsViewing(false)} pullRight/>
+            ? <Button type="primary" text="Edit" onClick={() => setIsViewing(false)} pullRight/>
             : <Button type="primary"
                       text={localInterval.id ? 'Save' : 'Add'}
                       onClick={handleSubmitForm}

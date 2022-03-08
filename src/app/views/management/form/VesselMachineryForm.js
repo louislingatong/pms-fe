@@ -3,20 +3,24 @@ import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
 import {Col, Row} from 'react-bootstrap';
-import {Inputs, Button} from 'adminlte-2-react';
+import {Button, Inputs} from 'adminlte-2-react';
 import {reqDataStatus, vesselMachineryAddAsync, vesselMachineryEditAsync} from '../../../store/vesselMachinerySlice';
 import Transform from '../../../utils/Transformer';
 import VesselMachinery from '../../../core/models/VesselMachinery';
 import moment from 'moment';
+import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
 import MachinerySelect from '../../../components/select/MachinerySelect';
 import InchargeRankSelect from '../../../components/select/InchargeRankSelect';
-import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
+import MachineryModelAutoSuggest from '../../../components/auto-suggest/MachineryModelAutoSuggest';
+import MachineryMakerAutoSuggest from '../../../components/auto-suggest/MachineryMakerAutoSuggest';
 
 const validator = new ReeValidate({
   vessel: 'required',
   machinery: 'required',
+  model: '',
+  maker: '',
   incharge_rank: 'required',
-  installed_date: 'required',
+  installed_date: 'required'
 });
 
 function VesselMachineryForm({data: localVesselMachinery}) {
@@ -30,10 +34,12 @@ function VesselMachineryForm({data: localVesselMachinery}) {
   const [formData, setFormData] = useState({
     vessel: activeVessel.name,
     machinery: localVesselMachinery.machinery.name,
+    model: localVesselMachinery.model.name,
+    maker: localVesselMachinery.maker.name,
     incharge_rank: localVesselMachinery.incharge_rank.name,
     installed_date: localVesselMachinery.installed_date
       ? moment(localVesselMachinery.installed_date).format("DD-MMM-YYYY")
-      : moment().format("DD-MMM-YYYY"),
+      : moment().format("DD-MMM-YYYY")
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -118,6 +124,28 @@ function VesselMachineryForm({data: localVesselMachinery}) {
       <Col xs={12}>
         <Row>
           <Col xs={12} md={4}>
+            <MachineryModelAutoSuggest
+              name="model"
+              id="modelInput"
+              label="Model"
+              labelPosition="above"
+              value={formData.model}
+              onChange={handleInputChange}
+              disabled={isViewing}
+            />
+          </Col>
+          <Col xs={12} md={4}>
+            <MachineryMakerAutoSuggest
+              name="maker"
+              id="makerInput"
+              label="Maker"
+              labelPosition="above"
+              value={formData.maker}
+              onChange={handleInputChange}
+              disabled={isViewing}
+            />
+          </Col>
+          <Col xs={12} md={4}>
             <InchargeRankSelect
               form
               name="incharge_rank"
@@ -132,6 +160,10 @@ function VesselMachineryForm({data: localVesselMachinery}) {
               help={formErrors['incharge_rank']}
             />
           </Col>
+        </Row>
+      </Col>
+      <Col xs={12}>
+        <Row>
           <Col xs={12} md={4}>
             <Date
               name="installed_date"
@@ -156,7 +188,7 @@ function VesselMachineryForm({data: localVesselMachinery}) {
       <Col xs={12}>
         {
           isViewing
-            ? <Button type="primary" text="Edit" onClick={() =>  setIsViewing(false)} pullRight/>
+            ? <Button type="primary" text="Edit" onClick={() => setIsViewing(false)} pullRight/>
             : <Button type="primary"
                       text={localVesselMachinery.id ? 'Save' : 'Add'}
                       onClick={handleSubmitForm}

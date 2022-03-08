@@ -32,7 +32,7 @@ export function add(data) {
 
 export function count() {
   return new Promise((resolve, reject) => {
-    Http.get('works/count', )
+    Http.get('works/count',)
       .then(res => {
         resolve(res.data);
       })

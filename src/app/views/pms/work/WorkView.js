@@ -1,7 +1,7 @@
 import React from 'react';
 import {Col, Row} from 'react-bootstrap';
 import WorkForm from '../form/WorkForm';
-import DataTable from "../../../components/DataTable";
+import DataTable from '../../../components/DataTable';
 
 function WorkView({rows}) {
   const header = [

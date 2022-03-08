@@ -7,15 +7,15 @@ import DataTable from '../../../components/DataTable';
 import Modal from '../../../components/Modal';
 import Divider from '../../../components/Divider';
 import {
-  machineryList,
   machineryData,
+  machineryList,
+  machineryListAsync,
   metaData,
   reqListStatus,
-  machineryListAsync,
 } from '../../../store/machinerySlice';
 import MachineryView from './MachineryView';
 import Machinery from '../../../core/models/Machinery';
-import VesselDepartmentSelect from "../../../components/select/VesselDepartmentSelect";
+import VesselDepartmentSelect from '../../../components/select/VesselDepartmentSelect';
 
 function MachineryList({name}) {
   const dispatch = useDispatch();
@@ -207,7 +207,7 @@ function MachineryList({name}) {
                 <Col xs={12}>
                   {
                     !!selectedRowIds.length
-                      && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
+                    && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
                   }
                 </Col>
               </Row>

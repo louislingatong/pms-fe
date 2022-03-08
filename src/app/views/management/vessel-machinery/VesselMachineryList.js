@@ -5,10 +5,10 @@ import {Col, Row} from 'react-bootstrap';
 import {Box, Button, Content} from 'adminlte-2-react';
 import DataTable from '../../../components/DataTable';
 import {
-  vesselMachineryData,
-  vesselMachineryList,
   metaData,
   reqListStatus,
+  vesselMachineryData,
+  vesselMachineryList,
   vesselMachineryListAsync
 } from '../../../store/vesselMachinerySlice';
 import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
@@ -42,12 +42,6 @@ function VesselMachineryList({name}) {
 
   useEffect(() => {
     if (activeVessel && activeVessel.id) {
-      setFilters({});
-    }
-  }, []);
-
-  useEffect(() => {
-    if (activeVessel && activeVessel.id && !localVesselMachineries.length) {
       setParams({vessel: activeVessel.name});
     }
   }, [activeVessel]);
@@ -157,17 +151,17 @@ function VesselMachineryList({name}) {
     {
       title: 'Model',
       data: 'model',
-      render: (model, row) => row.machinery.model.name,
+      render: model => model.name,
     },
     {
       title: 'Maker',
       data: 'maker',
-      render: (maker, row) => row.machinery.maker.name,
+      render: maker => maker.name,
     },
     {
       title: 'In-charge',
-      data: 'inchargeRank',
-      render: (inchargeRank, row) => row.incharge_rank.name,
+      data: 'incharge_rank',
+      render: inchargeRank => inchargeRank.name,
     },
   ];
 

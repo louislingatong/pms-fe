@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
-import {Inputs, Button} from 'adminlte-2-react';
+import {Button, Inputs} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
 import Transform from '../../../utils/Transformer';
 import {reqDataStatus, runningHourAddAsync} from '../../../store/runningHourSlice';

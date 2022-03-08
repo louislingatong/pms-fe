@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import VesselMachineryRunningHour from '../core/models/VesselMachineryRunningHour';
 import Meta from '../core/models/Meta';
-import {fetchAll, add} from '../services/runningHourService';
+import {add, fetchAll} from '../services/runningHourService';
 import Transform from '../utils/Transformer';
 
 const initialState = {

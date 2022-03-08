@@ -1,19 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  runningHourData,
-  runningHourList,
   metaData,
   reqListStatus,
-  runningHourListAsync} from '../../../store/runningHourSlice';
+  runningHourData,
+  runningHourList,
+  runningHourListAsync
+} from '../../../store/runningHourSlice';
 import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
 import {Box, Button, Col, Content, Row} from 'adminlte-2-react';
 import DataTable from '../../../components/DataTable';
 import {usePrevious} from '../../../utils/Hooks';
 import {Divider, Modal} from '../../../components';
 import VesselMachineryRunningHour from '../../../core/models/VesselMachineryRunningHour';
-import RunningHourDetail from "./RunningHourView";
-import VesselDepartmentSelect from "../../../components/select/VesselDepartmentSelect";
+import RunningHourDetail from './RunningHourView';
+import VesselDepartmentSelect from '../../../components/select/VesselDepartmentSelect';
 
 function RunningHourList({name}) {
   const dispatch = useDispatch();
@@ -42,12 +43,6 @@ function RunningHourList({name}) {
 
   useEffect(() => {
     if (activeVessel && activeVessel.id) {
-      setFilters({});
-    }
-  }, []);
-
-  useEffect(() => {
-    if (activeVessel && activeVessel.id && !localVesselMachineryRunningHours.length) {
       setParams({vessel: activeVessel.name});
     }
   }, [activeVessel]);
@@ -256,7 +251,7 @@ function RunningHourList({name}) {
                 <Col xs={6}><label>Encode By</label></Col>
               </Row>
             </Col>
-            <Col xs={12}><Divider type="line" /></Col>
+            <Col xs={12}><Divider type="line"/></Col>
             {
               runningHourHistory.map((runningHour) => (
                 <React.Fragment>
@@ -266,7 +261,7 @@ function RunningHourList({name}) {
                       <Col xs={6}>{runningHour.creator}</Col>
                     </Row>
                   </Col>
-                  <Col xs={12}><Divider type="line" /></Col>
+                  <Col xs={12}><Divider type="line"/></Col>
                 </React.Fragment>
               ))
             }

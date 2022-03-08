@@ -16,7 +16,7 @@ function EmployeeView({match, name}) {
   const dispatch = useDispatch();
   const employee = useSelector(employeeData);
 
-  const { params } = match;
+  const {params} = match;
   const paramId = parseInt(params.id);
 
   const [localEmployee, setLocalEmployee] = useState(employee);
@@ -185,7 +185,7 @@ function EmployeeView({match, name}) {
         closeButton
         onHide={handleModalClose}
       >
-        <EmployeeForm data={localEmployee} />
+        <EmployeeForm data={localEmployee}/>
       </Modal>
     </Content>
   )

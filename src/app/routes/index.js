@@ -1,5 +1,5 @@
 import React from 'react';
-import {Router as ReactRouter, Redirect,Switch} from 'react-router-dom';
+import {Redirect, Router as ReactRouter, Switch} from 'react-router-dom';
 import {createBrowserHistory} from 'history';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';

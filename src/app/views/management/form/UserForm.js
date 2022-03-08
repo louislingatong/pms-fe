@@ -24,19 +24,19 @@ function UserForm() {
           <div className="form-group row">
             <label htmlFor="inputFirstName" className="col-sm-3 col-form-label">First Name</label>
             <div className="col-sm-9">
-              <input className="form-control" id="inputFirstName" />
+              <input className="form-control" id="inputFirstName"/>
             </div>
           </div>
           <div className="form-group row">
             <label htmlFor="inputMiddleName" className="col-sm-3 col-form-label">Middle Name</label>
             <div className="col-sm-9">
-              <input type="text" className="form-control" id="inputMiddleName" />
+              <input type="text" className="form-control" id="inputMiddleName"/>
             </div>
           </div>
           <div className="form-group row">
             <label htmlFor="inputLastName" className="col-sm-3 col-form-label">Last Name</label>
             <div className="col-sm-9">
-              <input type="text" className="form-control" id="inputLastName" />
+              <input type="text" className="form-control" id="inputLastName"/>
             </div>
           </div>
         </div>
@@ -44,7 +44,7 @@ function UserForm() {
           <div className="form-group row">
             <label htmlFor="inputEmployeeId" className="col-sm-3 col-form-label">Employee ID</label>
             <div className="col-sm-9">
-              <input className="form-control" id="inputEmployeeId" />
+              <input className="form-control" id="inputEmployeeId"/>
             </div>
           </div>
           <div className="form-group row">
@@ -66,13 +66,13 @@ function UserForm() {
           <div className="form-group row">
             <label htmlFor="inputPosition" className="col-sm-3 col-form-label">Position</label>
             <div className="col-sm-9">
-              <input className="form-control" id="inputPosition" />
+              <input className="form-control" id="inputPosition"/>
             </div>
           </div>
           <div className="form-group row">
             <label htmlFor="inputSection" className="col-sm-3 col-form-label">Section</label>
             <div className="col-sm-9">
-              <input className="form-control" id="inputSection" />
+              <input className="form-control" id="inputSection"/>
             </div>
           </div>
           <div className="form-group row">
@@ -91,13 +91,13 @@ function UserForm() {
           <div className="form-group row">
             <label htmlFor="inputUsername" className="col-sm-3 col-form-label">Username</label>
             <div className="col-sm-9">
-              <input className="form-control" id="inputUsername" />
+              <input className="form-control" id="inputUsername"/>
             </div>
           </div>
           <div className="form-group row">
             <label htmlFor="inputPassword" className="col-sm-3 col-form-label">Password</label>
             <div className="col-sm-9">
-              <input type="password" className="form-control" id="inputPassword" />
+              <input type="password" className="form-control" id="inputPassword"/>
             </div>
           </div>
         </div>

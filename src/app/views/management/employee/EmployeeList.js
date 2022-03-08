@@ -7,10 +7,10 @@ import {Col, Row} from 'react-bootstrap';
 import {
   employeeData,
   employeeList,
+  employeeListAsync,
   metaData,
   reqListStatus,
   setEmployeeData,
-  employeeListAsync,
 } from '../../../store/employeeSlice';
 import {DataTable, Divider, Modal} from '../../../components';
 import Employee from '../../../core/models/Employee';
@@ -189,7 +189,7 @@ function EmployeeList({name}) {
           closeButton
           onHide={handleModalClose}
         >
-          <EmployeeForm data={new Employee()} />
+          <EmployeeForm data={new Employee()}/>
         </Modal>
       </Content>
     </React.Fragment>

@@ -36,11 +36,13 @@ function Dashboard(props) {
     <Content title={name} browserTitle={name}>
       <Row>
         <Col xs={4}>
-          <Infobox2 icon="fas-cog" title={localCount.warning} text="Works to be done" color="yellow" footerText="View List"
+          <Infobox2 icon="fas-cog" title={localCount.warning} text="Works to be done" color="yellow"
+                    footerText="View List"
                     to="javascript:" onFooterClick={() => redirect('WARNING')}/>
         </Col>
         <Col xs={4}>
-          <Infobox2 icon="fas-screwdriver" title={localCount.due} text="Due works" color="light-blue" footerText="View List"
+          <Infobox2 icon="fas-screwdriver" title={localCount.due} text="Due works" color="light-blue"
+                    footerText="View List"
                     to="javascript:" onFooterClick={() => redirect('DUE')}/>
         </Col>
         <Col xs={4}>

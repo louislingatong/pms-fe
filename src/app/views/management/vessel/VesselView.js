@@ -13,7 +13,7 @@ function VesselView({match, name}) {
   const dispatch = useDispatch();
   const vessel = useSelector(vesselData);
 
-  const { params } = match;
+  const {params} = match;
   const paramId = parseInt(params.id);
 
   const [localVessel, setLocalVessel] = useState(vessel);
@@ -518,7 +518,7 @@ function VesselView({match, name}) {
                   </Col>
                   <Col xs={12}>
                     (Basis on full bunker condition)
-                    <Divider type="line" />
+                    <Divider type="line"/>
                   </Col>
                   <Col xs={12}>
                     <Row>

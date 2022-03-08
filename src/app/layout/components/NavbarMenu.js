@@ -5,11 +5,11 @@ import {Inputs} from 'adminlte-2-react';
 import {logoutAsync} from '../../store/authSlice';
 import {Entry} from '../../components';
 import {
-  vesselSubMenus,
   activeVesselSubMenu,
   reqVesselSubMenusStatus,
+  setSelectedVessel,
   vesselListAsync,
-  setSelectedVessel
+  vesselSubMenus
 } from '../../store/navbarMenuSlice';
 import {useDebounce} from '../../utils/Hooks';
 import Vessel from '../../core/models/Vessel';
@@ -33,7 +33,7 @@ function NavbarMenu() {
     if (!vessels.length) {
       initVessels();
     }
-    if (vessels.length  && localVessels && !localVessels.length) {
+    if (vessels.length && localVessels && !localVessels.length) {
       setLocalVessels(vessels);
     }
   }, [vessels, localVessels]);

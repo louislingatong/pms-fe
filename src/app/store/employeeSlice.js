@@ -1,12 +1,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import Employee from '../core/models/Employee';
 import Meta from '../core/models/Meta';
-import {
-  fetchAll,
-  fetchById,
-  add,
-  edit
-} from '../services/employeeService';
+import {add, edit, fetchAll, fetchById} from '../services/employeeService';
 import Transform from '../utils/Transformer';
 
 const initialState = {

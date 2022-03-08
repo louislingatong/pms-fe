@@ -3,13 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {usePrevious} from '../../../utils/Hooks';
 import {Box, Button, Content} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
-import {
-  intervalList,
-  intervalData,
-  metaData,
-  reqListStatus,
-  intervalListAsync,
-} from '../../../store/intervalSlice';
+import {intervalData, intervalList, intervalListAsync, metaData, reqListStatus,} from '../../../store/intervalSlice';
 import {DataTable, Divider, Modal} from '../../../components';
 import Interval from '../../../core/models/Interval';
 import IntervalView from './IntervalView';
@@ -169,7 +163,7 @@ function IntervalList({name}) {
                 <Col xs={12}>
                   {
                     !!selectedRowIds.length
-                      && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
+                    && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
                   }
                 </Col>
               </Row>

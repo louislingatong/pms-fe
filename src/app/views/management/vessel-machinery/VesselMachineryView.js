@@ -5,9 +5,10 @@ import {Button, Inputs} from 'adminlte-2-react';
 import DataTable from '../../../components/DataTable';
 import Divider from '../../../components/Divider';
 import VesselMachineryForm from '../form/VesselMachineryForm';
-import {vesselMachineryEditSubCategoriesAsync, reqDataStatus} from '../../../store/vesselMachinerySlice';
+import {reqDataStatus, vesselMachineryEditSubCategoriesAsync} from '../../../store/vesselMachinerySlice';
 import IntervalSelect from '../../../components/select/IntervalSelect';
-import MachinerySubCategoryDescriptionAutoSuggest from '../../../components/auto-suggest/MachinerySubCategoryDescriptionAutoSuggest';
+import MachinerySubCategoryDescriptionAutoSuggest
+  from '../../../components/auto-suggest/MachinerySubCategoryDescriptionAutoSuggest';
 import Transform from '../../../utils/Transformer';
 import ReeValidate from 'ree-validate';
 

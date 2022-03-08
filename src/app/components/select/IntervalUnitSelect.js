@@ -39,7 +39,6 @@ function IntervalUnitSelect(props) {
   const fetchOptions = (data, success) => {
     const currentLocalValue = localValue.current;
     const currentLocalDefaultOptions = localDefaultOptions.current;
-
     const params = {};
     if (!data.searchValue && !currentLocalValue && !preLocalValue && currentLocalDefaultOptions.length) {
       success(currentLocalDefaultOptions);
