@@ -28,7 +28,7 @@ table {
 
 .table-responsive {
   overflow-y: auto;
-  max-height: 500px;
+  max-height: calc(100vh - 418px);
   margin-bottom: 15px;
 }
 
