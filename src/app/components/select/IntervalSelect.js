@@ -1,10 +1,9 @@
-import React, {useEffect, useRef} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, {useRef} from 'react';
+import {useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Inputs} from 'adminlte-2-react';
 import Transform from '../../utils/Transformer';
-import {intervals as options, intervalsAsync} from '../../store/optionSlice';
-import {usePrevious} from '../../utils/Hooks';
+import {intervalsAsync} from '../../store/optionSlice';
 
 function IntervalSelect(props) {
   const {name, id, label, labelPosition = 'none', placeholder = '', allowClear} = props;
@@ -14,37 +13,16 @@ function IntervalSelect(props) {
   const {Select2} = Inputs;
 
   const dispatch = useDispatch();
-  const defaultOptions = useSelector(options);
 
   const localValue = useRef(value);
-  const localDefaultOptions = useRef(Transform.toSelectOptions(defaultOptions));
-  const openDropdownMenu = useRef(false);
-
-  const preLocalValue = usePrevious(localValue);
-
-  useEffect(() => {
-    const currentLocalDefaultOptions = localDefaultOptions.current;
-    const currentOpenDropdownMenu = openDropdownMenu.current;
-    if (!currentLocalDefaultOptions.length && currentOpenDropdownMenu) {
-      localDefaultOptions.current = Transform.toSelectOptions(defaultOptions);
-      openDropdownMenu.current = false;
-    }
-  }, [defaultOptions]);
 
   const openOptions = (e) => {
     localValue.current = Array.isArray(e.params.data) ? e.params.data[0] : e.params.data;
-    openDropdownMenu.current = true;
   };
 
   const fetchOptions = (data, success) => {
     const currentLocalValue = localValue.current;
-    const currentLocalDefaultOptions = localDefaultOptions.current;
     const params = {};
-    if (!data.searchValue && !currentLocalValue && !preLocalValue && currentLocalDefaultOptions.length) {
-      console.log(currentLocalDefaultOptions);
-      success(currentLocalDefaultOptions);
-      return;
-    }
     if (!data.searchValue && currentLocalValue) {
       params['keyword'] = currentLocalValue;
     }
