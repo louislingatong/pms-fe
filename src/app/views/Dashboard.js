@@ -4,19 +4,27 @@ import {useHistory} from 'react-router-dom';
 import {Content, Infobox2} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
 import {workCount, workCountAsync} from '../store/workSlice';
+import {activeVesselSubMenu} from '../store/navbarMenuSlice';
+import {usePrevious} from '../utils/Hooks';
 
 function Dashboard(props) {
   const {name} = props;
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const activeVessel = useSelector(activeVesselSubMenu);
   const count = useSelector(workCount);
 
   const [localCount, setLocalCount] = useState(count);
+  const [params, setParams] = useState({vessel: activeVessel.name});
+
+  const prevParams = usePrevious(params);
 
   useEffect(() => {
-    initCount();
-  }, []);
+    if (activeVessel && activeVessel.id) {
+      setParams({vessel: activeVessel.name});
+    }
+  }, [activeVessel]);
 
   useEffect(() => {
     if (count) {
@@ -24,8 +32,14 @@ function Dashboard(props) {
     }
   }, [count]);
 
+  useEffect(() => {
+    if (prevParams) {
+      initCount();
+    }
+  }, [params]);
+
   const initCount = () => {
-    dispatch(workCountAsync());
+    dispatch(workCountAsync(params));
   }
 
   const redirect = (status) => {

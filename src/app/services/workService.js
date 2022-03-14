@@ -30,9 +30,9 @@ export function add(data) {
   })
 }
 
-export function count() {
+export function count(params) {
   return new Promise((resolve, reject) => {
-    Http.get('works/count',)
+    Http.get('works/count', {params})
       .then(res => {
         resolve(res.data);
       })

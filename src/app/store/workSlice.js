@@ -38,8 +38,8 @@ export const workAddAsync = createAsyncThunk(
 
 export const workCountAsync = createAsyncThunk(
   'work/countWorksByStatus',
-  async () => {
-    const response = await count();
+  async (params) => {
+    const response = await count(params);
     return response.data;
   }
 );
