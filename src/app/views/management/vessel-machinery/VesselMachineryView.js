@@ -46,6 +46,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
   useEffect(() => {
     if (totalValidForm && updatedRows.length && (totalValidForm === updatedRows.length)) {
       submit();
+      setTotalValidForm(0);
     }
   }, [totalValidForm]);
 
