@@ -144,7 +144,6 @@ function VesselMachineryView({data: localVesselMachinery}) {
     if (updatedRows.length) {
       updatedRows.forEach((row, i) => {
         const formDataRow = formDatas[row];
-        console.log(formDataRow);
         validator.validateAll(formDataRow)
           .then((success) => {
             if (success) {
