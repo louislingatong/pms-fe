@@ -23,7 +23,11 @@ function WorkView({rows}) {
       title: 'Intervals',
       data: 'interval',
       render: interval => `${interval.value} ${interval.unit.name}`,
-    }
+    },
+    {
+      title: 'Commissioning Date',
+      data: 'installed_date',
+    },
   ];
 
   return (

@@ -168,7 +168,7 @@ function WorkList({name}) {
       render: interval => `${interval.value} ${interval.unit.name}`,
     },
     {
-      title: 'Date Installed',
+      title: 'Commissioning Date',
       data: 'installed_date',
     },
     {

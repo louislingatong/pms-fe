@@ -169,7 +169,7 @@ function DataTable(props) {
     });
   };
 
-  const handlePageChane = (page) => {
+  const handlePageChange = (page) => {
     apiControlled && onPageChange(page);
     setLocalMeta({
       ...localMeta,
@@ -212,8 +212,16 @@ function DataTable(props) {
   };
 
   const allRowsChecked = () => {
-    const localDataSize = localData.length
-    return localDataSize > 0 && localDataSize === localSelectedRowIds.length;
+    let checkedAll = false;
+    localData.every(data => {
+      if (!localSelectedRowIds.includes(data.id)) {
+        checkedAll = false;
+        return false;
+      }
+      checkedAll = true;
+      return true;
+    });
+    return checkedAll;
   };
 
   const rowChecked = (data) => {
@@ -351,7 +359,7 @@ function DataTable(props) {
                 <tbody>
                 {
                   localData.length
-                    ? localData.slice(0, localMeta.pageSize).map((row, rowIdx) => (
+                    ? localData.map((row, rowIdx) => (
                       <tr key={rowIdx}>
                         {headers.map((col) => mapCell(row[col.data], col, row, rowIdx))}
                       </tr>
@@ -394,7 +402,7 @@ function DataTable(props) {
               <div className="pull-right">
                 <Pagination
                   meta={localMeta}
-                  onPageChange={handlePageChane}
+                  onPageChange={handlePageChange}
                 />
               </div>
             </Col>

@@ -168,7 +168,7 @@ function VesselMachineryForm({data: localVesselMachinery}) {
             <Date
               name="installed_date"
               id="installedDateInput"
-              label="Installation Date"
+              label="Commissioning Date"
               labelPosition="above"
               iconRight="fa-calendar"
               format="DD-MMM-YYYY"

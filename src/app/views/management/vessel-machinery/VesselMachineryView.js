@@ -15,7 +15,7 @@ import ReeValidate from 'ree-validate';
 const validator = new ReeValidate({
   code: 'required',
   description: '',
-  interval: 'required',
+  interval: '',
 });
 
 function VesselMachineryView({data: localVesselMachinery}) {
@@ -30,6 +30,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
   const [formError, setFormError] = useState();
   const [validFormCount, setValidFormCount] = useState(0);
   const [totalValidForm, setTotalValidForm] = useState(0);
+  const [updatedRows, setUpdatedRows] = useState([]);
 
   const hasId = !!localVesselMachinery.id;
   const machineryCode = localVesselMachinery.machinery.code_name;
@@ -114,13 +115,29 @@ function VesselMachineryView({data: localVesselMachinery}) {
   };
 
   const formData = (id) => {
+    const subCategory = localVesselMachinery.sub_categories.find(subCategory => subCategory.id === id);
     return {
       vessel_machinery_id: localVesselMachinery.id,
       machinery_sub_category_id: id,
-      code: machineryCode + '-',
-      description: '',
-      interval: ''
+      code: subCategory ? subCategory.code : machineryCode + '-',
+      description: subCategory ? subCategory.description.name : '',
+      interval: subCategory ? subCategory.interval.name : ''
     }
+  };
+
+  const enableEditRow = (e, id) => {
+    e.preventDefault();
+    const newUpdatedRows = updatedRows.slice();
+    newUpdatedRows.push(id);
+    setUpdatedRows(newUpdatedRows);
+  };
+
+  const disableEditRow = (e, id) => {
+    e.preventDefault();
+    const newUpdatedRows = updatedRows.slice();
+    const i = newUpdatedRows.indexOf(id);
+    newUpdatedRows.splice(i, 1);
+    setUpdatedRows(newUpdatedRows);
   };
 
   const handleSubmitForm = (e) => {
@@ -139,17 +156,20 @@ function VesselMachineryView({data: localVesselMachinery}) {
 
   const submit = () => {
     const subCategories = {};
-    for (let i = 0; i < Object.values(formDatas).length; i++) {
-      const formData = Object.values(formDatas)[i];
-      for (const [key, value] of Object.entries(formData)) {
-        subCategories[`vessel_machinery_sub_categories[${i}][${key}]`] = value;
+    for (let i = 0; i < Object.keys(formDatas).length; i++) {
+      const key = Object.keys(formDatas)[i];
+      if (updatedRows.includes(parseInt(key))) {
+        const formData = formDatas[key];
+        for (const [key, value] of Object.entries(formData)) {
+          subCategories[`vessel_machinery_sub_categories[${i}][${key}]`] = value;
+        }
       }
     }
     dispatch(vesselMachineryEditSubCategoriesAsync({
       vessel_machinery_id: localVesselMachinery.id,
       ...subCategories
     }));
-  }
+  };
 
   const header = [
     {
@@ -162,7 +182,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
           id={`code${row.id}Input`}
           labelPosition="none"
           value={formDatas[row.id] ? formDatas[row.id].code : machineryCode + '-'}
-          disabled={!formDatas[row.id]}
+          disabled={!formDatas[row.id] || !updatedRows.includes(row.id)}
           onChange={(e) => handleInputChange(e, row.id)}
           type={formErrors[row.id] && formErrors[row.id]['code'] ? 'error' : ''}
           help={formErrors[row.id] && formErrors[row.id]['code']}
@@ -185,7 +205,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
           labelPosition="none"
           value={formDatas[row.id] ? formDatas[row.id].description : ''}
           defaultSuggestions={row.description}
-          disabled={!formDatas[row.id]}
+          disabled={!formDatas[row.id] || !updatedRows.includes(row.id)}
           onChange={(e) => handleInputChange(e, row.id)}
         />
       )
@@ -194,21 +214,47 @@ function VesselMachineryView({data: localVesselMachinery}) {
       title: 'Interval',
       data: 'interval',
       width: '20',
-      render: (interval, row) => (
-        <IntervalSelect
-          form
-          name={`interval_${row.id}`}
-          id={`interval${row.id}Select`}
-          labelPosition="none"
-          allowClear={true}
-          value={formDatas[row.id] ? formDatas[row.id].interval : ''}
-          disabled={!formDatas[row.id]}
-          onChange={(e) => handleInputChange(e, row.id)}
-          type={formErrors[row.id] && formErrors[row.id]['interval'] ? 'error' : ''}
-          help={formErrors[row.id] && formErrors[row.id]['interval']}
-        />
-      )
-    }
+      render: (interval, row) => {
+        if (!updatedRows.includes(row.id)) {
+          return (
+            <Text
+              name={`interval_${row.id}`}
+              id={`interval${row.id}Input`}
+              labelPosition="none"
+              value={formDatas[row.id] ? formDatas[row.id].interval : ''}
+              disabled={true}
+            />
+          )
+        }
+        return (
+          <IntervalSelect
+            form
+            name={`interval_${row.id}`}
+            id={`interval${row.id}Select`}
+            labelPosition="none"
+            allowClear={true}
+            value={formDatas[row.id] ? formDatas[row.id].interval : ''}
+            onChange={(e) => handleInputChange(e, row.id)}
+          />
+        )
+      }
+    },
+    {
+      title: '',
+      data: 'action',
+      render: (action, row) => {
+       if (!updatedRows.includes(row.id)) {
+         return <Button type="primary"
+                        icon="fas-edit"
+                        disabled={!formDatas[row.id]}
+                        onClick={(e) => enableEditRow(e, row.id)}/>
+       }
+       return <Button type="default"
+                      icon="fas-times"
+                      disabled={!formDatas[row.id]}
+                      onClick={(e) => disableEditRow(e, row.id)}/>
+      }
+    },
   ];
 
   return (
