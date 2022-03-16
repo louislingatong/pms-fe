@@ -44,8 +44,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
   }, [localVesselMachinery]);
 
   useEffect(() => {
-    const formDatasLength = Object.keys(formDatas).length;
-    if (totalValidForm && formDatasLength && (totalValidForm === formDatasLength)) {
+    if (totalValidForm && updatedRows.length && (totalValidForm === updatedRows.length)) {
       submit();
     }
   }, [totalValidForm]);
@@ -101,6 +100,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
     if (selectedRow.action === 'checked') {
       newFormDatas[selectedRow.id] = formData(selectedRow.id);
     } else if (selectedRow.action === 'unchecked') {
+      disableEditRow(selectedRow.id);
       delete newFormDatas[selectedRow.id];
     } else if (selectedRow.action === 'checked_all') {
       selectedRow.ids.forEach((id) => {
@@ -108,6 +108,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
       });
     } else if (selectedRow.action === 'unchecked_all') {
       selectedRow.ids.forEach((id) => {
+        disableEditRow(id);
         delete newFormDatas[id];
       });
     }
@@ -125,15 +126,13 @@ function VesselMachineryView({data: localVesselMachinery}) {
     }
   };
 
-  const enableEditRow = (e, id) => {
-    e.preventDefault();
+  const enableEditRow = (id) => {
     const newUpdatedRows = updatedRows.slice();
     newUpdatedRows.push(id);
     setUpdatedRows(newUpdatedRows);
   };
 
-  const disableEditRow = (e, id) => {
-    e.preventDefault();
+  const disableEditRow = (id) => {
     const newUpdatedRows = updatedRows.slice();
     const i = newUpdatedRows.indexOf(id);
     newUpdatedRows.splice(i, 1);
@@ -142,33 +141,37 @@ function VesselMachineryView({data: localVesselMachinery}) {
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
-    Object.entries(formDatas).forEach(([key, value], i) => {
-      validator.validateAll(value)
-        .then((success) => {
-          if (success) {
-            setValidFormCount(i + 1);
-          } else {
-            setFormError({[key]: Transform.toFormError((validator.errors))});
-          }
-        });
-    });
+    if (updatedRows.length) {
+      updatedRows.forEach((row, i) => {
+        const formDataRow = formDatas[row];
+        console.log(formDataRow);
+        validator.validateAll(formDataRow)
+          .then((success) => {
+            if (success) {
+              setValidFormCount(i + 1);
+            } else {
+              setFormError({[row]: Transform.toFormError((validator.errors))});
+            }
+          });
+      });
+    }
   };
 
   const submit = () => {
-    const subCategories = {};
-    for (let i = 0; i < Object.keys(formDatas).length; i++) {
-      const key = Object.keys(formDatas)[i];
-      if (updatedRows.includes(parseInt(key))) {
-        const formData = formDatas[key];
-        for (const [key, value] of Object.entries(formData)) {
+    let formData = {vessel_machinery_id: localVesselMachinery.id}
+    if (updatedRows.length) {
+      const subCategories = {};
+      updatedRows.forEach((row, i) => {
+        const formDataRow = formDatas[row];
+        for (const [key, value] of Object.entries(formDataRow)) {
           subCategories[`vessel_machinery_sub_categories[${i}][${key}]`] = value;
         }
-      }
+      });
+      formData = {...formData, ...subCategories}
+    } else {
+      formData.vessel_machinery_sub_categories = [];
     }
-    dispatch(vesselMachineryEditSubCategoriesAsync({
-      vessel_machinery_id: localVesselMachinery.id,
-      ...subCategories
-    }));
+    dispatch(vesselMachineryEditSubCategoriesAsync(formData));
   };
 
   const header = [
@@ -247,12 +250,12 @@ function VesselMachineryView({data: localVesselMachinery}) {
          return <Button type="primary"
                         icon="fas-edit"
                         disabled={!formDatas[row.id]}
-                        onClick={(e) => enableEditRow(e, row.id)}/>
+                        onClick={() => enableEditRow(row.id)}/>
        }
        return <Button type="default"
                       icon="fas-times"
                       disabled={!formDatas[row.id]}
-                      onClick={(e) => disableEditRow(e, row.id)}/>
+                      onClick={() => disableEditRow(row.id)}/>
       }
     },
   ];
