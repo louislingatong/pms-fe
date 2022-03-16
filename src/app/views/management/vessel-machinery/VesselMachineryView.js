@@ -53,6 +53,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
   useEffect(() => {
     if (validFormCount) {
       setTotalValidForm(validFormCount);
+      setValidFormCount(0);
     }
   }, [validFormCount]);
 
