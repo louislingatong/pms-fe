@@ -45,9 +45,9 @@ function WorkList({name}) {
       delete newState.status;
       history.replace({...history.location, newState});
     }
-    // if (activeVessel && activeVessel.id) {
-    //   setFilters({status: state.status})
-    // }
+    if (activeVessel && activeVessel.id) {
+      setFilters({status: state.status})
+    }
   }, []);
 
   useEffect(() => {

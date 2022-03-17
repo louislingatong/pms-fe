@@ -30,7 +30,8 @@ function VesselMachineryView({data: localVesselMachinery}) {
   const [formError, setFormError] = useState();
   const [validFormCount, setValidFormCount] = useState(0);
   const [totalValidForm, setTotalValidForm] = useState(0);
-  const [updatedRows, setUpdatedRows] = useState([]);
+  const [updatedSubCategories, setUpdatedSubCategories] = useState([]);
+  const [removedSubCategories, setRemovedSubCategories] = useState([]);
 
   const hasId = !!localVesselMachinery.id;
   const machineryCode = localVesselMachinery.machinery.code_name;
@@ -44,16 +45,17 @@ function VesselMachineryView({data: localVesselMachinery}) {
   }, [localVesselMachinery]);
 
   useEffect(() => {
-    if (totalValidForm && updatedRows.length && (totalValidForm === updatedRows.length)) {
+    if (totalValidForm && updatedSubCategories.concat(removedSubCategories).length
+      && (totalValidForm === updatedSubCategories.concat(removedSubCategories).length)) {
       submit();
       setTotalValidForm(0);
+      setValidFormCount(0);
     }
   }, [totalValidForm]);
 
   useEffect(() => {
     if (validFormCount) {
       setTotalValidForm(validFormCount);
-      setValidFormCount(0);
     }
   }, [validFormCount]);
 
@@ -68,7 +70,6 @@ function VesselMachineryView({data: localVesselMachinery}) {
       const state = {...prevState};
       subCategories.forEach((subCategory) => {
         state[subCategory.id] = {
-          vessel_machinery_id: localVesselMachinery.id,
           machinery_sub_category_id: subCategory.id,
           code: subCategory.code,
           description: subCategory.description.name,
@@ -101,16 +102,20 @@ function VesselMachineryView({data: localVesselMachinery}) {
     const newFormDatas = {...formDatas};
     if (selectedRow.action === 'checked') {
       newFormDatas[selectedRow.id] = formData(selectedRow.id);
+      restoreSubCategory(selectedRow.id);
     } else if (selectedRow.action === 'unchecked') {
       disableEditRow(selectedRow.id);
+      removeSubCategory(selectedRow.id);
       delete newFormDatas[selectedRow.id];
     } else if (selectedRow.action === 'checked_all') {
       selectedRow.ids.forEach((id) => {
         newFormDatas[id] = formData(id);
+        restoreSubCategory(selectedRow.id);
       });
     } else if (selectedRow.action === 'unchecked_all') {
       selectedRow.ids.forEach((id) => {
         disableEditRow(id);
+        removeSubCategory(id);
         delete newFormDatas[id];
       });
     }
@@ -120,7 +125,6 @@ function VesselMachineryView({data: localVesselMachinery}) {
   const formData = (id) => {
     const subCategory = localVesselMachinery.sub_categories.find(subCategory => subCategory.id === id);
     return {
-      vessel_machinery_id: localVesselMachinery.id,
       machinery_sub_category_id: id,
       code: subCategory ? subCategory.code : machineryCode + '-',
       description: subCategory ? subCategory.description.name : '',
@@ -129,48 +133,81 @@ function VesselMachineryView({data: localVesselMachinery}) {
   };
 
   const enableEditRow = (id) => {
-    const newUpdatedRows = updatedRows.slice();
-    newUpdatedRows.push(id);
-    setUpdatedRows(newUpdatedRows);
+    const newUpdatedSubCategories = updatedSubCategories.slice();
+    newUpdatedSubCategories.push(id);
+    setUpdatedSubCategories(newUpdatedSubCategories);
   };
 
   const disableEditRow = (id) => {
-    const newUpdatedRows = updatedRows.slice();
-    const i = newUpdatedRows.indexOf(id);
-    newUpdatedRows.splice(i, 1);
-    setUpdatedRows(newUpdatedRows);
+    const newUpdatedSubCategories = updatedSubCategories.slice();
+    const i = newUpdatedSubCategories.indexOf(id);
+    newUpdatedSubCategories.splice(i, 1);
+    setUpdatedSubCategories(newUpdatedSubCategories);
+  };
+
+  const removeSubCategory = (id) => {
+    const newRemovedSubCategories = removedSubCategories.slice();
+    const i = newRemovedSubCategories.indexOf(id);
+    if (i === -1) {
+      const subCategory = localVesselMachinery.sub_categories.find(subCategory => subCategory.id === id);
+      if (subCategory) {
+        newRemovedSubCategories.push(id);
+        setRemovedSubCategories(newRemovedSubCategories);
+      }
+    }
+  };
+
+  const restoreSubCategory = (id) => {
+    const newRemovedSubCategories = removedSubCategories.slice();
+    const i = newRemovedSubCategories.indexOf(id);
+    if (i !== -1) {
+      newRemovedSubCategories.splice(i, 1);
+      setRemovedSubCategories(newRemovedSubCategories);
+    }
   };
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
-    if (updatedRows.length) {
-      updatedRows.forEach((row, i) => {
-        const formDataRow = formDatas[row];
-        validator.validateAll(formDataRow)
-          .then((success) => {
-            if (success) {
-              setValidFormCount(i + 1);
-            } else {
-              setFormError({[row]: Transform.toFormError((validator.errors))});
-            }
-          });
-      });
+
+    updatedSubCategories.forEach((row, i) => {
+      const formDataRow = formDatas[row];
+      validator.validateAll(formDataRow)
+        .then((success) => {
+          if (success) {
+            setValidFormCount(validFormCount + 1);
+          } else {
+            setFormError({[row]: Transform.toFormError((validator.errors))});
+          }
+        });
+    });
+
+    if (removedSubCategories.length) {
+      setValidFormCount(validFormCount + removedSubCategories.length);
     }
   };
 
   const submit = () => {
     let formData = {vessel_machinery_id: localVesselMachinery.id}
-    if (updatedRows.length) {
+    if (updatedSubCategories.length) {
       const subCategories = {};
-      updatedRows.forEach((row, i) => {
+      updatedSubCategories.forEach((row, i) => {
         const formDataRow = formDatas[row];
         for (const [key, value] of Object.entries(formDataRow)) {
           subCategories[`vessel_machinery_sub_categories[${i}][${key}]`] = value;
         }
       });
       formData = {...formData, ...subCategories}
-    } else {
-      formData.vessel_machinery_sub_categories = [];
+    }
+
+    if (removedSubCategories.length) {
+      const subCategories = {};
+      removedSubCategories.forEach((row, i) => {
+        subCategories[`vessel_machinery_sub_categories[${i + updatedSubCategories.length}][code]`] = '';
+        subCategories[`vessel_machinery_sub_categories[${i + updatedSubCategories.length}][description]`] = '';
+        subCategories[`vessel_machinery_sub_categories[${i + updatedSubCategories.length}][interval]`] = '';
+        subCategories[`vessel_machinery_sub_categories[${i + updatedSubCategories.length}][machinery_sub_category_id]`] = row;
+      });
+      formData = {...formData, ...subCategories}
     }
     dispatch(vesselMachineryEditSubCategoriesAsync(formData));
   };
@@ -186,7 +223,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
           id={`code${row.id}Input`}
           labelPosition="none"
           value={formDatas[row.id] ? formDatas[row.id].code : machineryCode + '-'}
-          disabled={!formDatas[row.id] || !updatedRows.includes(row.id)}
+          disabled={!formDatas[row.id] || !updatedSubCategories.includes(row.id)}
           onChange={(e) => handleInputChange(e, row.id)}
           type={formErrors[row.id] && formErrors[row.id]['code'] ? 'error' : ''}
           help={formErrors[row.id] && formErrors[row.id]['code']}
@@ -209,7 +246,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
           labelPosition="none"
           value={formDatas[row.id] ? formDatas[row.id].description : ''}
           defaultSuggestions={row.description}
-          disabled={!formDatas[row.id] || !updatedRows.includes(row.id)}
+          disabled={!formDatas[row.id] || !updatedSubCategories.includes(row.id)}
           onChange={(e) => handleInputChange(e, row.id)}
         />
       )
@@ -219,7 +256,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
       data: 'interval',
       width: '20',
       render: (interval, row) => {
-        if (!updatedRows.includes(row.id)) {
+        if (!updatedSubCategories.includes(row.id)) {
           return (
             <Text
               name={`interval_${row.id}`}
@@ -247,7 +284,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
       title: '',
       data: 'action',
       render: (action, row) => {
-       if (!updatedRows.includes(row.id)) {
+       if (!updatedSubCategories.includes(row.id)) {
          return <Button type="primary"
                         icon="fas-edit"
                         disabled={!formDatas[row.id]}
