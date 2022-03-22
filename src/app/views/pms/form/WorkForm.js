@@ -13,6 +13,7 @@ const validator = new ReeValidate({
   running_hours: '',
   instructions: '',
   remarks: '',
+  file: 'max:10000'
 });
 
 function WorkForm({ids}) {
@@ -25,15 +26,17 @@ function WorkForm({ids}) {
     last_done: moment().format("DD-MMM-YYYY"),
     running_hours: '',
     instructions: '',
-    remarks: ''
+    remarks: '',
+    file: ''
   });
   const [formErrors, setFormErrors] = useState({});
 
   const isLoading = status === 'loading';
 
   const handleInputChange = (e) => {
+    const type = e.target.type;
     const name = e.target.name;
-    const value = e.target.value;
+    const value = type === 'file' ? Array.from(e.target.files) : e.target.value;
     const {errors} = validator;
 
     setFormData({...formData, [name]: value});
@@ -66,6 +69,7 @@ function WorkForm({ids}) {
     ids.forEach((id, i) => {
       vesselMachinerySubCategoryIds[`vessel_machinery_sub_category_ids[${i}]`] = id;
     });
+    console.log(formData);
     dispatch(workAddAsync({...vesselMachinerySubCategoryIds, ...formData}));
   };
 
@@ -119,6 +123,18 @@ function WorkForm({ids}) {
           labelPosition="above"
           onChange={handleInputChange}
           value={formData.remarks}
+        />
+      </Col>
+      <Col xs={12}>
+        <Text
+          inputType="file"
+          name="file"
+          id="fileInput"
+          label="File Upload"
+          labelPosition="above"
+          onChange={handleInputChange}
+          type={formErrors['file'] ? 'error' : ''}
+          help={formErrors['file']}
         />
       </Col>
       <Col xs={12}>

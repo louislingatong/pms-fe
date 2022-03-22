@@ -1,8 +1,16 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import VesselMachinerySubCategoryWork from '../core/models/VesselMachinerySubCategoryWork';
 import Meta from '../core/models/Meta';
-import {add, count, fetchAll} from '../services/workService';
+import {
+  add,
+  count,
+  fetchAll,
+  exportWorks,
+  exportWorkHistory
+} from '../services/workService';
 import Transform from '../utils/Transformer';
+
+const FileDownload = require('js-file-download');
 
 const initialState = {
   count: {
@@ -15,7 +23,9 @@ const initialState = {
   meta: new Meta(),
   countStatus: 'idle',
   doneListStatus: 'idle',
-  listStatus: 'idle'
+  listStatus: 'idle',
+  exportWorksStatus: 'idle',
+  exportWorksHistoryStatus: 'idle'
 };
 
 export const workListAsync = createAsyncThunk(
@@ -41,6 +51,20 @@ export const workCountAsync = createAsyncThunk(
   async (params) => {
     const response = await count(params);
     return response.data;
+  }
+);
+
+export const worksExportAsync = createAsyncThunk(
+  'work/exportWorks',
+  async (params) => {
+    return await exportWorks(params);
+  }
+);
+
+export const workHistoryExportAsync = createAsyncThunk(
+  'work/exportWorkHistory',
+  async (id) => {
+    return await exportWorkHistory(id);
   }
 );
 
@@ -80,6 +104,26 @@ export const workSlice = createSlice({
       })
       .addCase(workCountAsync.rejected, (state, action) => {
         state.countStatus = 'idle';
+      })
+      .addCase(worksExportAsync.pending, (state) => {
+        state.exportWorHistoryStatus = 'loading';
+      })
+      .addCase(worksExportAsync.fulfilled, (state, action) => {
+        state.exportWorHistoryStatus = 'idle';
+        FileDownload(action.payload, 'Works.xls');
+      })
+      .addCase(worksExportAsync.rejected, (state, action) => {
+        state.exportWorksHistoryStatus = 'idle';
+      })
+      .addCase(workHistoryExportAsync.pending, (state) => {
+        state.exportWorksHistoryStatus = 'loading';
+      })
+      .addCase(workHistoryExportAsync.fulfilled, (state, action) => {
+        state.exportWorksHistoryStatus = 'idle';
+        FileDownload(action.payload, 'Work History.xls');
+      })
+      .addCase(workHistoryExportAsync.rejected, (state, action) => {
+        state.exportWorHistoryStatus = 'idle';
       });
   },
 });
@@ -91,5 +135,7 @@ export const metaData = state => state.work.meta;
 export const reqCountStatus = state => state.work.countStatus;
 export const reqDoneListStatus = state => state.work.doneListStatus;
 export const reqListStatus = state => state.work.listStatus;
+export const reqExportWorksStatus = state => state.work.exportWorksStatus;
+export const reqExportWorkHistoryStatus = state => state.work.exportWorksHistoryStatus;
 
 export default workSlice.reducer;

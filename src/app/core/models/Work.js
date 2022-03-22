@@ -6,4 +6,5 @@ export default function Work(data = {}) {
   this.remarks = data.remarks ? data.remarks : '';
   this.created_at = data.created_at ? data.created_at : '';
   this.creator = data.creator ? data.creator : '';
+  this.file = data.file ? data.file : ''
 }

@@ -15,7 +15,11 @@ export function fetchAll(params) {
 export function add(data) {
   const formData = new FormData();
   for (const [key, value] of Object.entries(data)) {
-    formData.append(key, value);
+    if (key === 'file' && value.length) {
+      formData.append(key, value[0])
+    } else {
+      formData.append(key, value);
+    }
   }
   formData.append('_method', 'POST');
   return new Promise((resolve, reject) => {
@@ -33,6 +37,30 @@ export function add(data) {
 export function count(params) {
   return new Promise((resolve, reject) => {
     Http.get('works/count', {params})
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => {
+        reject(err);
+      })
+  })
+}
+
+export function exportWorks(params) {
+  return new Promise((resolve, reject) => {
+    Http.get('works/export', {params, responseType: 'blob'})
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => {
+        reject(err);
+      })
+  })
+}
+
+export function exportWorkHistory(id) {
+  return new Promise((resolve, reject) => {
+    Http.get(`works/${id}/export`, {responseType: 'blob'})
       .then(res => {
         resolve(res.data);
       })

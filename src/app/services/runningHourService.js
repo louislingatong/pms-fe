@@ -29,3 +29,27 @@ export function add(data) {
       })
   })
 }
+
+export function exportRunningHours(params) {
+  return new Promise((resolve, reject) => {
+    Http.get('running-hours/export', {params, responseType: 'blob'})
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => {
+        reject(err);
+      })
+  })
+}
+
+export function exportRunningHoursHistory(id) {
+  return new Promise((resolve, reject) => {
+    Http.get(`works/${id}/export`, {responseType: 'blob'})
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => {
+        reject(err);
+      })
+  })
+}

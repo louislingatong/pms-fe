@@ -1,7 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useHistory} from 'react-router-dom';
-import {metaData, reqListStatus, workDoneList, workList, workListAsync} from '../../../store/workSlice';
+import {
+  metaData,
+  reqListStatus,
+  workDoneList,
+  workList,
+  workListAsync,
+  workHistoryExportAsync,
+  worksExportAsync
+} from '../../../store/workSlice';
 import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
 import {Box, Button, Col, Content, Inputs, Row} from 'adminlte-2-react';
 import DataTable from '../../../components/DataTable';
@@ -10,6 +18,7 @@ import {Divider, Modal} from '../../../components';
 import WorkView from './WorkView';
 import VesselDepartmentSelect from '../../../components/select/VesselDepartmentSelect';
 import MachinerySelect from '../../../components/select/MachinerySelect';
+import VesselMachinerySubCategoryWork from '../../../core/models/VesselMachinerySubCategoryWork';
 
 function WorkList({name}) {
   const {Select2} = Inputs;
@@ -26,7 +35,7 @@ function WorkList({name}) {
 
   const [localWorkDone, setLocalWorkDone] = useState([]);
   const [localWorks, setLocalWorks] = useState(works);
-  const [workHistory, setWorkHistory] = useState([]);
+  const [selectedWork, setSelectedWork] = useState(new VesselMachinerySubCategoryWork());
   const [workModalShow, setWorkModalShow] = useState(false);
   const [workHistoryModalShow, setWorkHistoryModalShow] = useState(false);
   const [selectedRows, setSelectedRows] = useState({});
@@ -133,7 +142,7 @@ function WorkList({name}) {
   };
 
   const viewWorkHistory = (work) => {
-    setWorkHistory(work.work_history);
+    setSelectedWork(work);
     handleWorkHistoryModalOpen();
   }
 
@@ -145,6 +154,14 @@ function WorkList({name}) {
     !!value ? newFilters[name] = value : delete newFilters[name];
 
     setFilters(newFilters);
+  };
+
+  const handleExportWorks = () => {
+    dispatch(worksExportAsync({...params, ...filters}));
+  };
+
+  const handleExportWorkHistory = () => {
+    dispatch(workHistoryExportAsync(selectedWork.id));
   };
 
   const header = [
@@ -249,6 +266,17 @@ function WorkList({name}) {
                   <Divider type="line"/>
                 </Col>
                 <Col xs={12}>
+                  <Button
+                    type="primary"
+                    text="Export"
+                    onClick={handleExportWorks}
+                    pullRight
+                  />
+                </Col>
+                <Col xs={12}>
+                  <Divider/>
+                </Col>
+                <Col xs={12}>
                   <DataTable
                     api
                     data={localWorks}
@@ -297,25 +325,66 @@ function WorkList({name}) {
         <Modal
           show={workHistoryModalShow}
           title='Work History'
-          modalSize="sm"
+          modalSize="lg"
           closeButton
           onHide={handleWorkHistoryModalClose}
         >
           <Row>
             <Col xs={12}>
               <Row>
-                <Col xs={6}><label>Encode Date</label></Col>
-                <Col xs={6}><label>Encode By</label></Col>
+                <Col xs={2}><label>Code</label></Col>
+                <Col xs={10}>{selectedWork.code}</Col>
+              </Row>
+            </Col>
+            <Col xs={12}>
+              <Row>
+                <Col xs={2}><label>Sub Category</label></Col>
+                <Col xs={10}>{selectedWork.sub_category.name}</Col>
+              </Row>
+            </Col>
+            <Col xs={12}>
+              <Row>
+                <Col xs={2}><label>Description</label></Col>
+                <Col xs={10}>{selectedWork.description.name}</Col>
+              </Row>
+            </Col>
+            <Col xs={12}>
+              <Row>
+                <Col xs={2}><label>Interval</label></Col>
+                <Col xs={10}>{selectedWork.interval.name}</Col>
+              </Row>
+            </Col>
+            <Col xs={12}>
+              <Button
+                type="primary"
+                text="Export"
+                onClick={handleExportWorkHistory}
+                pullRight
+              />
+            </Col>
+            <Col xs={12}><Divider type="line"/></Col>
+            <Col xs={12}>
+              <Row>
+                <Col xs={2}><label>Last Done</label></Col>
+                <Col xs={2}><label>Running Hours</label></Col>
+                <Col xs={2}><label>Instructions</label></Col>
+                <Col xs={2}><label>Encode Date</label></Col>
+                <Col xs={3}><label>Encode By</label></Col>
+                <Col xs={1}/>
               </Row>
             </Col>
             <Col xs={12}><Divider type="line"/></Col>
             {
-              workHistory.map((work) => (
+              selectedWork.work_history.map((workHistory) => (
                 <React.Fragment>
                   <Col xs={12}>
                     <Row>
-                      <Col xs={6}>{work.created_at}</Col>
-                      <Col xs={6}>{work.creator}</Col>
+                      <Col xs={2}>{workHistory.last_done}</Col>
+                      <Col xs={2}>{workHistory.running_hours}</Col>
+                      <Col xs={2}>{workHistory.instructions}</Col>
+                      <Col xs={2}>{workHistory.created_at}</Col>
+                      <Col xs={3}>{workHistory.creator}</Col>
+                      <Col xs={1}>{workHistory.file ? <Button type="primary" icon="fas-file" /> : ''}</Col>
                     </Row>
                   </Col>
                   <Col xs={12}><Divider type="line"/></Col>

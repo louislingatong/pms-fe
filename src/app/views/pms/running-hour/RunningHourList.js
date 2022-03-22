@@ -5,7 +5,8 @@ import {
   reqListStatus,
   runningHourData,
   runningHourList,
-  runningHourListAsync
+  runningHourListAsync,
+  runningHourHistoryExportAsync, runningHoursExportAsync
 } from '../../../store/runningHourSlice';
 import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
 import {Box, Button, Col, Content, Row} from 'adminlte-2-react';
@@ -29,7 +30,7 @@ function RunningHourList({name}) {
 
   const [localVesselMachineryRunningHour, setLocalVesselMachineryRunningHour] = useState(new VesselMachineryRunningHour());
   const [localVesselMachineryRunningHours, setLocalVesselMachineryRunningHours] = useState(runningHours);
-  const [runningHourHistory, setRunningHourHistory] = useState([]);
+  const [selectedRunningHours, setSelectedRunningHours] = useState(new VesselMachineryRunningHour());
   const [runningHourModalShow, setRunningHourModalShow] = useState(false);
   const [runningHourHistoryModalShow, setRunningHourHistoryModalShow] = useState(false);
   const [selectedRowIds, setSelectedRowIds] = useState([]);
@@ -130,8 +131,8 @@ function RunningHourList({name}) {
     setRunningHourHistoryModalShow(false);
   };
 
-  const viewRunningHourHistory = (runningHour) => {
-    setRunningHourHistory(runningHour.running_hour_history);
+  const viewRunningHourHistory = (runningHours) => {
+    setSelectedRunningHours(runningHours);
     handleRunningHourHistoryModalOpen();
   }
 
@@ -144,6 +145,14 @@ function RunningHourList({name}) {
       !!value ? newState[name] = value : delete newState[name];
       return newState;
     });
+  };
+
+  const handleExportRunningHours = () => {
+    dispatch(runningHoursExportAsync({...params, ...filters}));
+  };
+
+  const handleExportRunningHourHistory = () => {
+    dispatch(runningHourHistoryExportAsync(selectedRunningHours.id));
   };
 
   const header = [
@@ -199,6 +208,17 @@ function RunningHourList({name}) {
                   <Divider type="line"/>
                 </Col>
                 <Col xs={12}>
+                  <Button
+                    type="primary"
+                    text="Export"
+                    onClick={handleExportRunningHours}
+                    pullRight
+                  />
+                </Col>
+                <Col xs={12}>
+                  <Divider/>
+                </Col>
+                <Col xs={12}>
                   <DataTable
                     api
                     data={localVesselMachineryRunningHours}
@@ -231,7 +251,7 @@ function RunningHourList({name}) {
         <Modal
           show={runningHourModalShow}
           title='Update Running Hours'
-          modalSize="md"
+          modalSize="lg"
           closeButton
           onHide={handleRunningHourModalClose}
         >
@@ -240,25 +260,38 @@ function RunningHourList({name}) {
         <Modal
           show={runningHourHistoryModalShow}
           title='Work History'
-          modalSize="sm"
+          modalSize="lg"
           closeButton
           onHide={handleRunningHourHistoryModalClose}
         >
           <Row>
             <Col xs={12}>
+              <Button
+                type="primary"
+                text="Export"
+                onClick={handleExportRunningHourHistory}
+                pullRight
+              />
+            </Col>
+            <Col xs={12}><Divider type="line"/></Col>
+            <Col xs={12}>
               <Row>
-                <Col xs={6}><label>Encode Date</label></Col>
-                <Col xs={6}><label>Encode By</label></Col>
+                <Col xs={3}><label>Machinery</label></Col>
+                <Col xs={3}><label>Running Hours</label></Col>
+                <Col xs={3}><label>Encoded Date</label></Col>
+                <Col xs={3}><label>Encoded By</label></Col>
               </Row>
             </Col>
             <Col xs={12}><Divider type="line"/></Col>
             {
-              runningHourHistory.map((runningHour) => (
+              selectedRunningHours.running_hour_history.map((runningHoursHistory) => (
                 <React.Fragment>
                   <Col xs={12}>
                     <Row>
-                      <Col xs={6}>{runningHour.created_at}</Col>
-                      <Col xs={6}>{runningHour.creator}</Col>
+                      <Col xs={3}>{selectedRunningHours.machinery.name}</Col>
+                      <Col xs={3}>{runningHoursHistory.running_hours}</Col>
+                      <Col xs={3}>{runningHoursHistory.created_at}</Col>
+                      <Col xs={3}>{runningHoursHistory.creator}</Col>
                     </Row>
                   </Col>
                   <Col xs={12}><Divider type="line"/></Col>
