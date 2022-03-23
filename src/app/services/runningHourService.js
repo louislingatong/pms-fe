@@ -44,7 +44,7 @@ export function exportRunningHours(params) {
 
 export function exportRunningHoursHistory(id) {
   return new Promise((resolve, reject) => {
-    Http.get(`works/${id}/export`, {responseType: 'blob'})
+    Http.get(`running-hours/${id}/export`, {responseType: 'blob'})
       .then(res => {
         resolve(res.data);
       })
