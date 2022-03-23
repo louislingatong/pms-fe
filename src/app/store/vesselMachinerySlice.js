@@ -1,15 +1,18 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {add, edit, editSubCategories, fetchAll} from '../services/vesselMachineryService';
+import {add, edit, editSubCategories, fetchAll, exportVesselMachinery} from '../services/vesselMachineryService';
 import VesselMachinery from '../core/models/VesselMachinery';
 import Meta from '../core/models/Meta';
 import Transform from '../utils/Transformer';
+
+const FileDownload = require('js-file-download');
 
 const initialState = {
   data: new VesselMachinery(),
   list: [],
   meta: new Meta(),
   listStatus: 'idle',
-  dataStatus: 'idle'
+  dataStatus: 'idle',
+  exportVesselMachineryStatus: 'idle'
 };
 
 export const vesselMachineryListAsync = createAsyncThunk(
@@ -43,6 +46,13 @@ export const vesselMachineryEditSubCategoriesAsync = createAsyncThunk(
   async (data) => {
     const response = await editSubCategories(data);
     return Transform.fetchObject(response.data, VesselMachinery);
+  }
+);
+
+export const vesselMachineryExportAsync = createAsyncThunk(
+  'vesselMachinery/exportVesselMachinery',
+  async (id) => {
+    return await exportVesselMachinery(id);
   }
 );
 
@@ -92,6 +102,16 @@ export const vesselMachinerySlice = createSlice({
       })
       .addCase(vesselMachineryEditSubCategoriesAsync.rejected, (state, action) => {
         state.dataStatus = 'idle';
+      })
+      .addCase(vesselMachineryExportAsync.pending, (state) => {
+        state.exportVesselMachineryStatus = 'loading';
+      })
+      .addCase(vesselMachineryExportAsync.fulfilled, (state, action) => {
+        state.exportVesselMachineryStatus = 'idle';
+        FileDownload(action.payload, 'Vessel Machinery.xls');
+      })
+      .addCase(vesselMachineryExportAsync.rejected, (state, action) => {
+        state.exportVesselMachineryStatus = 'idle';
       });
   },
 });
@@ -101,5 +121,6 @@ export const vesselMachineryList = state => state.vesselMachinery.list;
 export const metaData = state => state.vesselMachinery.meta;
 export const reqListStatus = state => state.vesselMachinery.listStatus;
 export const reqDataStatus = state => state.vesselMachinery.dataStatus;
+export const reqExportVesselMachineryStatus = state => state.vesselMachinery.exportVesselMachineryStatus;
 
 export default vesselMachinerySlice.reducer;

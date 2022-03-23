@@ -5,7 +5,11 @@ import {Button, Inputs} from 'adminlte-2-react';
 import DataTable from '../../../components/DataTable';
 import Divider from '../../../components/Divider';
 import VesselMachineryForm from '../form/VesselMachineryForm';
-import {reqDataStatus, vesselMachineryEditSubCategoriesAsync} from '../../../store/vesselMachinerySlice';
+import {
+  reqDataStatus,
+  vesselMachineryEditSubCategoriesAsync,
+  vesselMachineryExportAsync
+} from '../../../store/vesselMachinerySlice';
 import IntervalSelect from '../../../components/select/IntervalSelect';
 import MachinerySubCategoryDescriptionAutoSuggest
   from '../../../components/auto-suggest/MachinerySubCategoryDescriptionAutoSuggest';
@@ -212,6 +216,10 @@ function VesselMachineryView({data: localVesselMachinery}) {
     dispatch(vesselMachineryEditSubCategoriesAsync(formData));
   };
 
+  const handleExportVesselMachinery = () => {
+    dispatch(vesselMachineryExportAsync(localVesselMachinery.id));
+  };
+
   const header = [
     {
       title: 'Code',
@@ -300,6 +308,17 @@ function VesselMachineryView({data: localVesselMachinery}) {
 
   return (
     <React.Fragment>
+      <Row>
+        <Col xs={12}>
+          <Button
+            type="primary"
+            text="Export"
+            onClick={handleExportVesselMachinery}
+            pullRight
+          />
+        </Col>
+        <Col xs={12}><Divider type="line"/></Col>
+      </Row>
       <VesselMachineryForm data={localVesselMachinery}/>
       {
         hasId && (

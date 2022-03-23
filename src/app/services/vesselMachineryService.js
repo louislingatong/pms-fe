@@ -76,3 +76,15 @@ export function editSubCategories(data) {
   })
 }
 
+export function exportVesselMachinery(id) {
+  return new Promise((resolve, reject) => {
+    Http.get(`vessel-machineries/${id}/export`, {responseType: 'blob'})
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => {
+        reject(err);
+      })
+  })
+}
+

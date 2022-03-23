@@ -331,6 +331,14 @@ function WorkList({name}) {
         >
           <Row>
             <Col xs={12}>
+              <Button
+                type="primary"
+                text="Export"
+                onClick={handleExportWorkHistory}
+                pullRight
+              />
+            </Col>
+            <Col xs={12}>
               <Row>
                 <Col xs={2}><label>Code</label></Col>
                 <Col xs={10}>{selectedWork.code}</Col>
@@ -353,14 +361,6 @@ function WorkList({name}) {
                 <Col xs={2}><label>Interval</label></Col>
                 <Col xs={10}>{selectedWork.interval.name}</Col>
               </Row>
-            </Col>
-            <Col xs={12}>
-              <Button
-                type="primary"
-                text="Export"
-                onClick={handleExportWorkHistory}
-                pullRight
-              />
             </Col>
             <Col xs={12}><Divider type="line"/></Col>
             <Col xs={12}>
