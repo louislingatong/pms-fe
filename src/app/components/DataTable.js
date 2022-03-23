@@ -232,7 +232,7 @@ function DataTable(props) {
     title: <div className="text-center"><input type="checkbox" checked={allRowsChecked()}
                                                onChange={handleAllRowsCheck}/></div>,
     data: 'check',
-    width: 10
+    width: 5
   }];
 
   const headers = multiple ? checkColumn.concat(columns) : columns;

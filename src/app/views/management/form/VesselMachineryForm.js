@@ -19,12 +19,11 @@ const validator = new ReeValidate({
   machinery: 'required',
   model: '',
   maker: '',
-  incharge_rank: 'required',
-  installed_date: 'required'
+  incharge_rank: 'required'
 });
 
 function VesselMachineryForm({data: localVesselMachinery}) {
-  const {Date, Text} = Inputs;
+  const {Text} = Inputs;
 
   const dispatch = useDispatch();
   const status = useSelector(reqDataStatus);
@@ -37,9 +36,6 @@ function VesselMachineryForm({data: localVesselMachinery}) {
     model: localVesselMachinery.model.name,
     maker: localVesselMachinery.maker.name,
     incharge_rank: localVesselMachinery.incharge_rank.name,
-    installed_date: localVesselMachinery.installed_date
-      ? moment(localVesselMachinery.installed_date).format("DD-MMM-YYYY")
-      : moment().format("DD-MMM-YYYY")
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -49,7 +45,7 @@ function VesselMachineryForm({data: localVesselMachinery}) {
     if (localVesselMachinery.id) {
       setIsViewing(true);
     }
-  }, [localVesselMachinery]);
+  }, [localVesselMachinery])
 
   const handleInputChange = (e) => {
     const name = e.target.name;
@@ -158,29 +154,6 @@ function VesselMachineryForm({data: localVesselMachinery}) {
               disabled={isViewing}
               type={formErrors['incharge_rank'] ? 'error' : ''}
               help={formErrors['incharge_rank']}
-            />
-          </Col>
-        </Row>
-      </Col>
-      <Col xs={12}>
-        <Row>
-          <Col xs={12} md={4}>
-            <Date
-              name="installed_date"
-              id="installedDateInput"
-              label="Commissioning Date"
-              labelPosition="above"
-              iconRight="fa-calendar"
-              format="DD-MMM-YYYY"
-              dateProps={{
-                numberOfMonths: 1,
-                isOutsideRange: () => false
-              }}
-              onChange={handleInputChange}
-              value={moment(formData.installed_date)}
-              disabled={isViewing}
-              type={formErrors['installed_date'] ? 'error' : ''}
-              help={formErrors['installed_date']}
             />
           </Col>
         </Row>

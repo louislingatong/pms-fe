@@ -15,15 +15,17 @@ import MachinerySubCategoryDescriptionAutoSuggest
   from '../../../components/auto-suggest/MachinerySubCategoryDescriptionAutoSuggest';
 import Transform from '../../../utils/Transformer';
 import ReeValidate from 'ree-validate';
+import moment from 'moment';
 
 const validator = new ReeValidate({
   code: 'required',
+  installed_date: 'required|date_format:DD-MMM-YYYY',
   description: '',
   interval: '',
 });
 
 function VesselMachineryView({data: localVesselMachinery}) {
-  const {Text} = Inputs;
+  const {Date, Text} = Inputs;
 
   const dispatch = useDispatch();
 
@@ -76,6 +78,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
         state[subCategory.id] = {
           machinery_sub_category_id: subCategory.id,
           code: subCategory.code,
+          installed_date: moment(subCategory.installed_date),
           description: subCategory.description.name,
           interval: subCategory.interval.name
         }
@@ -85,9 +88,10 @@ function VesselMachineryView({data: localVesselMachinery}) {
   };
 
   const handleInputChange = (e, id) => {
-    const name = e.target.name.split('_')[0];
+    const name = e.target.name.split('-')[0];
     const value = e.target.value;
     const {errors} = validator;
+    console.log(value);
 
     setFormDatas((prevState) => {
       const state = {...prevState};
@@ -98,6 +102,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
     errors.remove(id);
     validator.validate(name, value)
       .then(() => {
+        console.log(errors);
         setFormErrors({...formErrors, [id]: Transform.toFormError(errors)});
       })
   };
@@ -131,7 +136,10 @@ function VesselMachineryView({data: localVesselMachinery}) {
     return {
       machinery_sub_category_id: id,
       code: subCategory ? subCategory.code : machineryCode + '-',
-      description: subCategory ? subCategory.description.name : '',
+      installed_date: subCategory
+        ? moment(localVesselMachinery.installed_date)
+        : moment(),
+      description: subCategory ? subCategory.description.name :  '',
       interval: subCategory ? subCategory.interval.name : ''
     }
   };
@@ -227,7 +235,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
       width: '15',
       render: (code, row) => (
         <Text
-          name={`code_${row.id}`}
+          name={`code-${row.id}`}
           id={`code${row.id}Input`}
           labelPosition="none"
           value={formDatas[row.id] ? formDatas[row.id].code : machineryCode + '-'}
@@ -246,10 +254,10 @@ function VesselMachineryView({data: localVesselMachinery}) {
     {
       title: 'Description',
       data: 'description',
-      width: '35',
+      width: '20',
       render: (description, row) => (
         <MachinerySubCategoryDescriptionAutoSuggest
-          name={`description_${row.id}`}
+          name={`description-${row.id}`}
           id={`description${row.id}Input`}
           labelPosition="none"
           value={formDatas[row.id] ? formDatas[row.id].description : ''}
@@ -262,12 +270,12 @@ function VesselMachineryView({data: localVesselMachinery}) {
     {
       title: 'Interval',
       data: 'interval',
-      width: '20',
+      width: '15',
       render: (interval, row) => {
         if (!updatedSubCategories.includes(row.id)) {
           return (
             <Text
-              name={`interval_${row.id}`}
+              name={`interval-${row.id}`}
               id={`interval${row.id}Input`}
               labelPosition="none"
               value={formDatas[row.id] ? formDatas[row.id].interval : ''}
@@ -278,7 +286,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
         return (
           <IntervalSelect
             form
-            name={`interval_${row.id}`}
+            name={`interval-${row.id}`}
             id={`interval${row.id}Select`}
             labelPosition="none"
             allowClear={true}
@@ -289,8 +297,32 @@ function VesselMachineryView({data: localVesselMachinery}) {
       }
     },
     {
+      title: 'Commissioning Date',
+      data: 'commissioning_date',
+      width: '20',
+      render: (commissioningDate, row) => (
+        <Date
+          name={`installed_date-${row.id}`}
+          id={`installedDate${row.id}Input`}
+          labelPosition="none"
+          iconRight="fa-calendar"
+          format="DD-MMM-YYYY"
+          dateProps={{
+            numberOfMonths: 1,
+            isOutsideRange: () => false
+          }}
+          value={formDatas[row.id] ? moment(formDatas[row.id].installed_date) : moment()}
+          disabled={!formDatas[row.id] || !updatedSubCategories.includes(row.id)}
+          onChange={(e) => handleInputChange(e, row.id)}
+          type={formErrors[row.id] && formErrors[row.id]['installed_date'] ? 'error' : ''}
+          help={formErrors[row.id] && formErrors[row.id]['installed_date']}
+        />
+      )
+    },
+    {
       title: '',
       data: 'action',
+      width: '10',
       render: (action, row) => {
        if (!updatedSubCategories.includes(row.id)) {
          return <Button type="primary"
@@ -308,17 +340,21 @@ function VesselMachineryView({data: localVesselMachinery}) {
 
   return (
     <React.Fragment>
-      <Row>
-        <Col xs={12}>
-          <Button
-            type="primary"
-            text="Export"
-            onClick={handleExportVesselMachinery}
-            pullRight
-          />
-        </Col>
-        <Col xs={12}><Divider type="line"/></Col>
-      </Row>
+      {
+        hasId && (
+          <Row>
+            <Col xs={12}>
+              <Button
+                type="primary"
+                text="Export"
+                onClick={handleExportVesselMachinery}
+                pullRight
+              />
+            </Col>
+            <Col xs={12}><Divider type="line"/></Col>
+          </Row>
+        )
+      }
       <VesselMachineryForm data={localVesselMachinery}/>
       {
         hasId && (

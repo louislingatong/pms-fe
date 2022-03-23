@@ -39,7 +39,7 @@ function Modal(props) {
 Modal.propTypes = {
   show: PropTypes.bool,
   title: PropTypes.string,
-  modalSize: PropTypes.oneOf(['xs', 'xsmall', 'sm', 'small', 'md', 'medium', 'lg', 'large']),
+  modalSize: PropTypes.oneOf(['xs', 'xsmall', 'sm', 'small', 'medium', 'lg', 'large']),
   modalType: PropTypes.oneOf(['default', 'info', 'danger', 'warning', 'success', 'primary']),
   closeButton: PropTypes.bool,
   onHide: PropTypes.func,

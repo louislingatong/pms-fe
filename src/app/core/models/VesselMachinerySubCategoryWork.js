@@ -6,6 +6,7 @@ import Work from './Work';
 export default function VesselMachinerySubCategoryWork(data = {}) {
   this.id = data.id ? data.id : 0;
   this.code = data.code ? data.code : '';
+  this.installed_date = data.installed_date ? data.installed_date : '';
   this.due_date = data.due_date ? data.due_date : '';
   this.interval = data.interval
     ? new Interval(data.interval)
