@@ -8,7 +8,7 @@ import {
   workList,
   workListAsync,
   workHistoryExportAsync,
-  worksExportAsync
+  worksExportAsync, fileDownloadAsync
 } from '../../../store/workSlice';
 import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
 import {Box, Button, Col, Content, Inputs, Row} from 'adminlte-2-react';
@@ -386,7 +386,10 @@ function WorkList({name}) {
                       <Col xs={2}>{workHistory.instructions}</Col>
                       <Col xs={2}>{workHistory.created_at}</Col>
                       <Col xs={2}>{workHistory.creator}</Col>
-                      <Col xs={1}>{workHistory.file ? <Button type="primary" icon="fas-file" /> : ''}</Col>
+                      <Col xs={1}>{workHistory.file
+                        ? <Button type="primary" icon="fas-file"
+                                  onClick={() => dispatch(fileDownloadAsync(workHistory.file.path))}/>
+                        : ''}</Col>
                     </Row>
                   </Col>
                   <Col xs={12}><Divider type="line"/></Col>

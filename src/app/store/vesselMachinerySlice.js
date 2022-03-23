@@ -11,8 +11,7 @@ const initialState = {
   list: [],
   meta: new Meta(),
   listStatus: 'idle',
-  dataStatus: 'idle',
-  exportVesselMachineryStatus: 'idle'
+  dataStatus: 'idle'
 };
 
 export const vesselMachineryListAsync = createAsyncThunk(
@@ -52,7 +51,9 @@ export const vesselMachineryEditSubCategoriesAsync = createAsyncThunk(
 export const vesselMachineryExportAsync = createAsyncThunk(
   'vesselMachinery/exportVesselMachinery',
   async (id) => {
-    return await exportVesselMachinery(id);
+    const vesselMachinery = await exportVesselMachinery(id);
+    FileDownload(vesselMachinery, 'Vessel Machinery.xls');
+    return vesselMachinery;
   }
 );
 
@@ -102,16 +103,6 @@ export const vesselMachinerySlice = createSlice({
       })
       .addCase(vesselMachineryEditSubCategoriesAsync.rejected, (state, action) => {
         state.dataStatus = 'idle';
-      })
-      .addCase(vesselMachineryExportAsync.pending, (state) => {
-        state.exportVesselMachineryStatus = 'loading';
-      })
-      .addCase(vesselMachineryExportAsync.fulfilled, (state, action) => {
-        state.exportVesselMachineryStatus = 'idle';
-        FileDownload(action.payload, 'Vessel Machinery.xls');
-      })
-      .addCase(vesselMachineryExportAsync.rejected, (state, action) => {
-        state.exportVesselMachineryStatus = 'idle';
       });
   },
 });
@@ -121,6 +112,5 @@ export const vesselMachineryList = state => state.vesselMachinery.list;
 export const metaData = state => state.vesselMachinery.meta;
 export const reqListStatus = state => state.vesselMachinery.listStatus;
 export const reqDataStatus = state => state.vesselMachinery.dataStatus;
-export const reqExportVesselMachineryStatus = state => state.vesselMachinery.exportVesselMachineryStatus;
 
 export default vesselMachinerySlice.reducer;
