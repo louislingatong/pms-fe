@@ -380,7 +380,7 @@ function WorkList({name}) {
                 <React.Fragment>
                   <Col xs={12}>
                     <Row>
-                      <Col xs={2}>{workHistory.installed_date}</Col>
+                      <Col xs={2}>{selectedWork.installed_date}</Col>
                       <Col xs={2}>{workHistory.last_done}</Col>
                       <Col xs={1}>{workHistory.running_hours}</Col>
                       <Col xs={2}>{workHistory.instructions}</Col>
