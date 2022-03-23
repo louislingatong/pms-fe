@@ -69,7 +69,6 @@ function WorkForm({ids}) {
     ids.forEach((id, i) => {
       vesselMachinerySubCategoryIds[`vessel_machinery_sub_category_ids[${i}]`] = id;
     });
-    console.log(formData);
     dispatch(workAddAsync({...vesselMachinerySubCategoryIds, ...formData}));
   };
 
