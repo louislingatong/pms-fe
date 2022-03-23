@@ -78,7 +78,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
         state[subCategory.id] = {
           machinery_sub_category_id: subCategory.id,
           code: subCategory.code,
-          installed_date: moment(subCategory.installed_date),
+          installed_date: subCategory.installed_date,
           description: subCategory.description.name,
           interval: subCategory.interval.name
         }
@@ -91,7 +91,6 @@ function VesselMachineryView({data: localVesselMachinery}) {
     const name = e.target.name.split('-')[0];
     const value = e.target.value;
     const {errors} = validator;
-    console.log(value);
 
     setFormDatas((prevState) => {
       const state = {...prevState};
@@ -102,7 +101,6 @@ function VesselMachineryView({data: localVesselMachinery}) {
     errors.remove(id);
     validator.validate(name, value)
       .then(() => {
-        console.log(errors);
         setFormErrors({...formErrors, [id]: Transform.toFormError(errors)});
       })
   };
@@ -137,8 +135,8 @@ function VesselMachineryView({data: localVesselMachinery}) {
       machinery_sub_category_id: id,
       code: subCategory ? subCategory.code : machineryCode + '-',
       installed_date: subCategory
-        ? moment(localVesselMachinery.installed_date)
-        : moment(),
+        ? localVesselMachinery.installed_date
+        : '',
       description: subCategory ? subCategory.description.name :  '',
       interval: subCategory ? subCategory.interval.name : ''
     }
