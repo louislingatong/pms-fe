@@ -369,8 +369,8 @@ function WorkList({name}) {
                 <Col xs={2}><label>Last Done</label></Col>
                 <Col xs={1}><label>Running Hours</label></Col>
                 <Col xs={2}><label>Instructions</label></Col>
-                <Col xs={2}><label>Encode Date</label></Col>
-                <Col xs={2}><label>Encode By</label></Col>
+                <Col xs={2}><label>Encoded Date</label></Col>
+                <Col xs={2}><label>Encoded By</label></Col>
                 <Col xs={1}/>
               </Row>
             </Col>
