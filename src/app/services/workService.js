@@ -72,7 +72,7 @@ export function exportWorkHistory(id) {
 
 export function downloadFile(path) {
   return new Promise((resolve, reject) => {
-    Http.get(process.env.REACT_APP_API_URL.replace('v1', 'storage') + path, {responseType: 'blob'})
+    Http.get( 'works/file-download', {params: {path}, responseType: 'blob'})
       .then(res => {
         resolve(res.data);
       })
