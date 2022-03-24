@@ -108,11 +108,11 @@ function VesselMachineryList({name}) {
     if (keyword) {
       !!department
         ? setParams({vessel, department, keyword})
-        : setParams({keyword});
+        : setParams({vessel, keyword});
     } else {
       !!department
         ? setParams({vessel, department})
-        : setParams({});
+        : setParams({vessel});
     }
   };
 
