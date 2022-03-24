@@ -12,6 +12,7 @@ import IntervalUnitSelect from '../../../components/select/IntervalUnitSelect';
 const validator = new ReeValidate({
   value: 'required|numeric|min_value:1',
   unit: 'required',
+  name: ''
 });
 
 function IntervalForm({data: localInterval}) {
@@ -23,8 +24,9 @@ function IntervalForm({data: localInterval}) {
   const [isViewing, setIsViewing] = useState(false);
 
   const [formData, setFormData] = useState({
-    value: localInterval.value ? localInterval.value : 1,
-    unit: localInterval.unit.name
+    value: localInterval.value,
+    unit: localInterval.unit.name,
+    name: localInterval.name
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -107,6 +109,17 @@ function IntervalForm({data: localInterval}) {
           disabled={isViewing}
           type={formErrors['unit'] ? 'error' : ''}
           help={formErrors['unit']}
+        />
+      </Col>
+      <Col xs={12}>
+        <Text
+          name="name"
+          id="intervalNameInput"
+          label="Name"
+          labelPosition="above"
+          onChange={handleInputChange}
+          value={formData.name}
+          disabled={isViewing}
         />
       </Col>
       <Col xs={12}>

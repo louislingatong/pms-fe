@@ -365,7 +365,6 @@ function WorkList({name}) {
             <Col xs={12}><Divider type="line"/></Col>
             <Col xs={12}>
               <Row>
-                <Col xs={2}><label>Commissioning Date</label></Col>
                 <Col xs={2}><label>Last Done</label></Col>
                 <Col xs={1}><label>Running Hours</label></Col>
                 <Col xs={2}><label>Instructions</label></Col>
@@ -380,7 +379,6 @@ function WorkList({name}) {
                 <React.Fragment>
                   <Col xs={12}>
                     <Row>
-                      <Col xs={2}>{selectedWork.installed_date}</Col>
                       <Col xs={2}>{workHistory.last_done}</Col>
                       <Col xs={1}>{workHistory.running_hours}</Col>
                       <Col xs={2}>{workHistory.instructions}</Col>
