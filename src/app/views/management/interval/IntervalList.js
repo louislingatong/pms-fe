@@ -111,7 +111,7 @@ function IntervalList({name}) {
     {
       title: 'Interval',
       data: 'unit',
-      render: (unit, row) => `${row.value} ${unit.name}`,
+      render: (unit, row) => row.name
     },
   ];
 
