@@ -68,14 +68,14 @@ export const employeeSlice = createSlice({
         state.listStatus = 'idle';
       })
       .addCase(employeeDataAsync.pending, (state) => {
-        state.listStatus = 'loading';
+        state.dataStatus = 'loading';
       })
       .addCase(employeeDataAsync.fulfilled, (state, action) => {
-        state.listStatus = 'idle';
+        state.dataStatus = 'idle';
         state.data = action.payload;
       })
       .addCase(employeeDataAsync.rejected, (state, action) => {
-        state.listStatus = 'idle';
+        state.dataStatus = 'idle';
       })
       .addCase(employeeAddAsync.pending, (state) => {
         state.dataStatus = 'loading';

@@ -22,8 +22,8 @@ function VesselMachineryList({name}) {
   const dispatch = useDispatch();
 
   const activeVessel = useSelector(activeVesselSubMenu);
-  const vesselMachineries = useSelector(vesselMachineryList);
   const vesselMachinery = useSelector(vesselMachineryData);
+  const vesselMachineries = useSelector(vesselMachineryList);
   const meta = useSelector(metaData);
   const status = useSelector(reqListStatus);
 
@@ -55,7 +55,9 @@ function VesselMachineryList({name}) {
   useEffect(() => {
     if (prevLocalVesselMachinery) {
       setLocalVesselMachinery(vesselMachinery);
-      initList();
+      if (!prevLocalVesselMachinery.id) {
+        initList();
+      }
     }
   }, [vesselMachinery]);
 

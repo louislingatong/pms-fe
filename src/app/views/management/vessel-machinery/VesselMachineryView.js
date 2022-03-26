@@ -8,7 +8,8 @@ import VesselMachineryForm from '../form/VesselMachineryForm';
 import {
   reqDataStatus,
   vesselMachineryEditSubCategoriesAsync,
-  vesselMachineryExportAsync
+  vesselMachineryExportAsync,
+  vesselMachineryDataAsync
 } from '../../../store/vesselMachinerySlice';
 import IntervalSelect from '../../../components/select/IntervalSelect';
 import MachinerySubCategoryDescriptionAutoSuggest
@@ -16,6 +17,7 @@ import MachinerySubCategoryDescriptionAutoSuggest
 import Transform from '../../../utils/Transformer';
 import ReeValidate from 'ree-validate';
 import moment from 'moment';
+import {usePrevious} from '../../../utils/Hooks';
 
 const validator = new ReeValidate({
   code: 'required',
@@ -28,7 +30,6 @@ function VesselMachineryView({data: localVesselMachinery}) {
   const {Date, Text} = Inputs;
 
   const dispatch = useDispatch();
-
   const status = useSelector(reqDataStatus);
 
   const [formErrors, setFormErrors] = useState({});
@@ -39,14 +40,18 @@ function VesselMachineryView({data: localVesselMachinery}) {
   const [updatedSubCategories, setUpdatedSubCategories] = useState([]);
   const [removedSubCategories, setRemovedSubCategories] = useState([]);
 
+  const prevLocalVesselMachinery = usePrevious(localVesselMachinery);
+
   const hasId = !!localVesselMachinery.id;
   const machineryCode = localVesselMachinery.machinery.code_name;
   const isLoading = status === 'loading';
 
   useEffect(() => {
-    const subCategories = localVesselMachinery.sub_categories;
-    if (subCategories.length) {
-      loadFormData(subCategories);
+    if (!prevLocalVesselMachinery) {
+      dispatch(vesselMachineryDataAsync(localVesselMachinery.id));
+    }
+    if (localVesselMachinery.id && localVesselMachinery.sub_categories.length) {
+      loadFormData();
     }
   }, [localVesselMachinery]);
 
@@ -71,10 +76,10 @@ function VesselMachineryView({data: localVesselMachinery}) {
     }
   }, [formError]);
 
-  const loadFormData = (subCategories) => {
+  const loadFormData = () => {
     setFormDatas((prevState) => {
       const state = {...prevState};
-      subCategories.forEach((subCategory) => {
+      localVesselMachinery.sub_categories.forEach((subCategory) => {
         state[subCategory.id] = {
           machinery_sub_category_id: subCategory.id,
           code: subCategory.code,
@@ -84,7 +89,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
         }
       });
       return state;
-    })
+    });
   };
 
   const handleInputChange = (e, id) => {

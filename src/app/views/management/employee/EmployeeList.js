@@ -33,7 +33,7 @@ function EmployeeList({name}) {
   const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [params, setParams] = useState({});
 
-  const prevLocalVessel = usePrevious(localEmployee);
+  const prevLocalEmployee = usePrevious(localEmployee);
   const prevParams = usePrevious(params);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ function EmployeeList({name}) {
   }, [employees]);
 
   useEffect(() => {
-    if (prevLocalVessel) {
+    if (prevLocalEmployee) {
       setLocalEmployee(employee);
       handleModalClose();
       initList();

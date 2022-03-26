@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {add, edit, editSubCategories, fetchAll, exportVesselMachinery} from '../services/vesselMachineryService';
+import {add, edit, editSubCategories, fetchAll, fetchById, exportVesselMachinery} from '../services/vesselMachineryService';
 import VesselMachinery from '../core/models/VesselMachinery';
 import Meta from '../core/models/Meta';
 import Transform from '../utils/Transformer';
@@ -21,6 +21,14 @@ export const vesselMachineryListAsync = createAsyncThunk(
     const data = Transform.fetchCollection(response.data, VesselMachinery);
     const meta = Transform.fetchObject(response.meta, Meta);
     return {data, meta};
+  }
+);
+
+export const vesselMachineryDataAsync = createAsyncThunk(
+  'vesselMachinery/fetchVesselMachinery',
+  async (id) => {
+    const response = await fetchById(id);
+    return Transform.fetchObject(response.data, VesselMachinery);
   }
 );
 
@@ -73,6 +81,16 @@ export const vesselMachinerySlice = createSlice({
       })
       .addCase(vesselMachineryListAsync.rejected, (state, action) => {
         state.listStatus = 'idle';
+      })
+      .addCase(vesselMachineryDataAsync.pending, (state) => {
+        state.dataStatus = 'loading';
+      })
+      .addCase(vesselMachineryDataAsync.fulfilled, (state, action) => {
+        state.dataStatus = 'idle';
+        state.data = action.payload;
+      })
+      .addCase(vesselMachineryDataAsync.rejected, (state, action) => {
+        state.dataStatus = 'idle';
       })
       .addCase(vesselMachineryAddAsync.pending, (state) => {
         state.dataStatus = 'loading';
