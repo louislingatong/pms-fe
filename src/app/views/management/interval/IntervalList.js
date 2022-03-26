@@ -110,8 +110,7 @@ function IntervalList({name}) {
   const header = [
     {
       title: 'Interval',
-      data: 'unit',
-      render: (unit, row) => row.name
+      data: 'name',
     },
   ];
 
