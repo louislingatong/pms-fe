@@ -366,8 +366,8 @@ function WorkList({name}) {
             <Col xs={12}>
               <Row>
                 <Col xs={2}><label>Last Done</label></Col>
-                <Col xs={1}><label>Running Hours</label></Col>
-                <Col xs={2}><label>Instructions</label></Col>
+                <Col xs={2}><label>Running Hours</label></Col>
+                <Col xs={3}><label>Instructions</label></Col>
                 <Col xs={2}><label>Encoded Date</label></Col>
                 <Col xs={2}><label>Encoded By</label></Col>
                 <Col xs={1}/>
@@ -380,8 +380,8 @@ function WorkList({name}) {
                   <Col xs={12}>
                     <Row>
                       <Col xs={2}>{workHistory.last_done}</Col>
-                      <Col xs={1}>{workHistory.running_hours}</Col>
-                      <Col xs={2}>{workHistory.instructions}</Col>
+                      <Col xs={2}>{workHistory.running_hours}</Col>
+                      <Col xs={3}>{workHistory.instructions}</Col>
                       <Col xs={2}>{workHistory.created_at}</Col>
                       <Col xs={2}>{workHistory.creator}</Col>
                       <Col xs={1}>{workHistory.file
