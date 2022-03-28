@@ -6,6 +6,7 @@ import Transform from '../utils/Transformer';
 
 function Item(props) {
   const {
+    id,
     icon = 'far-circle',
     text,
     to: path,
@@ -48,7 +49,7 @@ function Item(props) {
   });
 
   return (
-    <li className={liClasses}>
+    <li className={liClasses} id={id}>
       {
         path
           ? <Link to={path}>{renderContent}</Link>

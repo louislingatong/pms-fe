@@ -57,12 +57,12 @@ function SidebarMenu() {
   return (
     <React.Fragment>
       <UserPanel imageUrl={user} username={profile.full_name} status="Online" statusType="success"/>
-      <Item icon="fa-tachometer-alt" text="Dashboard" to="/" history={history}/>
-      <Item text="Management" icon="fa-list">
-        {managementRoutes.map((route) => <Item key={route.path} text={route.name} to={route.path}/>)}
+      <Item id="dashboard" icon="fa-tachometer-alt" text="Dashboard" to="/" history={history}/>
+      <Item id="management" text="Management" icon="fa-list">
+        {managementRoutes.map((route) => <Item key={route.path} id={route.path} text={route.name} to={route.path}/>)}
       </Item>
-      <Item text="PMS" icon="fa-wrench">
-        {pmsRoutes.map((route) => <Item key={route.path} text={route.name} to={route.path}/>)}
+      <Item id="pms" text="PMS" icon="fa-wrench">
+        {pmsRoutes.map((route) => <Item key={route.path} id={route.path} text={route.name} to={route.path}/>)}
       </Item>
     </React.Fragment>
   );
