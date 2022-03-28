@@ -6,49 +6,21 @@ import Transform from '../utils/Transformer';
 
 function Item(props) {
   const {
-    id,
     icon = 'far-circle',
     text,
     to: path,
-    labels,
-    color,
-    activeOn,
-    hasActiveChild,
-    highlighted = false,
     children
   } = props;
 
   const history = useHistory();
 
-  const [isActive, setIsActive] = useState(false);
-
+  const pathName = history.location.pathname;
   const hasChildren = !!(children);
   const hasIcon = !!(icon);
-
-  useEffect(() => {
-    const pathname = history.location.pathname;
-    // console.log(hasChildren, path, pathname);
-    if (hasChildren && path === pathname) {
-      // console.log(path);
-      setIsActive(true);
-    }
-  }, [path]);
+  const hasActiveChild = Array.isArray(children) && children.some(child => child.key === pathName);
+  const isActive = path ? path === pathName : false;
 
   const localIcon = hasIcon ? Transform.toIcon(icon) : null;
-
-  // let activeChild = false;
-  // let localChildren = false;
-  // if (hasChildren) {
-  //   if (!Array.isArray(children)) {
-  //     localChildren = [children];
-  //   } else {
-  //     localChildren = children;
-  //   }
-  //
-  //   localChildren = localChildren.filter(p => p && p instanceof Component).map((p) => React.cloneElement(p, { key: p.props.to }));
-  //
-  //   activeChild = !!(localChildren.find((p) => checkActive()));
-  // }
 
   const renderContent = (
     <React.Fragment>
@@ -68,27 +40,15 @@ function Item(props) {
     </React.Fragment>
   );
 
-  // const checkActive = () => {
-  //   const { location } = history || {};
-  //   const { pathname } = location || { pathname: '' };
-  //   // let activeArray = [];
-  //   // if (activeOn) {
-  //   //   activeArray = (activeOn.length && typeof activeOn !== 'string' ? activeOn : [activeOn]);
-  //   // }
-  //
-  //   return path === pathname;
-  // };
-
-
   const liClasses = classnames({
     'active': isActive,
     'treeview': hasChildren,
-    'menu-open': isActive,
-    'highlighted': highlighted,
+    'menu-open': hasActiveChild,
+    'highlighted': isActive,
   });
 
   return (
-    <li className={liClasses} id={id}>
+    <li className={liClasses}>
       {
         path
           ? <Link to={path}>{renderContent}</Link>
@@ -96,7 +56,7 @@ function Item(props) {
       }
       {
         hasChildren && (
-          <ul className="treeview-menu" style={{display: isActive ? 'block' : 'none'}}>
+          <ul className="treeview-menu" style={{display: hasActiveChild ? 'block' : 'none'}}>
             {children}
           </ul>
         )
