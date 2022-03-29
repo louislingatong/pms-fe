@@ -3,23 +3,23 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Col, Row} from 'react-bootstrap';
 import {Button, Inputs} from 'adminlte-2-react';
 import ReeValidate from 'ree-validate';
-import {loginAsync, reqLoginStatus} from '../../../store/authSlice';
+import {resetPasswordAsync, reqResetPasswordStatus} from '../../../store/authSlice';
 import Transform from '../../../utils/Transformer';
 
 const validator = new ReeValidate({
-  username: 'required|email',
   password: 'required',
+  password_confirmation: 'required',
 });
 
-function LoginForm(props) {
+function ResetPasswordForm({token}) {
   const {Text} = Inputs;
 
   const dispatch = useDispatch();
-  const status = useSelector(reqLoginStatus);
+  const status = useSelector(reqResetPasswordStatus);
 
   const [formData, setFormData] = useState({
-    username: '',
-    password: ''
+    password: '',
+    password_confirmation: ''
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -56,29 +56,17 @@ function LoginForm(props) {
   };
 
   const submit = () => {
-    dispatch(loginAsync(formData));
+    dispatch(resetPasswordAsync({...formData, token}));
   };
 
   return (
     <Row>
       <Col xs={12}>
-        <Text inputType="email"
-              name="username"
-              id="emailInput"
-              labelPosition="none"
-              placeholder="Email"
-              iconRight="fa-envelope"
-              onChange={handleInputChange}
-              type={formErrors['username'] ? 'error' : ''}
-              help={formErrors['username']}
-        />
-      </Col>
-      <Col xs={12}>
         <Text inputType="password"
               name="password"
               id="passwordInput"
               labelPosition="none"
-              placeholder="Password"
+              placeholder="New Password"
               iconRight="fa-lock"
               onChange={handleInputChange}
               type={formErrors['password'] ? 'error' : ''}
@@ -86,8 +74,20 @@ function LoginForm(props) {
         />
       </Col>
       <Col xs={12}>
+        <Text inputType="password"
+              name="password_confirmation"
+              id="confirmPasswordInput"
+              labelPosition="none"
+              placeholder="Confirm New Password"
+              iconRight="fa-lock"
+              onChange={handleInputChange}
+              type={formErrors['password_confirmation'] ? 'error' : ''}
+              help={formErrors['password_confirmation']}
+        />
+      </Col>
+      <Col xs={12}>
         <Button type="primary"
-                id="loginButton"
+                id="resetPasswordButton"
                 text="Submit"
                 color="primary"
                 flat={true}
@@ -99,4 +99,4 @@ function LoginForm(props) {
   )
 }
 
-export default LoginForm;
+export default ResetPasswordForm;

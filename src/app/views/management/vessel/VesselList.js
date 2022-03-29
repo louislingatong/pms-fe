@@ -122,7 +122,7 @@ function VesselList({name}) {
 
   return (
     <React.Fragment>
-      <Content title={name} browserTitle={name}>
+      <Content title={name} browserTitle={`ASTRO | Management - ${name}`}>
         <Row>
           <Col xs={12}>
             <Button

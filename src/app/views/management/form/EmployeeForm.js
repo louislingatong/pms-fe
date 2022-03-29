@@ -11,7 +11,6 @@ import Employee from '../../../core/models/Employee';
 
 const validator = new ReeValidate({
   email: 'required|email',
-  password: 'required',
   first_name: 'required',
   middle_name: '',
   last_name: 'required',
@@ -99,19 +98,6 @@ function EmployeeForm({data: employee}) {
               onChange={handleInputChange}
               type={formErrors['email'] ? 'error' : ''}
               help={formErrors['email']}
-        />
-      </Col>
-      <Col xs={12}>
-        <Text inputType="password"
-              name="password"
-              id="passwordFormInput"
-              label="Password"
-              labelPosition="above"
-              value={formData.password}
-              onChange={handleInputChange}
-              onFocus={() => setFormData({...formData, password: ''})}
-              type={formErrors['password'] ? 'error' : ''}
-              help={formErrors['password']}
         />
       </Col>
       <Col xs={12}>

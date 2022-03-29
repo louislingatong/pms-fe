@@ -31,3 +31,39 @@ export function logout() {
       })
   })
 }
+
+export function forgotPassword(data) {
+  const formData = new FormData();
+  for (const [key, value] of Object.entries(data)) {
+    formData.append(key, value);
+  }
+  formData.append('_method', 'POST');
+  return new Promise((resolve, reject) => {
+    Http.post('oauth/password/forgot', formData, {headers: {'Content-Type': 'multipart/form-data'}})
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => {
+        console.log(err.response.data.error);
+        reject(err);
+      })
+  })
+}
+
+export function resetPassword(data) {
+  const formData = new FormData();
+  for (const [key, value] of Object.entries(data)) {
+    formData.append(key, value);
+  }
+  formData.append('_method', 'POST');
+  return new Promise((resolve, reject) => {
+    Http.post('oauth/password/reset', formData, {headers: {'Content-Type': 'multipart/form-data'}})
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => {
+        console.log(err.response.data.error);
+        reject(err);
+      })
+  })
+}

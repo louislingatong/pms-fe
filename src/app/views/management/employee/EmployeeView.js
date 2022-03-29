@@ -45,7 +45,7 @@ function EmployeeView({match, name}) {
   };
 
   return (
-    <Content title={name} browserTitle={name}>
+    <Content title={name} browserTitle={`ASTRO | Management - ${name}`}>
       <Row>
         <Col xs={12}>
           <div className="nav-tabs-custom">

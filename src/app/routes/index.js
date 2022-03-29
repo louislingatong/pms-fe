@@ -17,9 +17,9 @@ function RoutesComp() {
               return <Redirect key={i} to={{pathname: '/login'}}/>
             }
             if (route.auth) {
-              return <PrivateRoute exact key={i} {...route} />
+              return <PrivateRoute key={i} {...route} />
             }
-            return <PublicRoute exact key={i} {...route} />
+            return <PublicRoute key={i} {...route} />
           })
         }
       </Switch>

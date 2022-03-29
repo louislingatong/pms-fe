@@ -190,7 +190,7 @@ function RunningHourList({name}) {
 
   return (
     <React.Fragment>
-      <Content title={name} browserTitle={name}>
+      <Content title={name} browserTitle={`ASTRO | PMS - ${name}`}>
         <Row>
           <Col xs={12}>
             <Box>

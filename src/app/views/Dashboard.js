@@ -47,7 +47,7 @@ function Dashboard(props) {
   }
 
   return (
-    <Content title={name} browserTitle={name}>
+    <Content title={name} browserTitle={`ASTRO | ${name}`}>
       <Row>
         <Col xs={4}>
           <Infobox2 icon="fas-cog" title={localCount.warning} text="Works to be done" color="yellow"

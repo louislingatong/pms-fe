@@ -3,23 +3,21 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Col, Row} from 'react-bootstrap';
 import {Button, Inputs} from 'adminlte-2-react';
 import ReeValidate from 'ree-validate';
-import {loginAsync, reqLoginStatus} from '../../../store/authSlice';
+import {forgotPasswordAsync, reqForgotPasswordStatus} from '../../../store/authSlice';
 import Transform from '../../../utils/Transformer';
 
 const validator = new ReeValidate({
-  username: 'required|email',
-  password: 'required',
+  email: 'required|email'
 });
 
-function LoginForm(props) {
+function ForgotPasswordForm(props) {
   const {Text} = Inputs;
 
   const dispatch = useDispatch();
-  const status = useSelector(reqLoginStatus);
+  const status = useSelector(reqForgotPasswordStatus);
 
   const [formData, setFormData] = useState({
-    username: '',
-    password: ''
+    email: '',
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -56,33 +54,21 @@ function LoginForm(props) {
   };
 
   const submit = () => {
-    dispatch(loginAsync(formData));
+    dispatch(forgotPasswordAsync(formData));
   };
 
   return (
     <Row>
       <Col xs={12}>
         <Text inputType="email"
-              name="username"
+              name="email"
               id="emailInput"
               labelPosition="none"
               placeholder="Email"
               iconRight="fa-envelope"
               onChange={handleInputChange}
-              type={formErrors['username'] ? 'error' : ''}
-              help={formErrors['username']}
-        />
-      </Col>
-      <Col xs={12}>
-        <Text inputType="password"
-              name="password"
-              id="passwordInput"
-              labelPosition="none"
-              placeholder="Password"
-              iconRight="fa-lock"
-              onChange={handleInputChange}
-              type={formErrors['password'] ? 'error' : ''}
-              help={formErrors['password']}
+              type={formErrors['email'] ? 'error' : ''}
+              help={formErrors['email']}
         />
       </Col>
       <Col xs={12}>
@@ -99,4 +85,4 @@ function LoginForm(props) {
   )
 }
 
-export default LoginForm;
+export default ForgotPasswordForm;
