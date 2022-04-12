@@ -44,14 +44,14 @@ const routes = [
     component: lazy(() => import('../views/management/vessel/VesselView')),
   },
   {
-    name: 'Machinery',
+    name: 'New Machinery',
     path: '/machinery',
     exact: true,
     auth: true,
     component: lazy(() => import('../views/management/machinery/MachineryList')),
   },
   {
-    name: 'Vessel Machinery',
+    name: 'Vessel Add Machinery',
     path: '/vessel-machinery',
     exact: true,
     auth: true,
@@ -72,7 +72,7 @@ const routes = [
     component: lazy(() => import('../views/pms/running-hour/RunningHourList')),
   },
   {
-    name: 'Works',
+    name: 'Update Jobs',
     path: '/works',
     exact: true,
     auth: true,

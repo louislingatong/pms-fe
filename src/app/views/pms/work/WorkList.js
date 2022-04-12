@@ -182,19 +182,19 @@ function WorkList({name}) {
     {
       title: 'Intervals',
       data: 'interval',
-      render: interval => `${interval.value} ${interval.unit.name}`,
+      render: interval => interval.name,
     },
     {
       title: 'Commissioning Date',
       data: 'installed_date',
     },
     {
-      title: 'Last Done',
+      title: 'Last Done (DD-MMM-YYYY)',
       data: 'last_done',
       render: (lastDone, row) => row.current_work.last_done,
     },
     {
-      title: 'Running Hours',
+      title: 'Last Done (Run Hours)',
       data: 'running_hours',
       render: (runningHours, row) => row.current_work.running_hours,
     },
@@ -256,7 +256,7 @@ function WorkList({name}) {
                     id="statusFilterSelect"
                     placeholder="Status"
                     labelPosition="none"
-                    options={['WARNING', 'DUE', 'OVERDUE']}
+                    options={['WARNING', 'DUE', 'OVERDUE', 'JOBS DONE', 'DRY DOCK']}
                     allowClear={true}
                     value={filters.status}
                     onChange={handleFilterChange}
@@ -306,7 +306,11 @@ function WorkList({name}) {
                 <Col xs={12}>
                   {
                     !!Object.keys(selectedRows).length
-                    && <Button type="primary" text="Work" onClick={handleWorkModalOpen} pullRight/>
+                    && (
+                        <Button type="primary"
+                                text={`Update Job${Object.keys(selectedRows).length > 1 ? 's' : ''}`}
+                                onClick={handleWorkModalOpen} pullRight/>
+                    )
                   }
                 </Col>
               </Row>
@@ -315,7 +319,7 @@ function WorkList({name}) {
         </Row>
         <Modal
           show={workModalShow}
-          title='Work'
+          title='Job'
           modalSize="lg"
           closeButton
           onHide={handleWorkModalClose}
@@ -324,7 +328,7 @@ function WorkList({name}) {
         </Modal>
         <Modal
           show={workHistoryModalShow}
-          title='Work History'
+          title='Job History'
           modalSize="lg"
           closeButton
           onHide={handleWorkHistoryModalClose}
@@ -365,8 +369,8 @@ function WorkList({name}) {
             <Col xs={12}><Divider type="line"/></Col>
             <Col xs={12}>
               <Row>
-                <Col xs={2}><label>Last Done</label></Col>
-                <Col xs={2}><label>Running Hours</label></Col>
+                <Col xs={2}><label>Last Done (DD-MMM-YYYY)</label></Col>
+                <Col xs={2}><label>Last Done (Run Hours)</label></Col>
                 <Col xs={3}><label>Instructions</label></Col>
                 <Col xs={2}><label>Encoded Date</label></Col>
                 <Col xs={2}><label>Encoded By</label></Col>
@@ -386,7 +390,7 @@ function WorkList({name}) {
                       <Col xs={2}>{workHistory.creator}</Col>
                       <Col xs={1}>{workHistory.file
                         ? <Button type="primary" icon="fas-file"
-                                  onClick={() => dispatch(fileDownloadAsync(workHistory.file.path))}/>
+                                  onClick={() => dispatch(fileDownloadAsync(workHistory.file))}/>
                         : ''}</Col>
                     </Row>
                   </Col>

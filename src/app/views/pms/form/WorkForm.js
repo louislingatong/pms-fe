@@ -96,7 +96,7 @@ function WorkForm({ids}) {
         <Text
           name="running_hours"
           id="runningHoursInput"
-          label="Running Hours"
+          label="Running Hours (optional)"
           labelPosition="above"
           onChange={handleInputChange}
           value={formData.running_hours}

@@ -10,8 +10,8 @@ import Interval from '../../../core/models/Interval';
 import IntervalUnitSelect from '../../../components/select/IntervalUnitSelect';
 
 const validator = new ReeValidate({
-  value: 'required|numeric|min_value:1',
-  unit: 'required',
+  value: 'numeric|min_value:1',
+  unit: '',
   name: ''
 });
 

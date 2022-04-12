@@ -17,7 +17,9 @@ const initialState = {
   count: {
     warning: 0,
     due: 0,
-    overdue: 0
+    overdue: 0,
+    dry_dock: 0,
+    jobs_done: 0,
   },
   doneList: [],
   list: [],
@@ -57,7 +59,7 @@ export const worksExportAsync = createAsyncThunk(
   'work/exportWorks',
   async (params) => {
     const works = await exportWorks(params)
-    FileDownload(works, 'Works.xls');
+    FileDownload(works, 'Jobs.xls');
     return works;
   }
 );
@@ -66,16 +68,16 @@ export const workHistoryExportAsync = createAsyncThunk(
   'work/exportWorkHistory',
   async (id) => {
     const workHistory = await exportWorkHistory(id);
-    FileDownload(workHistory, 'Work History.xls');
+    FileDownload(workHistory, 'Jobs History.xls');
     return workHistory;
   }
 );
 
 export const fileDownloadAsync = createAsyncThunk(
   'work/downloadFile',
-  async (path) => {
-    const fileName = path.replace('files/', '')
-    const file = await downloadFile(path);
+  async (data) => {
+    const fileName = data.filename;
+    const file = await downloadFile(data.path);
     FileDownload(file, fileName);
     return file;
   }

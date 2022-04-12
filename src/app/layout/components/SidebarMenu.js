@@ -21,11 +21,11 @@ function SidebarMenu() {
       path: '/vessels'
     },
     {
-      name: 'Machinery',
+      name: 'New Machinery',
       path: '/machinery'
     },
     {
-      name: 'Vessel Machinery',
+      name: 'Vessel Add Machinery',
       path: '/vessel-machinery'
     },
     {
@@ -40,7 +40,7 @@ function SidebarMenu() {
       path: '/running-hours'
     },
     {
-      name: 'Works',
+      name: 'Update Jobs',
       path: '/works'
     },
     {

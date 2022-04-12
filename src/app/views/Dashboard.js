@@ -63,6 +63,14 @@ function Dashboard(props) {
           <Infobox2 icon="fas-wrench" title={localCount.overdue} text="Overdue works" color="red" footerText="View List"
                     to="javascript:" onFooterClick={() => redirect('OVERDUE')}/>
         </Col>
+        <Col xs={4}>
+          <Infobox2 icon="fas-hammer" title={localCount.jobs_done} text="Jobs Done" color="green" footerText="View List"
+                    to="javascript:" onFooterClick={() => redirect('JOBS DONE')}/>
+        </Col>
+        <Col xs={4}>
+          <Infobox2 icon="fas-anchor" title={localCount.dry_dock} text="Dry Dock" color="teal" footerText="View List"
+                    to="javascript:" onFooterClick={() => redirect('DRY DOCK')}/>
+        </Col>
       </Row>
     </Content>
   );
