@@ -50,17 +50,17 @@ function Dashboard(props) {
     <Content title={name} browserTitle={`ASTRO | ${name}`}>
       <Row>
         <Col xs={4}>
-          <Infobox2 icon="fas-cog" title={localCount.warning} text="Works to be done" color="yellow"
+          <Infobox2 icon="fas-cog" title={localCount.warning} text="Jobs To Be Done" color="yellow"
                     footerText="View List"
                     to="javascript:" onFooterClick={() => redirect('WARNING')}/>
         </Col>
         <Col xs={4}>
-          <Infobox2 icon="fas-screwdriver" title={localCount.due} text="Due works" color="light-blue"
+          <Infobox2 icon="fas-screwdriver" title={localCount.due} text="Due Jobs" color="light-blue"
                     footerText="View List"
                     to="javascript:" onFooterClick={() => redirect('DUE')}/>
         </Col>
         <Col xs={4}>
-          <Infobox2 icon="fas-wrench" title={localCount.overdue} text="Overdue works" color="red" footerText="View List"
+          <Infobox2 icon="fas-wrench" title={localCount.overdue} text="Overdue Jobs" color="red" footerText="View List"
                     to="javascript:" onFooterClick={() => redirect('OVERDUE')}/>
         </Col>
         <Col xs={4}>
@@ -68,7 +68,7 @@ function Dashboard(props) {
                     to="javascript:" onFooterClick={() => redirect('JOBS DONE')}/>
         </Col>
         <Col xs={4}>
-          <Infobox2 icon="fas-anchor" title={localCount.dry_dock} text="Dry Dock" color="teal" footerText="View List"
+          <Infobox2 icon="fas-anchor" title={localCount.dry_dock} text="Dry Dock Jobs" color="teal" footerText="View List"
                     to="javascript:" onFooterClick={() => redirect('DRY DOCK')}/>
         </Col>
       </Row>
