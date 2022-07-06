@@ -2,7 +2,7 @@ import Interval from './Interval';
 import MachinerySubCategory from './MachinerySubCategory';
 import MachinerySubCategoryDescription from './MachinerySubCategoryDescription';
 
-export default function VesselMachinerySubCategories(data = {}) {
+export default function VesselMachinerySubCategory(data = {}) {
   this.id = data.id ? data.id : 0;
   this.code = data.code ? data.code : '';
   this.installed_date = data.installed_date ? data.installed_date : '';

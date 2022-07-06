@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
-import {Button, Inputs} from 'adminlte-2-react';
-import {Col, Row} from 'react-bootstrap';
+import {Inputs} from 'adminlte-2-react';
+import {Button, Col, Row} from 'react-bootstrap';
 import Transform from '../../../utils/Transformer';
 import {reqDataStatus, runningHourAddAsync} from '../../../store/runningHourSlice';
 import moment from "moment";
@@ -63,42 +63,50 @@ function RunningHourForm({id}) {
   };
 
   return (
-    <Row>
-      <Col xs={12}>
-        <Text
-          inputType="number"
-          name="running_hours"
-          id="runningHoursInput"
-          label="Running Hours"
-          labelPosition="above"
-          onChange={handleInputChange}
-          value={formData.running_hours}
-          type={formErrors['running_hours'] ? 'error' : ''}
-          help={formErrors['running_hours']}
-        />
-      </Col>
-      <Col xs={12}>
-        <Date
-          name="updating_date"
-          id="updatingDateInput"
-          label="Updating Date"
-          labelPosition="above"
-          iconRight="fa-calendar"
-          format="DD-MMM-YYYY"
-          dateProps={{
-            numberOfMonths: 1,
-            isOutsideRange: () => false
-          }}
-          onChange={handleInputChange}
-          value={moment(formData.updating_date)}
-          type={formErrors['updating_date'] ? 'error' : ''}
-          help={formErrors['updating_date']}
-        />
-      </Col>
-      <Col xs={12}>
-        <Button type="primary" text="Save" onClick={handleSubmitForm} disabled={isLoading} pullRight/>
-      </Col>
-    </Row>
+    <form onSubmit={handleSubmitForm} noValidate>
+      <Row>
+        <Col xs={12}>
+          <Text
+            inputType="number"
+            name="running_hours"
+            id="runningHoursInput"
+            label="Running Hours"
+            labelPosition="above"
+            onChange={handleInputChange}
+            value={formData.running_hours}
+            type={formErrors['running_hours'] ? 'error' : ''}
+            help={formErrors['running_hours']}
+          />
+        </Col>
+        <Col xs={12}>
+          <Date
+            name="updating_date"
+            id="updatingDateInput"
+            label="Updating Date"
+            labelPosition="above"
+            iconRight="fa-calendar"
+            format="DD-MMM-YYYY"
+            dateProps={{
+              numberOfMonths: 1,
+              isOutsideRange: () => false
+            }}
+            onChange={handleInputChange}
+            value={moment(formData.updating_date)}
+            type={formErrors['updating_date'] ? 'error' : ''}
+            help={formErrors['updating_date']}
+          />
+        </Col>
+        <Col xs={12}>
+          <Button type="submit"
+                  bsStyle="primary"
+                  id="loginButton"
+                  className="pull-right"
+                  disabled={isLoading}>
+            Save
+          </Button>
+        </Col>
+      </Row>
+    </form>
   )
 }
 

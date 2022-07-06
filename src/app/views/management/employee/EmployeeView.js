@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Button, Content, Inputs} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
 import {employeeData, employeeDataAsync,} from '../../../store/employeeSlice';
+import {profileData} from '../../../store/profileSlice';
 import {Modal} from '../../../components';
 import EmployeeForm from '../form/EmployeeForm';
 
@@ -14,7 +15,9 @@ function EmployeeView({match, name}) {
 
   const history = useHistory();
   const dispatch = useDispatch();
+
   const employee = useSelector(employeeData);
+  const profile = useSelector(profileData);
 
   const {params} = match;
   const paramId = parseInt(params.id);
@@ -56,11 +59,14 @@ function EmployeeView({match, name}) {
               <li className="">
                 <a href="#accountInfo" data-toggle="tab" aria-expanded="false">Account Information</a>
               </li>
+              <li className="">
+                <a href="#accessControlList" data-toggle="tab" aria-expanded="false">Access Control List</a>
+              </li>
             </ul>
             <div className="tab-content">
               <div className="tab-pane active" id="employeeInfo">
                 <Row>
-                  <Col xs={6}>
+                  <Col xs={12} md={6}>
                     <Row>
                       <Col xs={12}>
                         <Row>
@@ -103,7 +109,7 @@ function EmployeeView({match, name}) {
                       </Col>
                     </Row>
                   </Col>
-                  <Col xs={6}>
+                  <Col xs={12} md={6}>
                     <Row>
                       <Col xs={12}>
                         <Row>
@@ -131,13 +137,24 @@ function EmployeeView({match, name}) {
                           </Col>
                         </Row>
                       </Col>
+                      <Col xs={12}>
+                        <Row>
+                          <Col xs={4}><label>Is Admin</label></Col>
+                          <Col xs={8}>
+                            <input type="checkbox" name="is_admin"
+                                   checked={!!localEmployee.is_admin}
+                                   disabled
+                            />
+                          </Col>
+                        </Row>
+                      </Col>
                     </Row>
                   </Col>
                 </Row>
               </div>
               <div className="tab-pane" id="accountInfo">
                 <Row>
-                  <Col xs={6}>
+                  <Col xs={12} md={6}>
                     <Row>
                       <Col xs={12}>
                         <Row>
@@ -170,12 +187,34 @@ function EmployeeView({match, name}) {
                   </Col>
                 </Row>
               </div>
+              <div className="tab-pane" id="accessControlList">
+                <Row>
+                  {
+                    Object.entries(employee.role_permissions).map(([key, value]) => (
+                      <Col xs={12} sm={6} md={4} lg={3}>
+                        <div className="checkbox">
+                          <label>
+                            <input type="checkbox" name="is_admin"
+                                   checked={!!employee.permissions[key]}
+                                   disabled
+                            />
+                            { key.replaceAll('_', ' ') }
+                          </label>
+                        </div>
+                      </Col>
+                    ))
+                  }
+                </Row>
+              </div>
             </div>
           </div>
         </Col>
         <Col xs={12}>
           <Button type="default" text="Back" onClick={() => history.goBack()}/>
-          <Button type="primary" text="Edit" onClick={handleModalOpen} pullRight/>
+          {
+            !!profile.permissions['employee_edit']
+            && <Button type="primary" text="Edit" onClick={handleModalOpen} pullRight/>
+          }
         </Col>
       </Row>
       <Modal

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Col, Row} from 'react-bootstrap';
-import {Button, Inputs} from 'adminlte-2-react';
+import {Col, Row, Button} from 'react-bootstrap';
+import {Inputs} from 'adminlte-2-react';
 import ReeValidate from 'ree-validate';
 import {forgotPasswordAsync, reqForgotPasswordStatus} from '../../../store/authSlice';
 import Transform from '../../../utils/Transformer';
@@ -58,30 +58,31 @@ function ForgotPasswordForm(props) {
   };
 
   return (
-    <Row>
-      <Col xs={12}>
-        <Text inputType="email"
-              name="email"
-              id="emailInput"
-              labelPosition="none"
-              placeholder="Email"
-              iconRight="fa-envelope"
-              onChange={handleInputChange}
-              type={formErrors['email'] ? 'error' : ''}
-              help={formErrors['email']}
-        />
-      </Col>
-      <Col xs={12}>
-        <Button type="primary"
-                id="loginButton"
-                text="Submit"
-                color="primary"
-                flat={true}
-                pullRight={true}
-                onClick={handleSubmitForm}
-                disabled={isLoading}/>
-      </Col>
-    </Row>
+    <form onSubmit={handleSubmitForm} noValidate>
+      <Row>
+        <Col xs={12}>
+          <Text inputType="email"
+                name="email"
+                id="emailInput"
+                labelPosition="none"
+                placeholder="Email"
+                iconRight="fa-envelope"
+                onChange={handleInputChange}
+                type={formErrors['email'] ? 'error' : ''}
+                help={formErrors['email']}
+          />
+        </Col>
+        <Col xs={12}>
+          <Button type="submit"
+                  bsStyle="primary"
+                  id="loginButton"
+                  className="pull-right"
+                  disabled={isLoading}>
+            Submit
+          </Button>
+        </Col>
+      </Row>
+    </form>
   )
 }
 

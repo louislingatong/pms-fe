@@ -12,6 +12,7 @@ import {
   vesselList,
   vesselListAsync,
 } from '../../../store/vesselSlice';
+import {profileData} from '../../../store/profileSlice';
 import {DataTable, Divider, Modal} from '../../../components';
 import Vessel from '../../../core/models/Vessel';
 import VesselForm from '../form/VesselForm';
@@ -24,6 +25,7 @@ function VesselList({name}) {
   const vessels = useSelector(vesselList);
   const meta = useSelector(metaData);
   const status = useSelector(reqListStatus);
+  const profile = useSelector(profileData);
 
   const isLoading = status === 'loading';
 
@@ -66,22 +68,24 @@ function VesselList({name}) {
   };
 
   const handleRowSelect = (selectedRow) => {
-    let newSelectedRowIds = selectedRowIds.slice();
-    if (selectedRow.action === 'checked') {
-      newSelectedRowIds.push(selectedRow.id);
-    } else if (selectedRow.action === 'unchecked') {
-      const i = newSelectedRowIds.indexOf(selectedRow);
-      newSelectedRowIds.splice(i, 1);
-    } else if (selectedRow.action === 'checked_all') {
-      newSelectedRowIds = selectedRow.ids;
-    } else if (selectedRow.action === 'unchecked_all') {
-      newSelectedRowIds = [];
-    } else {
-      setLocalVessel(selectedRow);
-      dispatch(setVesselData(selectedRow));
-      history.push(`/vessels/${selectedRow.id}`);
+    if (!!profile.permissions['vessel_show']) {
+      let newSelectedRowIds = selectedRowIds.slice();
+      if (selectedRow.action === 'checked') {
+        newSelectedRowIds.push(selectedRow.id);
+      } else if (selectedRow.action === 'unchecked') {
+        const i = newSelectedRowIds.indexOf(selectedRow);
+        newSelectedRowIds.splice(i, 1);
+      } else if (selectedRow.action === 'checked_all') {
+        newSelectedRowIds = selectedRow.ids;
+      } else if (selectedRow.action === 'unchecked_all') {
+        newSelectedRowIds = [];
+      } else {
+        setLocalVessel(selectedRow);
+        dispatch(setVesselData(selectedRow));
+        history.push(`/vessels/${selectedRow.id}`);
+      }
+      setSelectedRowIds(newSelectedRowIds);
     }
-    setSelectedRowIds(newSelectedRowIds);
   }
 
   const handlePageChange = (page) => {
@@ -125,12 +129,15 @@ function VesselList({name}) {
       <Content title={name} browserTitle={`ASTRO | Management - ${name}`}>
         <Row>
           <Col xs={12}>
-            <Button
-              type="primary"
-              text="Add New Vessel"
-              onClick={handleModalOpen}
-              pullRight
-            />
+            {
+              !!profile.permissions['vessel_create']
+              && <Button
+                type="primary"
+                text="Add New Vessel"
+                onClick={handleModalOpen}
+                pullRight
+              />
+            }
           </Col>
           <Divider/>
           <Col xs={12}>
@@ -168,6 +175,7 @@ function VesselList({name}) {
                 <Col xs={12}>
                   {
                     !!selectedRowIds.length
+                    && !!profile.permissions['vessel_delete']
                     && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
                   }
                 </Col>

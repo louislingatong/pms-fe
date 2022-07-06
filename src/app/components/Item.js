@@ -53,7 +53,7 @@ function Item(props) {
       {
         path
           ? <Link to={path}>{renderContent}</Link>
-          : <a href="#">{renderContent}</a>
+          : !!children?.filter(Boolean).length && <a href="#">{renderContent}</a>
       }
       {
         hasChildren && (

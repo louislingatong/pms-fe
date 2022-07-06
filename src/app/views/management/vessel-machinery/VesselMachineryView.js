@@ -80,7 +80,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
     setFormDatas((prevState) => {
       const state = {...prevState};
       localVesselMachinery.sub_categories.forEach((subCategory) => {
-        state[subCategory.id] = {
+        state[subCategory.sub_category.id] = {
           machinery_sub_category_id: subCategory.id,
           code: subCategory.code,
           installed_date: subCategory.installed_date,
@@ -135,7 +135,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
   };
 
   const formData = (id) => {
-    const subCategory = localVesselMachinery.sub_categories.find(subCategory => subCategory.id === id);
+    const subCategory = localVesselMachinery.sub_categories.find(subCategory => subCategory.sub_category.id === id);
     return {
       machinery_sub_category_id: id,
       code: subCategory ? subCategory.code : machineryCode + '-',
@@ -164,7 +164,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
     const newRemovedSubCategories = removedSubCategories.slice();
     const i = newRemovedSubCategories.indexOf(id);
     if (i === -1) {
-      const subCategory = localVesselMachinery.sub_categories.find(subCategory => subCategory.id === id);
+      const subCategory = localVesselMachinery.sub_categories.find(subCategory => subCategory.sub_category.id === id);
       if (subCategory) {
         newRemovedSubCategories.push(id);
         setRemovedSubCategories(newRemovedSubCategories);
@@ -241,8 +241,10 @@ function VesselMachineryView({data: localVesselMachinery}) {
           name={`code-${row.id}`}
           id={`code${row.id}Input`}
           labelPosition="none"
-          value={formDatas[row.id] ? formDatas[row.id].code : machineryCode + '-'}
-          disabled={!formDatas[row.id] || !updatedSubCategories.includes(row.id)}
+          // value={formDatas[row.id] ? formDatas[row.id].code : machineryCode + '-'}
+          value={code}
+          // disabled={!formDatas[row.id] || !updatedSubCategories.includes(row.id)}
+          disabled
           onChange={(e) => handleInputChange(e, row.id)}
           type={formErrors[row.id] && formErrors[row.id]['code'] ? 'error' : ''}
           help={formErrors[row.id] && formErrors[row.id]['code']}
@@ -258,8 +260,8 @@ function VesselMachineryView({data: localVesselMachinery}) {
       title: 'Description',
       data: 'description',
       width: '20',
-      render: (description, row) => (
-        <MachinerySubCategoryDescriptionAutoSuggest
+      render: (description, row) => {
+        return <MachinerySubCategoryDescriptionAutoSuggest
           name={`description-${row.id}`}
           id={`description${row.id}Input`}
           labelPosition="none"
@@ -268,7 +270,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
           disabled={!formDatas[row.id] || !updatedSubCategories.includes(row.id)}
           onChange={(e) => handleInputChange(e, row.id)}
         />
-      )
+      }
     },
     {
       title: 'Interval',

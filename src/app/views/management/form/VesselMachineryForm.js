@@ -2,12 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
-import {Col, Row} from 'react-bootstrap';
-import {Button, Inputs} from 'adminlte-2-react';
+import {Button, Col, Row} from 'react-bootstrap';
+import {Inputs} from 'adminlte-2-react';
 import {reqDataStatus, vesselMachineryAddAsync, vesselMachineryEditAsync} from '../../../store/vesselMachinerySlice';
 import Transform from '../../../utils/Transformer';
 import VesselMachinery from '../../../core/models/VesselMachinery';
-import moment from 'moment';
 import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
 import MachinerySelect from '../../../components/select/MachinerySelect';
 import InchargeRankSelect from '../../../components/select/InchargeRankSelect';
@@ -88,88 +87,92 @@ function VesselMachineryForm({data: localVesselMachinery}) {
   };
 
   return (
-    <Row>
-      <Col xs={12}>
-        <Row>
-          <Col xs={12} md={4}>
-            <Text
-              name="vessel"
-              id="vesselInput"
-              label="Vessel"
-              labelPosition="above"
-              value={formData.vessel}
-              disabled={true}/>
-          </Col>
-          <Col xs={12} md={8}>
-            <MachinerySelect
-              form
-              name="machinery"
-              id="machinerySelect"
-              label="Machinery"
-              labelPosition="above"
-              allowClear={true}
-              onChange={handleInputChange}
-              value={formData.machinery}
-              disabled={isViewing}
-              type={formErrors['machinery'] ? 'error' : ''}
-              help={formErrors['machinery']}
-            />
-          </Col>
-        </Row>
-      </Col>
-      <Col xs={12}>
-        <Row>
-          <Col xs={12} md={4}>
-            <MachineryModelAutoSuggest
-              name="model"
-              id="modelInput"
-              label="Model"
-              labelPosition="above"
-              value={formData.model}
-              onChange={handleInputChange}
-              disabled={isViewing}
-            />
-          </Col>
-          <Col xs={12} md={4}>
-            <MachineryMakerAutoSuggest
-              name="maker"
-              id="makerInput"
-              label="Maker"
-              labelPosition="above"
-              value={formData.maker}
-              onChange={handleInputChange}
-              disabled={isViewing}
-            />
-          </Col>
-          <Col xs={12} md={4}>
-            <InchargeRankSelect
-              form
-              name="incharge_rank"
-              id="inchargeRankSelect"
-              label="In-charge Rank"
-              labelPosition="above"
-              allowClear={true}
-              onChange={handleInputChange}
-              value={formData.incharge_rank}
-              disabled={isViewing}
-              type={formErrors['incharge_rank'] ? 'error' : ''}
-              help={formErrors['incharge_rank']}
-            />
-          </Col>
-        </Row>
-      </Col>
-      <Col xs={12}>
-        {
-          isViewing
-            ? <Button type="primary" text="Edit" onClick={() => setIsViewing(false)} pullRight/>
-            : <Button type="primary"
-                      text={localVesselMachinery.id ? 'Save' : 'Add'}
-                      onClick={handleSubmitForm}
-                      disabled={isLoading}
-                      pullRight/>
-        }
-      </Col>
-    </Row>
+    <form onSubmit={handleSubmitForm} noValidate>
+      <Row>
+        <Col xs={12}>
+          <Row>
+            <Col xs={12} md={4}>
+              <Text
+                name="vessel"
+                id="vesselInput"
+                label="Vessel"
+                labelPosition="above"
+                value={formData.vessel}
+                disabled={true}/>
+            </Col>
+            <Col xs={12} md={8}>
+              <MachinerySelect
+                form
+                name="machinery"
+                id="machinerySelect"
+                label="Machinery"
+                labelPosition="above"
+                allowClear={true}
+                onChange={handleInputChange}
+                value={formData.machinery}
+                disabled={isViewing}
+                type={formErrors['machinery'] ? 'error' : ''}
+                help={formErrors['machinery']}
+              />
+            </Col>
+          </Row>
+        </Col>
+        <Col xs={12}>
+          <Row>
+            <Col xs={12} md={4}>
+              <MachineryModelAutoSuggest
+                name="model"
+                id="modelInput"
+                label="Model"
+                labelPosition="above"
+                value={formData.model}
+                onChange={handleInputChange}
+                disabled={isViewing}
+              />
+            </Col>
+            <Col xs={12} md={4}>
+              <MachineryMakerAutoSuggest
+                name="maker"
+                id="makerInput"
+                label="Maker"
+                labelPosition="above"
+                value={formData.maker}
+                onChange={handleInputChange}
+                disabled={isViewing}
+              />
+            </Col>
+            <Col xs={12} md={4}>
+              <InchargeRankSelect
+                form
+                name="incharge_rank"
+                id="inchargeRankSelect"
+                label="In-charge Rank"
+                labelPosition="above"
+                allowClear={true}
+                onChange={handleInputChange}
+                value={formData.incharge_rank}
+                disabled={isViewing}
+                type={formErrors['incharge_rank'] ? 'error' : ''}
+                help={formErrors['incharge_rank']}
+              />
+            </Col>
+          </Row>
+        </Col>
+        <Col xs={12}>
+          {
+            isViewing
+              ? <Button bsStyle="primary" onClick={() => setIsViewing(false)} className="pull-right">Edit</Button>
+              : <Button type="submit"
+                        bsStyle="primary"
+                        id="loginButton"
+                        className="pull-right"
+                        disabled={isLoading}>
+                { localVesselMachinery.id ? 'Save' : 'Add' }
+              </Button>
+          }
+        </Col>
+      </Row>
+    </form>
   );
 }
 

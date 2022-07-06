@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
-import {Button, Inputs} from 'adminlte-2-react';
-import {Col, Row} from 'react-bootstrap';
+import {Inputs} from 'adminlte-2-react';
+import {Button, Col, Row} from 'react-bootstrap';
 import Transform from '../../../utils/Transformer';
 import {machineryAddSubCategoryAsync, reqDataStatus} from '../../../store/machinerySlice';
 
@@ -60,21 +60,23 @@ function SubCategoryForm({machineryId}) {
   };
 
   return (
-    <Row>
-      <Col xs={12}>
-        <Text
-          name="name"
-          id="subCategoryNameInput"
-          label="Name"
-          labelPosition="above"
-          onChange={handleInputChange}
-          value={formData.name}
-          type={formError['name'] ? 'error' : ''}
-          help={formError['name']}
-          buttonRight={<Button flat type="primary" text="Add" disabled={isLoading} onClick={handleSubmitForm}/>}
-        />
-      </Col>
-    </Row>
+    <form onSubmit={handleSubmitForm} noValidate>
+      <Row>
+        <Col xs={12}>
+          <Text
+            name="name"
+            id="subCategoryNameInput"
+            label="Name"
+            labelPosition="above"
+            onChange={handleInputChange}
+            value={formData.name}
+            type={formError['name'] ? 'error' : ''}
+            help={formError['name']}
+            buttonRight={<Button type="submit" bsStyle="primary" disabled={isLoading}>Add</Button>}
+          />
+        </Col>
+      </Row>
+    </form>
   );
 }
 

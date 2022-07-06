@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
-import {Button, Inputs} from 'adminlte-2-react';
-import {Col, Row} from 'react-bootstrap';
+import {Inputs} from 'adminlte-2-react';
+import {Col, Row, Button} from 'react-bootstrap';
 import Transform from '../../../utils/Transformer';
 import {intervalAddAsync, intervalEditAsync, reqDataStatus} from '../../../store/intervalSlice';
 import Interval from '../../../core/models/Interval';
@@ -81,60 +81,63 @@ function IntervalForm({data: localInterval}) {
   };
 
   return (
-    <Row>
-      <Col xs={12}>
-        <Text
-          inputType="number"
-          name="value"
-          id="intervalValueInput"
-          label="Value"
-          labelPosition="above"
-          onChange={handleInputChange}
-          value={formData.value}
-          disabled={isViewing}
-          type={formErrors['value'] ? 'error' : ''}
-          help={formErrors['value']}
-        />
-      </Col>
-      <Col xs={12}>
-        <IntervalUnitSelect
-          form
-          name="unit"
-          id="unitSelect"
-          label="Unit"
-          labelPosition="above"
-          allowClear={true}
-          onChange={handleInputChange}
-          value={formData.unit}
-          disabled={isViewing}
-          type={formErrors['unit'] ? 'error' : ''}
-          help={formErrors['unit']}
-        />
-      </Col>
-      <Col xs={12}>
-        <Text
-          name="name"
-          id="intervalNameInput"
-          label="Name"
-          labelPosition="above"
-          onChange={handleInputChange}
-          value={formData.name}
-          disabled={isViewing}
-        />
-      </Col>
-      <Col xs={12}>
-        {
-          isViewing
-            ? <Button type="primary" text="Edit" onClick={() => setIsViewing(false)} pullRight/>
-            : <Button type="primary"
-                      text={localInterval.id ? 'Save' : 'Add'}
-                      onClick={handleSubmitForm}
-                      disabled={isLoading}
-                      pullRight/>
-
-        }
-      </Col>
-    </Row>
+    <form onSubmit={handleSubmitForm} noValidate>
+      <Row>
+        <Col xs={12}>
+          <Text
+            inputType="number"
+            name="value"
+            id="intervalValueInput"
+            label="Value"
+            labelPosition="above"
+            onChange={handleInputChange}
+            value={formData.value}
+            disabled={isViewing}
+            type={formErrors['value'] ? 'error' : ''}
+            help={formErrors['value']}
+          />
+        </Col>
+        <Col xs={12}>
+          <IntervalUnitSelect
+            form
+            name="unit"
+            id="unitSelect"
+            label="Unit"
+            labelPosition="above"
+            allowClear={true}
+            onChange={handleInputChange}
+            value={formData.unit}
+            disabled={isViewing}
+            type={formErrors['unit'] ? 'error' : ''}
+            help={formErrors['unit']}
+          />
+        </Col>
+        <Col xs={12}>
+          <Text
+            name="name"
+            id="intervalNameInput"
+            label="Name"
+            labelPosition="above"
+            onChange={handleInputChange}
+            value={formData.name}
+            disabled={isViewing}
+          />
+        </Col>
+        <Col xs={12}>
+          {
+            isViewing
+              ? <Button bsStyle="primary" onClick={() => setIsViewing(false)} className="pull-right">Edit</Button>
+              : <Button type="submit"
+                        bsStyle="primary"
+                        id="loginButton"
+                        className="pull-right"
+                        disabled={isLoading}>
+                { localInterval.id ? 'Save' : 'Add' }
+              </Button>
+          }
+        </Col>
+      </Row>
+    </form>
   )
 }
 

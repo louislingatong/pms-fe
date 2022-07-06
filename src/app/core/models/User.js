@@ -6,4 +6,5 @@ export default function User(data = {}) {
   this.first_name = data.first_name ? data.first_name : '';
   this.last_name = data.last_name ? data.last_name : '';
   this.status = data.status ? new UserStatus(data.status) : new UserStatus();
+  this.permissions = data.permissions ? data.permissions : {};
 }

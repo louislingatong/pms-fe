@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Col, Row} from 'react-bootstrap';
-import {Button, Inputs} from 'adminlte-2-react';
+import {Col, Row, Button} from 'react-bootstrap';
+import {Inputs} from 'adminlte-2-react';
 import ReeValidate from 'ree-validate';
 import {resetPasswordAsync, reqResetPasswordStatus} from '../../../store/authSlice';
 import Transform from '../../../utils/Transformer';
@@ -60,42 +60,43 @@ function ResetPasswordForm({token}) {
   };
 
   return (
-    <Row>
-      <Col xs={12}>
-        <Text inputType="password"
-              name="password"
-              id="passwordInput"
-              labelPosition="none"
-              placeholder="New Password"
-              iconRight="fa-lock"
-              onChange={handleInputChange}
-              type={formErrors['password'] ? 'error' : ''}
-              help={formErrors['password']}
-        />
-      </Col>
-      <Col xs={12}>
-        <Text inputType="password"
-              name="password_confirmation"
-              id="confirmPasswordInput"
-              labelPosition="none"
-              placeholder="Confirm New Password"
-              iconRight="fa-lock"
-              onChange={handleInputChange}
-              type={formErrors['password_confirmation'] ? 'error' : ''}
-              help={formErrors['password_confirmation']}
-        />
-      </Col>
-      <Col xs={12}>
-        <Button type="primary"
-                id="resetPasswordButton"
-                text="Submit"
-                color="primary"
-                flat={true}
-                pullRight={true}
-                onClick={handleSubmitForm}
-                disabled={isLoading}/>
-      </Col>
-    </Row>
+    <form onSubmit={handleSubmitForm} noValidate>
+      <Row>
+        <Col xs={12}>
+          <Text inputType="password"
+                name="password"
+                id="passwordInput"
+                labelPosition="none"
+                placeholder="New Password"
+                iconRight="fa-lock"
+                onChange={handleInputChange}
+                type={formErrors['password'] ? 'error' : ''}
+                help={formErrors['password']}
+          />
+        </Col>
+        <Col xs={12}>
+          <Text inputType="password"
+                name="password_confirmation"
+                id="confirmPasswordInput"
+                labelPosition="none"
+                placeholder="Confirm New Password"
+                iconRight="fa-lock"
+                onChange={handleInputChange}
+                type={formErrors['password_confirmation'] ? 'error' : ''}
+                help={formErrors['password_confirmation']}
+          />
+        </Col>
+        <Col xs={12}>
+          <Button type="submit"
+                  bsStyle="primary"
+                  id="resetPasswordButton"
+                  className="pull-right"
+                  disabled={isLoading}>
+            Submit
+          </Button>
+        </Col>
+      </Row>
+    </form>
   )
 }
 

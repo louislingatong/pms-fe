@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
-import {Col, Row} from 'react-bootstrap';
-import {Button, Inputs} from 'adminlte-2-react';
+import {Col, Row, Button} from 'react-bootstrap';
+import {Inputs} from 'adminlte-2-react';
 import {machineryAddAsync, machineryEditAsync, reqDataStatus} from '../../../store/machinerySlice';
 import Transform from '../../../utils/Transformer';
 import Machinery from '../../../core/models/Machinery';
@@ -78,64 +78,68 @@ function MachineryForm({data: localMachinery}) {
   };
 
   return (
-    <Row>
-      <Col xs={12}>
-        <Row>
-          <Col xs={12} md={4}>
-            <VesselDepartmentSelect
-              form
-              name="department"
-              id="departmentSelect"
-              label="Department"
-              labelPosition="above"
-              allowClear={true}
-              onChange={handleInputChange}
-              value={formData.department}
-              disabled={isViewing}
-              type={formErrors['department'] ? 'error' : ''}
-              help={formErrors['department']}
-            />
-          </Col>
-          <Col xs={12} md={4}>
-            <Text
-              name="name"
-              id="nameInput"
-              label="Name"
-              labelPosition="above"
-              onChange={handleInputChange}
-              value={formData.name}
-              disabled={isViewing}
-              type={formErrors['name'] ? 'error' : ''}
-              help={formErrors['name']}
-            />
-          </Col>
-          <Col xs={12} md={4}>
-            <Text
-              name="code_name"
-              id="codeNameInput"
-              label="Code"
-              labelPosition="above"
-              onChange={handleInputChange}
-              value={formData.code_name}
-              disabled={isViewing}
-              type={formErrors['code_name'] ? 'error' : ''}
-              help={formErrors['code_name']}
-            />
-          </Col>
-        </Row>
-      </Col>
-      <Col xs={12}>
-        {
-          isViewing
-            ? <Button type="primary" text="Edit" onClick={() => setIsViewing(false)} pullRight/>
-            : <Button type="primary"
-                      text={localMachinery.id ? 'Save' : 'Add'}
-                      onClick={handleSubmitForm}
-                      disabled={isLoading}
-                      pullRight/>
-        }
-      </Col>
-    </Row>
+    <form onSubmit={handleSubmitForm} noValidate>
+      <Row>
+        <Col xs={12}>
+          <Row>
+            <Col xs={12} md={4}>
+              <VesselDepartmentSelect
+                form
+                name="department"
+                id="departmentSelect"
+                label="Department"
+                labelPosition="above"
+                allowClear={true}
+                onChange={handleInputChange}
+                value={formData.department}
+                disabled={isViewing}
+                type={formErrors['department'] ? 'error' : ''}
+                help={formErrors['department']}
+              />
+            </Col>
+            <Col xs={12} md={4}>
+              <Text
+                name="name"
+                id="nameInput"
+                label="Name"
+                labelPosition="above"
+                onChange={handleInputChange}
+                value={formData.name}
+                disabled={isViewing}
+                type={formErrors['name'] ? 'error' : ''}
+                help={formErrors['name']}
+              />
+            </Col>
+            <Col xs={12} md={4}>
+              <Text
+                name="code_name"
+                id="codeNameInput"
+                label="Code"
+                labelPosition="above"
+                onChange={handleInputChange}
+                value={formData.code_name}
+                disabled={isViewing}
+                type={formErrors['code_name'] ? 'error' : ''}
+                help={formErrors['code_name']}
+              />
+            </Col>
+          </Row>
+        </Col>
+        <Col xs={12}>
+          {
+            isViewing
+              ? <Button bsStyle="primary" onClick={() => setIsViewing(false)} className="pull-right">Edit</Button>
+              : <Button type="submit"
+                        bsStyle="primary"
+                        id="loginButton"
+                        className="pull-right"
+                        disabled={isLoading}>
+                { localMachinery.id ? 'Save' : 'Add' }
+              </Button>
+          }
+        </Col>
+      </Row>
+    </form>
   );
 }
 

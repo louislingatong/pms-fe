@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Button, Content, Inputs} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
 import {vesselData, vesselDataAsync,} from '../../../store/vesselSlice';
+import {profileData} from '../../../store/profileSlice';
 import {Divider, Modal} from '../../../components';
 import VesselForm from '../form/VesselForm';
 
@@ -11,7 +12,9 @@ function VesselView({match, name}) {
   const {Text} = Inputs;
   const history = useHistory();
   const dispatch = useDispatch();
+
   const vessel = useSelector(vesselData);
+  const profile = useSelector(profileData);
 
   const {params} = match;
   const paramId = parseInt(params.id);

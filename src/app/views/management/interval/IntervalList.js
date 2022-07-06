@@ -3,7 +3,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import {usePrevious} from '../../../utils/Hooks';
 import {Box, Button, Content} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
-import {intervalData, intervalList, intervalListAsync, metaData, reqListStatus,} from '../../../store/intervalSlice';
+import {
+  intervalData,
+  intervalList,
+  intervalListAsync,
+  metaData,
+  reqListStatus
+} from '../../../store/intervalSlice';
+import {profileData} from '../../../store/profileSlice';
 import {DataTable, Divider, Modal} from '../../../components';
 import Interval from '../../../core/models/Interval';
 import IntervalView from './IntervalView';
@@ -15,6 +22,7 @@ function IntervalList({name}) {
   const intervals = useSelector(intervalList);
   const meta = useSelector(metaData);
   const status = useSelector(reqListStatus);
+  const profile = useSelector(profileData);
 
   const isLoading = status === 'loading';
 
@@ -64,21 +72,23 @@ function IntervalList({name}) {
   };
 
   const handleRowSelect = (selectedRow) => {
-    let newSelectedRowIds = selectedRowIds.slice();
-    if (selectedRow.action === 'checked') {
-      newSelectedRowIds.push(selectedRow.id);
-    } else if (selectedRow.action === 'unchecked') {
-      const i = newSelectedRowIds.indexOf(selectedRow);
-      newSelectedRowIds.splice(i, 1)
-    } else if (selectedRow.action === 'checked_all') {
-      newSelectedRowIds = selectedRow.ids;
-    } else if (selectedRow.action === 'unchecked_all') {
-      newSelectedRowIds = [];
-    } else {
-      newSelectedRowIds = [selectedRow.id];
-      setLocalInterval(selectedRow);
+    if (!!profile.permissions['interval_show']) {
+      let newSelectedRowIds = selectedRowIds.slice();
+      if (selectedRow.action === 'checked') {
+        newSelectedRowIds.push(selectedRow.id);
+      } else if (selectedRow.action === 'unchecked') {
+        const i = newSelectedRowIds.indexOf(selectedRow);
+        newSelectedRowIds.splice(i, 1)
+      } else if (selectedRow.action === 'checked_all') {
+        newSelectedRowIds = selectedRow.ids;
+      } else if (selectedRow.action === 'unchecked_all') {
+        newSelectedRowIds = [];
+      } else {
+        newSelectedRowIds = [selectedRow.id];
+        setLocalInterval(selectedRow);
+      }
+      setSelectedRowIds(newSelectedRowIds);
     }
-    setSelectedRowIds(newSelectedRowIds);
   }
 
   const handlePageChange = (page) => {
@@ -119,12 +129,15 @@ function IntervalList({name}) {
       <Content title={name} browserTitle={`ASTRO | Management - ${name}`}>
         <Row>
           <Col xs={12}>
-            <Button
-              type="primary"
-              text="Add New Interval"
-              onClick={handleModalOpen}
-              pullRight
-            />
+            {
+              !!profile.permissions['interval_create']
+              && <Button
+                type="primary"
+                text="Add New Interval"
+                onClick={handleModalOpen}
+                pullRight
+              />
+            }
           </Col>
           <Divider/>
           <Col xs={12}>
@@ -162,6 +175,7 @@ function IntervalList({name}) {
                 <Col xs={12}>
                   {
                     !!selectedRowIds.length
+                    && !!profile.permissions['interval_delete']
                     && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
                   }
                 </Col>

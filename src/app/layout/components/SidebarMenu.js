@@ -14,42 +14,51 @@ function SidebarMenu() {
   const managementRoutes = [
     {
       name: 'Employees',
-      path: '/employees'
+      path: '/employees',
+      permission: 'employee_access'
     },
     {
       name: 'Vessels',
-      path: '/vessels'
+      path: '/vessels',
+      permission: 'vessel_access'
     },
     {
       name: 'New Machinery',
-      path: '/machinery'
+      path: '/machinery',
+      permission: 'machinery_access'
     },
     {
       name: 'Vessel Add Machinery',
-      path: '/vessel-machinery'
+      path: '/vessel-machinery',
+      permission: 'vessel_machinery_access'
     },
     {
       name: 'Intervals',
-      path: '/intervals'
+      path: '/intervals',
+      permission: 'interval_access'
     },
   ];
 
   const pmsRoutes = [
     {
       name: 'Running Hours',
-      path: '/running-hours'
+      path: '/running-hours',
+      permission: 'running_hours_access'
     },
     {
       name: 'Update Jobs',
-      path: '/works'
+      path: '/works',
+      permission: 'jobs_access'
     },
     {
       name: 'MECO Setting',
-      path: '/meco-setting'
+      path: '/meco-setting',
+      permission: 'meco_setting_access'
     },
     {
       name: 'Monitoring',
-      path: '/monitoring'
+      path: '/monitoring',
+      permission: 'monitoring_access'
     },
   ];
 
@@ -59,10 +68,20 @@ function SidebarMenu() {
       <UserPanel imageUrl={user} username={profile.full_name} status="Online" statusType="success"/>
       <Item id="dashboard" icon="fa-tachometer-alt" text="Dashboard" to="/" history={history}/>
       <Item id="management" text="Management" icon="fa-list">
-        {managementRoutes.map((route) => <Item key={route.path} id={route.path} text={route.name} to={route.path}/>)}
+        {
+          managementRoutes.map((route) => (
+            !!profile.permissions[route.permission]
+            && <Item key={route.path} id={route.path} text={route.name} to={route.path}/>
+          ))
+        }
       </Item>
       <Item id="pms" text="PMS" icon="fa-wrench">
-        {pmsRoutes.map((route) => <Item key={route.path} id={route.path} text={route.name} to={route.path}/>)}
+        {
+          pmsRoutes.map((route) => (
+            !!profile.permissions[route.permission]
+            && <Item key={route.path} id={route.path} text={route.name} to={route.path}/>
+          ))
+        }
       </Item>
     </React.Fragment>
   );

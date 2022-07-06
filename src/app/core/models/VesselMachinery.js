@@ -1,7 +1,7 @@
 import Vessel from './Vessel';
 import Machinery from './Machinery';
 import InChargeRank from './InChargeRank';
-import VesselMachinerySubCategories from './VesselMachinerySubCategories';
+import VesselMachinerySubCategory from './VesselMachinerySubCategory';
 import MachineryModel from './MachineryModel';
 import MachineryMaker from './MachineryMaker';
 
@@ -13,6 +13,6 @@ export default function Interval(data = {}) {
   this.model = data.model ? new MachineryModel(data.model) : new MachineryModel();
   this.maker = data.maker ? new MachineryMaker(data.maker) : new MachineryMaker();
   this.sub_categories = data.sub_categories
-    ? data.sub_categories.map(subCategory => new VesselMachinerySubCategories(subCategory))
+    ? data.sub_categories.map(subCategory => new VesselMachinerySubCategory(subCategory))
     : [];
 }

@@ -12,6 +12,7 @@ import {
   reqListStatus,
   setEmployeeData,
 } from '../../../store/employeeSlice';
+import {profileData} from '../../../store/profileSlice';
 import {DataTable, Divider, Modal} from '../../../components';
 import Employee from '../../../core/models/Employee';
 import EmployeeForm from '../form/EmployeeForm';
@@ -24,6 +25,7 @@ function EmployeeList({name}) {
   const employees = useSelector(employeeList);
   const meta = useSelector(metaData);
   const status = useSelector(reqListStatus);
+  const profile = useSelector(profileData);
 
   const isLoading = status === 'loading';
 
@@ -65,22 +67,24 @@ function EmployeeList({name}) {
   };
 
   const handleRowSelect = (selectedRow) => {
-    let newSelectedRowIds = selectedRowIds.slice();
-    if (selectedRow.action === 'checked') {
-      newSelectedRowIds.push(selectedRow.id);
-    } else if (selectedRow.action === 'unchecked') {
-      const i = newSelectedRowIds.indexOf(selectedRow);
-      newSelectedRowIds.splice(i, 1)
-    } else if (selectedRow.action === 'checked_all') {
-      newSelectedRowIds = selectedRow.ids;
-    } else if (selectedRow.action === 'unchecked_all') {
-      newSelectedRowIds = [];
-    } else {
-      setLocalEmployee(selectedRow);
-      dispatch(setEmployeeData(selectedRow));
-      history.push(`/employees/${selectedRow.id}`);
+    if (!!profile.permissions['employee_show']) {
+      let newSelectedRowIds = selectedRowIds.slice();
+      if (selectedRow.action === 'checked') {
+        newSelectedRowIds.push(selectedRow.id);
+      } else if (selectedRow.action === 'unchecked') {
+        const i = newSelectedRowIds.indexOf(selectedRow);
+        newSelectedRowIds.splice(i, 1)
+      } else if (selectedRow.action === 'checked_all') {
+        newSelectedRowIds = selectedRow.ids;
+      } else if (selectedRow.action === 'unchecked_all') {
+        newSelectedRowIds = [];
+      } else {
+        setLocalEmployee(selectedRow);
+        dispatch(setEmployeeData(selectedRow));
+        history.push(`/employees/${selectedRow.id}`);
+      }
+      setSelectedRowIds(newSelectedRowIds);
     }
-    setSelectedRowIds(newSelectedRowIds);
   }
 
   const handlePageChange = (page) => {
@@ -132,12 +136,15 @@ function EmployeeList({name}) {
       <Content title={name} browserTitle={`ASTRO | Management - ${name}`}>
         <Row>
           <Col xs={12}>
-            <Button
-              type="primary"
-              text="Add New Employee"
-              onClick={handleModalOpen}
-              pullRight
-            />
+            {
+              !!profile.permissions['employee_create']
+              && <Button
+                type="primary"
+                text="Add New Employee"
+                onClick={handleModalOpen}
+                pullRight
+              />
+            }
           </Col>
           <Divider/>
           <Col xs={12}>
@@ -175,6 +182,7 @@ function EmployeeList({name}) {
                 <Col xs={12}>
                   {
                     !!selectedRowIds.length
+                    && !!profile.permissions['employee_delete']
                     && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
                   }
                 </Col>
