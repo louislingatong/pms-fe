@@ -6,7 +6,8 @@ import {Inputs} from 'adminlte-2-react';
 import {Button, Col, Row} from 'react-bootstrap';
 import Transform from '../../../utils/Transformer';
 import {reqDataStatus, runningHourAddAsync} from '../../../store/runningHourSlice';
-import moment from "moment";
+import {profileData} from '../../../store/profileSlice';
+import moment from 'moment';
 
 const validator = new ReeValidate({
   updating_date: 'required',
@@ -18,6 +19,7 @@ function RunningHourForm({id}) {
 
   const dispatch = useDispatch();
   const status = useSelector(reqDataStatus);
+  const profile = useSelector(profileData);
 
   const [formData, setFormData] = useState({
     vessel_machinery_id: id,
@@ -97,13 +99,16 @@ function RunningHourForm({id}) {
           />
         </Col>
         <Col xs={12}>
-          <Button type="submit"
-                  bsStyle="primary"
-                  id="loginButton"
-                  className="pull-right"
-                  disabled={isLoading}>
-            Save
-          </Button>
+          {
+            !!profile.permissions['running_hours_create']
+              && <Button type="submit"
+                         bsStyle="primary"
+                         id="loginButton"
+                         className="pull-right"
+                         disabled={isLoading}>
+              Save
+            </Button>
+          }
         </Col>
       </Row>
     </form>

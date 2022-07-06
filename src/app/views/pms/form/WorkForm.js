@@ -6,6 +6,7 @@ import {Inputs} from 'adminlte-2-react';
 import {Button, Col, Row} from 'react-bootstrap';
 import Transform from '../../../utils/Transformer';
 import {reqDoneListStatus, workAddAsync} from '../../../store/workSlice';
+import {profileData} from '../../../store/profileSlice';
 import moment from 'moment';
 
 const validator = new ReeValidate({
@@ -21,6 +22,7 @@ function WorkForm({ids}) {
 
   const dispatch = useDispatch();
   const status = useSelector(reqDoneListStatus);
+  const profile = useSelector(profileData);
 
   const [formData, setFormData] = useState({
     last_done: moment().format("DD-MMM-YYYY"),
@@ -138,13 +140,16 @@ function WorkForm({ids}) {
           />
         </Col>
         <Col xs={12}>
-          <Button type="submit"
-                  bsStyle="primary"
-                  id="loginButton"
-                  className="pull-right"
-                  disabled={isLoading}>
-            Save
-          </Button>
+          {
+            !!profile.permissions['jobs_create']
+              && <Button type="submit"
+                      bsStyle="primary"
+                      id="loginButton"
+                      className="pull-right"
+                      disabled={isLoading}>
+                Save
+              </Button>
+          }
         </Col>
       </Row>
     </form>

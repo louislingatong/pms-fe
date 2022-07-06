@@ -13,6 +13,7 @@ import {
   metaData,
   reqListStatus,
 } from '../../../store/machinerySlice';
+import {profileData} from '../../../store/profileSlice';
 import MachineryView from './MachineryView';
 import Machinery from '../../../core/models/Machinery';
 import VesselDepartmentSelect from '../../../components/select/VesselDepartmentSelect';
@@ -24,6 +25,7 @@ function MachineryList({name}) {
   const machinery = useSelector(machineryData);
   const meta = useSelector(metaData);
   const status = useSelector(reqListStatus);
+  const profile = useSelector(profileData);
 
   const isLoading = status === 'loading';
 
@@ -74,21 +76,23 @@ function MachineryList({name}) {
   };
 
   const handleRowSelect = (selectedRow) => {
-    let newSelectedRowIds = selectedRowIds.slice();
-    if (selectedRow.action === 'checked') {
-      newSelectedRowIds.push(selectedRow.id);
-    } else if (selectedRow.action === 'unchecked') {
-      const i = newSelectedRowIds.indexOf(selectedRow);
-      newSelectedRowIds.splice(i, 1)
-    } else if (selectedRow.action === 'checked_all') {
-      newSelectedRowIds = selectedRow.ids;
-    } else if (selectedRow.action === 'unchecked_all') {
-      newSelectedRowIds = [];
-    } else {
-      newSelectedRowIds = [selectedRow.id];
-      setLocalMachinery(selectedRow);
+    if (!!profile.permissions['machinery_show']) {
+      let newSelectedRowIds = selectedRowIds.slice();
+      if (selectedRow.action === 'checked') {
+        newSelectedRowIds.push(selectedRow.id);
+      } else if (selectedRow.action === 'unchecked') {
+        const i = newSelectedRowIds.indexOf(selectedRow);
+        newSelectedRowIds.splice(i, 1)
+      } else if (selectedRow.action === 'checked_all') {
+        newSelectedRowIds = selectedRow.ids;
+      } else if (selectedRow.action === 'unchecked_all') {
+        newSelectedRowIds = [];
+      } else {
+        newSelectedRowIds = [selectedRow.id];
+        setLocalMachinery(selectedRow);
+      }
+      setSelectedRowIds(newSelectedRowIds);
     }
-    setSelectedRowIds(newSelectedRowIds);
   };
 
   const handlePageChange = (page) => {
@@ -152,12 +156,14 @@ function MachineryList({name}) {
       <Content title={name} browserTitle={`ASTRO | Management - ${name}`}>
         <Row>
           <Col xs={12}>
-            <Button
-              type="primary"
-              text="Add New Machinery"
-              onClick={handleModalOpen}
-              pullRight
-            />
+            {
+              !!profile.permissions['machinery_create']
+                && <Button
+                  type="primary"
+                  text="Add New Machinery"
+                  onClick={handleModalOpen}
+                  pullRight/>
+            }
           </Col>
           <Divider/>
           <Col xs={12}>
@@ -207,7 +213,8 @@ function MachineryList({name}) {
                 <Col xs={12}>
                   {
                     !!selectedRowIds.length
-                    && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
+                      && !!profile.permissions['machinery_delete']
+                      && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
                   }
                 </Col>
               </Row>

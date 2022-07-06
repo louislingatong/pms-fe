@@ -11,6 +11,7 @@ import {
   vesselMachineryList,
   vesselMachineryListAsync
 } from '../../../store/vesselMachinerySlice';
+import {profileData} from '../../../store/profileSlice';
 import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
 import VesselMachinery from '../../../core/models/VesselMachinery';
 import Divider from '../../../components/Divider';
@@ -26,6 +27,7 @@ function VesselMachineryList({name}) {
   const vesselMachineries = useSelector(vesselMachineryList);
   const meta = useSelector(metaData);
   const status = useSelector(reqListStatus);
+  const profile = useSelector(profileData);
 
   const isLoading = status === 'loading';
 
@@ -80,21 +82,23 @@ function VesselMachineryList({name}) {
   };
 
   const handleRowSelect = (selectedRow) => {
-    let newSelectedRowIds = selectedRowIds.slice();
-    if (selectedRow.action === 'checked') {
-      newSelectedRowIds.push(selectedRow.id);
-    } else if (selectedRow.action === 'unchecked') {
-      const i = newSelectedRowIds.indexOf(selectedRow);
-      newSelectedRowIds.splice(i, 1)
-    } else if (selectedRow.action === 'checked_all') {
-      newSelectedRowIds = selectedRow.ids;
-    } else if (selectedRow.action === 'unchecked_all') {
-      newSelectedRowIds = [];
-    } else {
-      newSelectedRowIds = [selectedRow.id];
-      setLocalVesselMachinery(selectedRow);
+    if (!!profile.permissions['vessel_machinery_show']) {
+      let newSelectedRowIds = selectedRowIds.slice();
+      if (selectedRow.action === 'checked') {
+        newSelectedRowIds.push(selectedRow.id);
+      } else if (selectedRow.action === 'unchecked') {
+        const i = newSelectedRowIds.indexOf(selectedRow);
+        newSelectedRowIds.splice(i, 1)
+      } else if (selectedRow.action === 'checked_all') {
+        newSelectedRowIds = selectedRow.ids;
+      } else if (selectedRow.action === 'unchecked_all') {
+        newSelectedRowIds = [];
+      } else {
+        newSelectedRowIds = [selectedRow.id];
+        setLocalVesselMachinery(selectedRow);
+      }
+      setSelectedRowIds(newSelectedRowIds);
     }
-    setSelectedRowIds(newSelectedRowIds);
   };
 
   const handlePageChange = (page) => {
@@ -172,12 +176,14 @@ function VesselMachineryList({name}) {
       <Content title={name} browserTitle={`ASTRO | PMS - ${name}`}>
         <Row>
           <Col xs={12}>
-            <Button
-              type="primary"
-              text="Add New Vessel Machinery"
-              onClick={handleModalOpen}
-              pullRight
-            />
+            {
+              !!profile.permissions['vessel_machinery_create']
+                && <Button
+                  type="primary"
+                  text="Add New Vessel Machinery"
+                  onClick={handleModalOpen}
+                  pullRight/>
+            }
           </Col>
           <Divider/>
           <Col xs={12}>
@@ -228,7 +234,8 @@ function VesselMachineryList({name}) {
                 <Col xs={12}>
                   {
                     !!selectedRowIds.length
-                    && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
+                      && !!profile.permissions['vessel_machinery_delete']
+                      && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
                   }
                 </Col>
               </Row>

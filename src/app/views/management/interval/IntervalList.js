@@ -131,12 +131,11 @@ function IntervalList({name}) {
           <Col xs={12}>
             {
               !!profile.permissions['interval_create']
-              && <Button
-                type="primary"
-                text="Add New Interval"
-                onClick={handleModalOpen}
-                pullRight
-              />
+                && <Button
+                  type="primary"
+                  text="Add New Interval"
+                  onClick={handleModalOpen}
+                  pullRight/>
             }
           </Col>
           <Divider/>
@@ -175,8 +174,8 @@ function IntervalList({name}) {
                 <Col xs={12}>
                   {
                     !!selectedRowIds.length
-                    && !!profile.permissions['interval_delete']
-                    && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
+                      && !!profile.permissions['interval_delete']
+                      && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
                   }
                 </Col>
               </Row>

@@ -7,9 +7,11 @@ import Divider from '../../../components/Divider';
 import MachineryForm from '../form/MachineryForm';
 import SubCategoryForm from '../form/SubCategoryForm';
 import {reqDataStatus} from '../../../store/machinerySlice';
+import {profileData} from '../../../store/profileSlice';
 
 function MachineryView({data: localMachinery}) {
   const status = useSelector(reqDataStatus);
+  const profile = useSelector(profileData);
 
   const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [showSubCategoryForm, setShowSubCategoryForm] = useState(false);
@@ -54,11 +56,11 @@ function MachineryView({data: localMachinery}) {
               </Col>
               <Col xs={6} className="display-flex align-items-center justify-content-end">
                 {
-                  !showSubCategoryForm && (
-                    <Button type="primary"
+                  !showSubCategoryForm
+                    && !!profile.permissions['sub_category_create']
+                    && <Button type="primary"
                             text="Add Sub Category"
                             onClick={() => setShowSubCategoryForm(!showSubCategoryForm)}/>
-                  )
                 }
               </Col>
             </Row>
@@ -94,7 +96,8 @@ function MachineryView({data: localMachinery}) {
               <Col xs={12}>
                 {
                   !!selectedRowIds.length
-                  && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
+                    && profile.permissions['sub_category_delete']
+                    && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
                 }
               </Col>
             </Row>

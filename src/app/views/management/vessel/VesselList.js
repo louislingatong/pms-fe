@@ -131,12 +131,11 @@ function VesselList({name}) {
           <Col xs={12}>
             {
               !!profile.permissions['vessel_create']
-              && <Button
-                type="primary"
-                text="Add New Vessel"
-                onClick={handleModalOpen}
-                pullRight
-              />
+                && <Button
+                  type="primary"
+                  text="Add New Vessel"
+                  onClick={handleModalOpen}
+                  pullRight/>
             }
           </Col>
           <Divider/>
@@ -175,8 +174,8 @@ function VesselList({name}) {
                 <Col xs={12}>
                   {
                     !!selectedRowIds.length
-                    && !!profile.permissions['vessel_delete']
-                    && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
+                      && !!profile.permissions['vessel_delete']
+                      && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
                   }
                 </Col>
               </Row>

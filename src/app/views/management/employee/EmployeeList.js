@@ -138,12 +138,11 @@ function EmployeeList({name}) {
           <Col xs={12}>
             {
               !!profile.permissions['employee_create']
-              && <Button
-                type="primary"
-                text="Add New Employee"
-                onClick={handleModalOpen}
-                pullRight
-              />
+                && <Button
+                  type="primary"
+                  text="Add New Employee"
+                  onClick={handleModalOpen}
+                  pullRight/>
             }
           </Col>
           <Divider/>
@@ -182,8 +181,8 @@ function EmployeeList({name}) {
                 <Col xs={12}>
                   {
                     !!selectedRowIds.length
-                    && !!profile.permissions['employee_delete']
-                    && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
+                      && !!profile.permissions['employee_delete']
+                      && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
                   }
                 </Col>
               </Row>

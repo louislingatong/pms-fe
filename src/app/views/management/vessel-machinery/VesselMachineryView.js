@@ -11,6 +11,7 @@ import {
   vesselMachineryExportAsync,
   vesselMachineryDataAsync
 } from '../../../store/vesselMachinerySlice';
+import {profileData} from '../../../store/profileSlice';
 import IntervalSelect from '../../../components/select/IntervalSelect';
 import MachinerySubCategoryDescriptionAutoSuggest
   from '../../../components/auto-suggest/MachinerySubCategoryDescriptionAutoSuggest';
@@ -31,6 +32,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
 
   const dispatch = useDispatch();
   const status = useSelector(reqDataStatus);
+  const profile = useSelector(profileData);
 
   const [formErrors, setFormErrors] = useState({});
   const [formDatas, setFormDatas] = useState({});
@@ -330,10 +332,11 @@ function VesselMachineryView({data: localVesselMachinery}) {
       width: '10',
       render: (action, row) => {
        if (!updatedSubCategories.includes(row.id)) {
-         return <Button type="primary"
-                        icon="fas-edit"
-                        disabled={!formDatas[row.id]}
-                        onClick={() => enableEditRow(row.id)}/>
+         return !!profile.permissions['vessel_sub_category_edit']
+           && <Button type="primary"
+                      icon="fas-edit"
+                      disabled={!formDatas[row.id]}
+                      onClick={() => enableEditRow(row.id)}/>
        }
        return <Button type="default"
                       icon="fas-times"
@@ -349,12 +352,15 @@ function VesselMachineryView({data: localVesselMachinery}) {
         hasId && (
           <Row>
             <Col xs={12}>
-              <Button
-                type="primary"
-                text="Export"
-                onClick={handleExportVesselMachinery}
-                pullRight
-              />
+              {
+                !!profile.permissions['vessel_sub_category_export']
+                && <Button
+                  type="primary"
+                  text="Export"
+                  onClick={handleExportVesselMachinery}
+                  pullRight
+                />
+              }
             </Col>
             <Col xs={12}><Divider type="line"/></Col>
           </Row>

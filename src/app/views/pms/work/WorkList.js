@@ -10,6 +10,7 @@ import {
   workHistoryExportAsync,
   worksExportAsync, fileDownloadAsync
 } from '../../../store/workSlice';
+import {profileData} from '../../../store/profileSlice';
 import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
 import {Box, Button, Col, Content, Inputs, Row} from 'adminlte-2-react';
 import DataTable from '../../../components/DataTable';
@@ -30,6 +31,7 @@ function WorkList({name}) {
   const works = useSelector(workList);
   const meta = useSelector(metaData);
   const status = useSelector(reqListStatus);
+  const profile = useSelector(profileData);
 
   const isLoading = status === 'loading';
 
@@ -219,7 +221,10 @@ function WorkList({name}) {
     {
       title: '',
       data: 'action',
-      render: (action, row) => <Button type="primary" icon="fas-history" onClick={() => viewWorkHistory(row)}/>,
+      render: (action, row) => (
+        !!profile.permissions['jobs_history_show']
+        && <Button type="primary" icon="fas-history" onClick={() => viewWorkHistory(row)}/>
+      ),
     },
   ];
 
@@ -266,12 +271,14 @@ function WorkList({name}) {
                   <Divider type="line"/>
                 </Col>
                 <Col xs={12}>
-                  <Button
-                    type="primary"
-                    text="Export"
-                    onClick={handleExportWorks}
-                    pullRight
-                  />
+                  {
+                    !!profile.permissions['jobs_export']
+                      && <Button
+                            type="primary"
+                            text="Export"
+                            onClick={handleExportWorks}
+                            pullRight/>
+                  }
                 </Col>
                 <Col xs={12}>
                   <Divider/>
@@ -306,11 +313,10 @@ function WorkList({name}) {
                 <Col xs={12}>
                   {
                     !!Object.keys(selectedRows).length
-                    && (
-                        <Button type="primary"
-                                text={`Update Job${Object.keys(selectedRows).length > 1 ? 's' : ''}`}
-                                onClick={handleWorkModalOpen} pullRight/>
-                    )
+                    && !!profile.permissions['jobs_show']
+                    && <Button type="primary"
+                               text={`Update Job${Object.keys(selectedRows).length > 1 ? 's' : ''}`}
+                               onClick={handleWorkModalOpen} pullRight/>
                   }
                 </Col>
               </Row>
@@ -335,12 +341,15 @@ function WorkList({name}) {
         >
           <Row>
             <Col xs={12}>
-              <Button
-                type="primary"
-                text="Export"
-                onClick={handleExportWorkHistory}
-                pullRight
-              />
+              {
+                !!profile.permissions['jobs_history_export']
+                  && <Button
+                    type="primary"
+                    text="Export"
+                    onClick={handleExportWorkHistory}
+                    pullRight
+                  />
+              }
             </Col>
             <Col xs={12}>
               <Row>
@@ -388,10 +397,14 @@ function WorkList({name}) {
                       <Col xs={3}>{workHistory.instructions}</Col>
                       <Col xs={2}>{workHistory.created_at}</Col>
                       <Col xs={2}>{workHistory.creator}</Col>
-                      <Col xs={1}>{workHistory.file
-                        ? <Button type="primary" icon="fas-file"
-                                  onClick={() => dispatch(fileDownloadAsync(workHistory.file))}/>
-                        : ''}</Col>
+                      <Col xs={1}>
+                        {
+                          workHistory.file
+                            && !!profile.permissions['jobs_download_file']
+                            && <Button type="primary" icon="fas-file"
+                                       onClick={() => dispatch(fileDownloadAsync(workHistory.file))}/>
+                        }
+                      </Col>
                     </Row>
                   </Col>
                   <Col xs={12}><Divider type="line"/></Col>

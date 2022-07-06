@@ -213,7 +213,7 @@ function EmployeeView({match, name}) {
           <Button type="default" text="Back" onClick={() => history.goBack()}/>
           {
             !!profile.permissions['employee_edit']
-            && <Button type="primary" text="Edit" onClick={handleModalOpen} pullRight/>
+              && <Button type="primary" text="Edit" onClick={handleModalOpen} pullRight/>
           }
         </Col>
       </Row>

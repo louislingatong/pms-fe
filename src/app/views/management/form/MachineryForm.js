@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
 import {Col, Row, Button} from 'react-bootstrap';
 import {Inputs} from 'adminlte-2-react';
-import {machineryAddAsync, machineryEditAsync, reqDataStatus} from '../../../store/machinerySlice';
+import {
+  machineryAddAsync,
+  machineryEditAsync,
+  reqDataStatus
+} from '../../../store/machinerySlice';
+import {profileData} from '../../../store/profileSlice';
 import Transform from '../../../utils/Transformer';
 import Machinery from '../../../core/models/Machinery';
 import VesselDepartmentSelect from '../../../components/select/VesselDepartmentSelect';
@@ -20,6 +25,7 @@ function MachineryForm({data: localMachinery}) {
 
   const dispatch = useDispatch();
   const status = useSelector(reqDataStatus);
+  const profile = useSelector(profileData);
 
   const [isViewing, setIsViewing] = useState(false);
   const [formData, setFormData] = useState({
@@ -128,7 +134,8 @@ function MachineryForm({data: localMachinery}) {
         <Col xs={12}>
           {
             isViewing
-              ? <Button bsStyle="primary" onClick={() => setIsViewing(false)} className="pull-right">Edit</Button>
+              ? !!profile.permissions['machinery_edit']
+                && <Button bsStyle="primary" onClick={() => setIsViewing(false)} className="pull-right">Edit</Button>
               : <Button type="submit"
                         bsStyle="primary"
                         id="loginButton"

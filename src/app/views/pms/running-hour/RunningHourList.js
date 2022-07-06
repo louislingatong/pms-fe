@@ -8,6 +8,7 @@ import {
   runningHourListAsync,
   runningHourHistoryExportAsync, runningHoursExportAsync
 } from '../../../store/runningHourSlice';
+import {profileData} from '../../../store/profileSlice';
 import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
 import {Box, Button, Col, Content, Row} from 'adminlte-2-react';
 import DataTable from '../../../components/DataTable';
@@ -25,6 +26,7 @@ function RunningHourList({name}) {
   const runningHours = useSelector(runningHourList);
   const meta = useSelector(metaData);
   const status = useSelector(reqListStatus);
+  const profile = useSelector(profileData);
 
   const isLoading = status === 'loading';
 
@@ -81,21 +83,23 @@ function RunningHourList({name}) {
   };
 
   const handleRowSelect = (selectedRow) => {
-    let newSelectedRowIds = selectedRowIds.slice();
-    if (selectedRow.action === 'checked') {
-      newSelectedRowIds.push(selectedRow.id);
-    } else if (selectedRow.action === 'unchecked') {
-      const i = newSelectedRowIds.indexOf(selectedRow);
-      newSelectedRowIds.splice(i, 1)
-    } else if (selectedRow.action === 'checked_all') {
-      newSelectedRowIds = selectedRow.ids;
-    } else if (selectedRow.action === 'unchecked_all') {
-      newSelectedRowIds = [];
-    } else {
-      newSelectedRowIds = [selectedRow.id];
-      setLocalVesselMachineryRunningHour(selectedRow);
+    if (!!profile.permissions['running_hours_show']) {
+      let newSelectedRowIds = selectedRowIds.slice();
+      if (selectedRow.action === 'checked') {
+        newSelectedRowIds.push(selectedRow.id);
+      } else if (selectedRow.action === 'unchecked') {
+        const i = newSelectedRowIds.indexOf(selectedRow);
+        newSelectedRowIds.splice(i, 1)
+      } else if (selectedRow.action === 'checked_all') {
+        newSelectedRowIds = selectedRow.ids;
+      } else if (selectedRow.action === 'unchecked_all') {
+        newSelectedRowIds = [];
+      } else {
+        newSelectedRowIds = [selectedRow.id];
+        setLocalVesselMachineryRunningHour(selectedRow);
+      }
+      setSelectedRowIds(newSelectedRowIds);
     }
-    setSelectedRowIds(newSelectedRowIds);
   };
 
   const handlePageChange = (page) => {
@@ -184,7 +188,10 @@ function RunningHourList({name}) {
     {
       title: '',
       data: 'action',
-      render: (action, row) => <Button type="primary" icon="fas-history" onClick={() => viewRunningHourHistory(row)}/>,
+      render: (action, row) => (
+        !!profile.permissions['running_hours_history_show']
+          && <Button type="primary" icon="fas-history" onClick={() => viewRunningHourHistory(row)}/>
+      ),
     },
   ];
 
@@ -208,12 +215,15 @@ function RunningHourList({name}) {
                   <Divider type="line"/>
                 </Col>
                 <Col xs={12}>
-                  <Button
-                    type="primary"
-                    text="Export"
-                    onClick={handleExportRunningHours}
-                    pullRight
-                  />
+                  {
+                    !!profile.permissions['running_hours_export']
+                    && <Button
+                      type="primary"
+                      text="Export"
+                      onClick={handleExportRunningHours}
+                      pullRight
+                    />
+                  }
                 </Col>
                 <Col xs={12}>
                   <Divider/>
@@ -266,12 +276,14 @@ function RunningHourList({name}) {
         >
           <Row>
             <Col xs={12}>
-              <Button
-                type="primary"
-                text="Export"
-                onClick={handleExportRunningHourHistory}
-                pullRight
-              />
+              {
+                !!profile.permissions['running_hours_history_export']
+                  && <Button
+                    type="primary"
+                    text="Export"
+                    onClick={handleExportRunningHourHistory}
+                    pullRight/>
+              }
             </Col>
             <Col xs={12}><Divider type="line"/></Col>
             <Col xs={12}>

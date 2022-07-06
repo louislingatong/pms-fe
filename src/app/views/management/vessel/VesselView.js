@@ -608,7 +608,10 @@ function VesselView({match, name}) {
         </Col>
         <Col xs={12}>
           <Button type="default" text="Back" onClick={() => history.goBack()}/>
-          <Button type="primary" text="Edit" onClick={handleModalOpen} pullRight/>
+          {
+            !!profile.permissions['vessel_edit']
+              && <Button type="primary" text="Edit" onClick={handleModalOpen} pullRight/>
+          }
         </Col>
       </Row>
       <Modal

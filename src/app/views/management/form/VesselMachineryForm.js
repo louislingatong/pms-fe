@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
 import {Button, Col, Row} from 'react-bootstrap';
 import {Inputs} from 'adminlte-2-react';
-import {reqDataStatus, vesselMachineryAddAsync, vesselMachineryEditAsync} from '../../../store/vesselMachinerySlice';
+import {
+  reqDataStatus,
+  vesselMachineryAddAsync,
+  vesselMachineryEditAsync
+} from '../../../store/vesselMachinerySlice';
+import {profileData} from '../../../store/profileSlice';
 import Transform from '../../../utils/Transformer';
 import VesselMachinery from '../../../core/models/VesselMachinery';
 import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
@@ -27,6 +32,7 @@ function VesselMachineryForm({data: localVesselMachinery}) {
   const dispatch = useDispatch();
   const status = useSelector(reqDataStatus);
   const activeVessel = useSelector(activeVesselSubMenu);
+  const profile = useSelector(profileData);
 
   const [isViewing, setIsViewing] = useState(false);
   const [formData, setFormData] = useState({
@@ -161,7 +167,8 @@ function VesselMachineryForm({data: localVesselMachinery}) {
         <Col xs={12}>
           {
             isViewing
-              ? <Button bsStyle="primary" onClick={() => setIsViewing(false)} className="pull-right">Edit</Button>
+              ? !!profile.permissions['vessel_machinery_edit']
+                && <Button bsStyle="primary" onClick={() => setIsViewing(false)} className="pull-right">Edit</Button>
               : <Button type="submit"
                         bsStyle="primary"
                         id="loginButton"

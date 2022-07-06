@@ -5,7 +5,12 @@ import ReeValidate from 'ree-validate';
 import {Inputs} from 'adminlte-2-react';
 import {Col, Row, Button} from 'react-bootstrap';
 import Transform from '../../../utils/Transformer';
-import {intervalAddAsync, intervalEditAsync, reqDataStatus} from '../../../store/intervalSlice';
+import {
+  intervalAddAsync,
+  intervalEditAsync,
+  reqDataStatus
+} from '../../../store/intervalSlice';
+import {profileData} from '../../../store/profileSlice';
 import Interval from '../../../core/models/Interval';
 import IntervalUnitSelect from '../../../components/select/IntervalUnitSelect';
 
@@ -20,6 +25,7 @@ function IntervalForm({data: localInterval}) {
 
   const dispatch = useDispatch();
   const status = useSelector(reqDataStatus);
+  const profile = useSelector(profileData);
 
   const [isViewing, setIsViewing] = useState(false);
 
@@ -126,7 +132,8 @@ function IntervalForm({data: localInterval}) {
         <Col xs={12}>
           {
             isViewing
-              ? <Button bsStyle="primary" onClick={() => setIsViewing(false)} className="pull-right">Edit</Button>
+              ? !!profile.permissions['interval_edit']
+                && <Button bsStyle="primary" onClick={() => setIsViewing(false)} className="pull-right">Edit</Button>
               : <Button type="submit"
                         bsStyle="primary"
                         id="loginButton"
