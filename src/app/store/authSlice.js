@@ -54,10 +54,7 @@ export const authSlice = createSlice({
     authenticate: (state, action) => {
       state.isAuthenticated = action.payload;
     },
-    clearFlag: (state, action) => {
-      state.successFlag = false;
-      state.errorFlag = false;
-    }
+    resetAuth: (state, action) => initialState
   },
   extraReducers: (builder) => {
     builder
@@ -118,7 +115,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const {authenticate, clearFlag} = authSlice.actions;
+export const {authenticate, resetAuth} = authSlice.actions;
 
 export const authCheck = () => dispatch => {
   const accessToken = localStorage.getItem('accessToken');

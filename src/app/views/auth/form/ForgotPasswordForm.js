@@ -78,7 +78,7 @@ function ForgotPasswordForm(props) {
                   id="loginButton"
                   className="pull-right"
                   disabled={isLoading}>
-            Submit
+            Forgot
           </Button>
         </Col>
       </Row>

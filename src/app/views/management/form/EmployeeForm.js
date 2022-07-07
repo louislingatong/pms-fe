@@ -8,6 +8,7 @@ import Transform from '../../../utils/Transformer';
 import {employeeAddAsync, employeeEditAsync, reqDataStatus} from '../../../store/employeeSlice';
 import EmployeeDepartmentSelect from '../../../components/select/EmployeeDepartmentSelect';
 import Employee from '../../../core/models/Employee';
+import InchargeRankSelect from "../../../components/select/InchargeRankSelect";
 
 const validator = new ReeValidate({
   email: 'required|email',
@@ -167,14 +168,26 @@ function EmployeeForm({data: employee}) {
           />
         </Col>
         <Col xs={12}>
-          <Text
-            name="position"
-            id="positionFormInput"
-            label="Position"
-            labelPosition="above"
-            onChange={handleInputChange}
-            value={formData.position}
-          />
+          {
+            formData.department === 'Crewing'
+              ? <InchargeRankSelect
+                form
+                name="position"
+                id="positionSelect"
+                label="Position"
+                labelPosition="above"
+                allowClear={true}
+                onChange={handleInputChange}
+                value={formData.position}/>
+              : <Text
+                name="position"
+                id="positionFormInput"
+                label="Position"
+                labelPosition="above"
+                onChange={handleInputChange}
+                value={formData.position}
+              />
+          }
         </Col>
         <Col xs={12}>
           <div className="checkbox">

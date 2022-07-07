@@ -10,6 +10,7 @@ import vesselMachineryReducer from './vesselMachinerySlice';
 import runningHourReducer from './runningHourSlice';
 import workReducer from './workSlice';
 import optionReducer from './optionSlice';
+import permissionReducer from './permissionSlice';
 
 export default configureStore({
   reducer: {
@@ -23,7 +24,8 @@ export default configureStore({
     vesselMachinery: vesselMachineryReducer,
     runningHour: runningHourReducer,
     work: workReducer,
-    option: optionReducer
+    option: optionReducer,
+    permission: permissionReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -41,7 +43,8 @@ export default configureStore({
           'interval',
           'runningHour',
           'work',
-          'option'
+          'option',
+          'permission'
         ],
       },
     }),

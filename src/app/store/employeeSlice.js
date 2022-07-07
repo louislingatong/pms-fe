@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import Employee from '../core/models/Employee';
 import Meta from '../core/models/Meta';
-import {add, edit, fetchAll, fetchById} from '../services/employeeService';
+import {add, edit, editPermissions, fetchAll, fetchById} from '../services/employeeService';
 import Transform from '../utils/Transformer';
 
 const initialState = {
@@ -42,6 +42,14 @@ export const employeeEditAsync = createAsyncThunk(
   'employee/editEmployee',
   async (data) => {
     const response = await edit(data);
+    return Transform.fetchObject(response.data, Employee);
+  }
+);
+
+export const employeePermissionEditAsync = createAsyncThunk(
+  'employee/editEmployeePermission',
+  async (data) => {
+    const response = await editPermissions(data);
     return Transform.fetchObject(response.data, Employee);
   }
 );
@@ -95,6 +103,16 @@ export const employeeSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(employeeEditAsync.rejected, (state, action) => {
+        state.dataStatus = 'idle';
+      })
+      .addCase(employeePermissionEditAsync.pending, (state) => {
+        state.dataStatus = 'loading';
+      })
+      .addCase(employeePermissionEditAsync.fulfilled, (state, action) => {
+        state.dataStatus = 'idle';
+        state.data = action.payload;
+      })
+      .addCase(employeePermissionEditAsync.rejected, (state, action) => {
         state.dataStatus = 'idle';
       });
   },

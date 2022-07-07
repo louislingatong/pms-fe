@@ -65,3 +65,26 @@ export function edit(data) {
   })
 }
 
+export function editPermissions(data) {
+  let employeeId;
+  const formData = new FormData();
+  for (const [key, value] of Object.entries(data)) {
+    if (key === 'employee_id') {
+      employeeId = value;
+    } else {
+      formData.append(key, value);
+    }
+  }
+  formData.append('_method', 'PUT');
+  return new Promise((resolve, reject) => {
+    Http.post(`employees/${employeeId}/edit-permissions`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => {
+        console.log(err.response.data.error);
+        reject(err);
+      })
+  })
+}
+

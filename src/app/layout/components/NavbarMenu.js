@@ -2,14 +2,16 @@ import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {Inputs} from 'adminlte-2-react';
-import {logoutAsync} from '../../store/authSlice';
+import {resetAuth, logoutAsync} from '../../store/authSlice';
+import {resetProfile} from '../../store/profileSlice';
 import {Entry} from '../../components';
 import {
   activeVesselSubMenu,
   reqVesselSubMenusStatus,
   setSelectedVessel,
   vesselListAsync,
-  vesselSubMenus
+  vesselSubMenus,
+  resetNavbarMenu
 } from '../../store/navbarMenuSlice';
 import {useDebounce} from '../../utils/Hooks';
 import Vessel from '../../core/models/Vessel';
@@ -63,6 +65,13 @@ function NavbarMenu() {
     dispatch(vesselListAsync(params));
   };
 
+  const handleLogout = () => {
+    dispatch(logoutAsync());
+    dispatch(resetAuth());
+    dispatch(resetNavbarMenu());
+    dispatch(resetProfile());
+  }
+
   return (
     <React.Fragment>
       <Entry
@@ -90,7 +99,7 @@ function NavbarMenu() {
       </Entry>
       <Entry
         icon="fa-power-off"
-        onClick={() => dispatch(logoutAsync())}
+        onClick={handleLogout}
       />
     </React.Fragment>
   );

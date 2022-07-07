@@ -92,7 +92,7 @@ function ResetPasswordForm({token}) {
                   id="resetPasswordButton"
                   className="pull-right"
                   disabled={isLoading}>
-            Submit
+            Reset
           </Button>
         </Col>
       </Row>

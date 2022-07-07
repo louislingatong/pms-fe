@@ -1,17 +1,12 @@
-import React, {useEffect}  from 'react';
+import React from 'react';
 import {Link} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import LoginForm from '../form/LoginForm';
-import {clearFlag, errorFlag} from '../../../store/authSlice';
+import {errorFlag} from '../../../store/authSlice';
 import {Alert} from 'adminlte-2-react';
 
 function Login() {
-  const dispatch = useDispatch();
   const isError = useSelector(errorFlag);
-
-  useEffect(() => {
-    dispatch(clearFlag());
-  }, []);
 
   return (
     <div className="login-box-body">

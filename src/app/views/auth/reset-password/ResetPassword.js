@@ -1,21 +1,16 @@
-import React, {useEffect}  from 'react';
+import React from 'react';
 import {Link} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import ResetPasswordForm from '../form/ResetPasswordForm';
-import {clearFlag, successFlag, errorFlag} from '../../../store/authSlice';
+import {successFlag, errorFlag} from '../../../store/authSlice';
 import {Alert} from 'adminlte-2-react';
 import queryString from 'query-string';
 
 function ResetPassword(props) {
-  const dispatch = useDispatch();
   const isSuccess = useSelector(successFlag);
   const isError = useSelector(errorFlag);
 
   const token = queryString.parse(props.location.search, { ignoreQueryPrefix: true }).token;
-
-  useEffect(() => {
-    dispatch(clearFlag());
-  }, []);
 
   return (
     <div className="login-box-body">

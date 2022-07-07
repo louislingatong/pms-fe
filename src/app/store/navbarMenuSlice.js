@@ -23,7 +23,8 @@ export const navbarMenuSlice = createSlice({
   reducers: {
     setSelectedVessel: (state, action) => {
       state.activeVesselSubMenu = action.payload;
-    }
+    },
+    resetNavbarMenu: (state, action) => initialState
   },
   extraReducers: (builder) => {
     builder
@@ -41,7 +42,7 @@ export const navbarMenuSlice = createSlice({
   },
 });
 
-export const {setSelectedVessel} = navbarMenuSlice.actions;
+export const {setSelectedVessel, resetNavbarMenu} = navbarMenuSlice.actions;
 
 export const vesselSubMenus = state => state.navbarMenu.vesselSubMenus;
 export const activeVesselSubMenu = state => state.navbarMenu.activeVesselSubMenu;

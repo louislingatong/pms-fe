@@ -13,6 +13,5 @@ export default function User(data = {}) {
   this.id_number = data.id_number ? data.id_number : '';
   this.position = data.position ? data.position : '';
   this.is_admin = data.is_admin ? 1 : 0;
-  this.role_permissions = data.role_permissions ? data.role_permissions : {};
   this.permissions = data.permissions ? data.permissions : {};
 }

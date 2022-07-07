@@ -90,7 +90,7 @@ function LoginForm(props) {
                   id="loginButton"
                   className="pull-right"
                   disabled={isLoading}>
-            Submit
+            Login
           </Button>
         </Col>
       </Row>

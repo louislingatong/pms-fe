@@ -20,7 +20,9 @@ export const profileAsync = createAsyncThunk(
 export const profileSlice = createSlice({
   name: 'profile',
   initialState,
-  reducers: {},
+  reducers: {
+    resetProfile: (state, action) => initialState
+  },
   extraReducers: (builder) => {
     builder
       .addCase(profileAsync.pending, (state) => {
@@ -35,6 +37,8 @@ export const profileSlice = createSlice({
       });
   },
 });
+
+export const {resetProfile} = profileSlice.actions;
 
 export const profileData = state => state.profile.data;
 export const reqDataStatus = state => state.profile.dataStatus;

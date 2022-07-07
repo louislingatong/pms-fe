@@ -3,8 +3,14 @@ import {useHistory} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {Button, Content, Inputs} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
-import {employeeData, employeeDataAsync,} from '../../../store/employeeSlice';
+import {
+  employeeData,
+  employeeDataAsync,
+  employeePermissionEditAsync,
+  reqDataStatus
+} from '../../../store/employeeSlice';
 import {profileData} from '../../../store/profileSlice';
+import {permissionList, permissionListAsync} from '../../../store/permissionSlice';
 import {Modal} from '../../../components';
 import EmployeeForm from '../form/EmployeeForm';
 
@@ -17,27 +23,38 @@ function EmployeeView({match, name}) {
   const dispatch = useDispatch();
 
   const employee = useSelector(employeeData);
+  const status = useSelector(reqDataStatus);
   const profile = useSelector(profileData);
+  const allPermissions = useSelector(permissionList);
 
   const {params} = match;
   const paramId = parseInt(params.id);
 
   const [localEmployee, setLocalEmployee] = useState(employee);
   const [vesselModalShow, setVesselModalShow] = useState(false);
+  const [localAllPermissions, setLocalAllPermissions] = useState([]);
+  const [permissions, setPermissions] = useState([]);
+
+  const isLoading = status === 'loading';
+
+  useEffect(() => {
+    dispatch(employeeDataAsync(paramId));
+    dispatch(permissionListAsync());
+  }, []);
 
   useEffect(() => {
     if (employee.id) {
       setLocalEmployee(employee);
+      setPermissions(Object.keys(employee.permissions));
       handleModalClose();
-    }
-    if (!employee.id) {
-      initData();
     }
   }, [employee]);
 
-  const initData = () => {
-    dispatch(employeeDataAsync(paramId));
-  };
+  useEffect(() => {
+    if (allPermissions.length) {
+      setLocalAllPermissions(allPermissions);
+    }
+  }, [allPermissions]);
 
   const handleModalOpen = () => {
     setVesselModalShow(true);
@@ -45,6 +62,32 @@ function EmployeeView({match, name}) {
 
   const handleModalClose = () => {
     setVesselModalShow(false);
+  };
+
+  const handlePermissionChange = (e, permission) => {
+    const isChecked = e.target.checked;
+    if (isChecked) {
+      setPermissions(prevState => {
+        const state = prevState.slice();
+        state.push(permission);
+        return state;
+      })
+    } else {
+      const index = permissions.indexOf(permission);
+      setPermissions(prevState => {
+        const state = prevState.slice();
+        state.splice(index, 1);
+        return state;
+      })
+    }
+  };
+
+  const handleSavePermissions = () => {
+    const permissionData = {employee_id: employee.id};
+    permissions.forEach((name, i) => {
+      permissionData[`permissions[${i}]`] = name;
+    });
+    dispatch(employeePermissionEditAsync(permissionData));
   };
 
   return (
@@ -107,10 +150,34 @@ function EmployeeView({match, name}) {
                           </Col>
                         </Row>
                       </Col>
+                      <Col xs={12}>
+                        <Row>
+                          <Col xs={4}><label>Is Admin</label></Col>
+                          <Col xs={8}>
+                            <input type="checkbox" name="is_admin"
+                                   checked={!!localEmployee.is_admin}
+                                   disabled
+                            />
+                          </Col>
+                        </Row>
+                      </Col>
                     </Row>
                   </Col>
                   <Col xs={12} md={6}>
                     <Row>
+                      <Col xs={12}>
+                        <Row>
+                          <Col xs={4}><label>Department</label></Col>
+                          <Col xs={8}>
+                            <Text name="department"
+                                  id="departmentInput"
+                                  labelPosition="none"
+                                  value={employee.department.name}
+                                  disabled
+                            />
+                          </Col>
+                        </Row>
+                      </Col>
                       <Col xs={12}>
                         <Row>
                           <Col xs={4}><label>Employee ID</label></Col>
@@ -137,18 +204,13 @@ function EmployeeView({match, name}) {
                           </Col>
                         </Row>
                       </Col>
-                      <Col xs={12}>
-                        <Row>
-                          <Col xs={4}><label>Is Admin</label></Col>
-                          <Col xs={8}>
-                            <input type="checkbox" name="is_admin"
-                                   checked={!!localEmployee.is_admin}
-                                   disabled
-                            />
-                          </Col>
-                        </Row>
-                      </Col>
                     </Row>
+                  </Col>
+                  <Col xs={12}>
+                    {
+                      !!profile.permissions['employee_edit']
+                      && <Button type="primary" text="Edit" onClick={handleModalOpen} pullRight/>
+                    }
                   </Col>
                 </Row>
               </div>
@@ -190,20 +252,29 @@ function EmployeeView({match, name}) {
               <div className="tab-pane" id="accessControlList">
                 <Row>
                   {
-                    Object.entries(employee.role_permissions).map(([key, value]) => (
-                      <Col xs={12} sm={6} md={4} lg={3}>
+                    localAllPermissions.map(permission => (
+                      <Col key={permission.name} xs={12} sm={6} md={4} lg={3}>
                         <div className="checkbox">
                           <label>
                             <input type="checkbox" name="is_admin"
-                                   checked={!!employee.permissions[key]}
-                                   disabled
-                            />
-                            { key.replaceAll('_', ' ') }
+                                   checked={permissions.includes(permission.name)}
+                                   onChange={(e) => handlePermissionChange(e, permission.name)}/>
+                            { permission.name.replaceAll('_', ' ') }
                           </label>
                         </div>
                       </Col>
                     ))
                   }
+                  <Col xs={12}>
+                    {
+                      !!profile.permissions['employee_edit']
+                        && <Button type="primary"
+                                   text="Save"
+                                   onClick={handleSavePermissions}
+                                   disabled={isLoading}
+                                   pullRight/>
+                    }
+                  </Col>
                 </Row>
               </div>
             </div>
@@ -211,10 +282,6 @@ function EmployeeView({match, name}) {
         </Col>
         <Col xs={12}>
           <Button type="default" text="Back" onClick={() => history.goBack()}/>
-          {
-            !!profile.permissions['employee_edit']
-              && <Button type="primary" text="Edit" onClick={handleModalOpen} pullRight/>
-          }
         </Col>
       </Row>
       <Modal
