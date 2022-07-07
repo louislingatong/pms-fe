@@ -44,7 +44,8 @@ export const intervalSlice = createSlice({
   reducers: {
     setInterval: (state, action) => {
       state.data = action.payload;
-    }
+    },
+    resetInterval: (state, action) => initialState
   },
   extraReducers: (builder) => {
     builder
@@ -82,7 +83,7 @@ export const intervalSlice = createSlice({
   },
 });
 
-export const {setInterval} = intervalSlice.actions;
+export const {setInterval, resetInterval} = intervalSlice.actions;
 
 export const intervalData = state => state.interval.data;
 export const intervalList = state => state.interval.list;

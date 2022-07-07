@@ -86,7 +86,9 @@ export const fileDownloadAsync = createAsyncThunk(
 export const workSlice = createSlice({
   name: 'work',
   initialState,
-  reducers: {},
+  reducers: {
+    resetWork: (state, action) => initialState
+  },
   extraReducers: (builder) => {
     builder
       .addCase(workListAsync.pending, (state) => {
@@ -122,6 +124,8 @@ export const workSlice = createSlice({
       });
   },
 });
+
+export const {resetWork} = workSlice.actions;
 
 export const workCount = state => state.work.count;
 export const workDoneList = state => state.work.doneList;

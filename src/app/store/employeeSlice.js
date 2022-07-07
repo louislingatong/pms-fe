@@ -60,7 +60,8 @@ export const employeeSlice = createSlice({
   reducers: {
     setEmployeeData: (state, action) => {
       state.data = action.payload;
-    }
+    },
+    resetEmployee: (state, action) => initialState
   },
   extraReducers: (builder) => {
     builder
@@ -118,7 +119,7 @@ export const employeeSlice = createSlice({
   },
 });
 
-export const {setEmployeeData} = employeeSlice.actions;
+export const {setEmployeeData, resetEmployee} = employeeSlice.actions;
 
 export const employeeData = state => state.employee.data;
 export const employeeList = state => state.employee.list;

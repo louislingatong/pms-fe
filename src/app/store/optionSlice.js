@@ -129,7 +129,9 @@ export const employeeDepartmentsAsync = createAsyncThunk(
 export const optionSlice = createSlice({
   name: 'option',
   initialState,
-  reducers: {},
+  reducers: {
+    resetOption: (state, action) => initialState
+  },
   extraReducers: (builder) => {
     builder
       .addCase(vesselOwnersAsync.fulfilled, (state, action) => {
@@ -167,6 +169,8 @@ export const optionSlice = createSlice({
       })
   },
 });
+
+export const {resetOption} = optionSlice.actions;
 
 export const vesselOwners = state => state.option.vesselOwners;
 export const vesselDepartments = state => state.option.vesselDepartments;

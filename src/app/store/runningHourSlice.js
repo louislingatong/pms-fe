@@ -58,7 +58,9 @@ export const runningHourHistoryExportAsync = createAsyncThunk(
 export const runningHourSlice = createSlice({
   name: 'runningHour',
   initialState,
-  reducers: {},
+  reducers: {
+    resetRunningHour: (state, action) => initialState
+  },
   extraReducers: (builder) => {
     builder
       .addCase(runningHourListAsync.pending, (state) => {
@@ -84,6 +86,8 @@ export const runningHourSlice = createSlice({
       });
   },
 });
+
+export const {resetRunningHour} = runningHourSlice.actions;
 
 export const runningHourData = state => state.runningHour.data;
 export const runningHourList = state => state.runningHour.list;

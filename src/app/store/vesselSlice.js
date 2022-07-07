@@ -52,7 +52,8 @@ export const vesselSlice = createSlice({
   reducers: {
     setVesselData: (state, action) => {
       state.data = action.payload;
-    }
+    },
+    resetVessel: (state, action) => initialState
   },
   extraReducers: (builder) => {
     builder
@@ -100,7 +101,7 @@ export const vesselSlice = createSlice({
   },
 });
 
-export const {setVesselData} = vesselSlice.actions;
+export const {setVesselData, resetVessel} = vesselSlice.actions;
 
 export const vesselData = state => state.vessel.data;
 export const vesselList = state => state.vessel.list;

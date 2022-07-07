@@ -68,7 +68,9 @@ export const vesselMachineryExportAsync = createAsyncThunk(
 export const vesselMachinerySlice = createSlice({
   name: 'vesselMachinery',
   initialState,
-  reducers: {},
+  reducers: {
+    resetVesselMachinery: (state, action) => initialState
+  },
   extraReducers: (builder) => {
     builder
       .addCase(vesselMachineryListAsync.pending, (state) => {
@@ -124,6 +126,8 @@ export const vesselMachinerySlice = createSlice({
       });
   },
 });
+
+export const {resetVesselMachinery} = vesselMachinerySlice.actions;
 
 export const vesselMachineryData = state => state.vesselMachinery.data;
 export const vesselMachineryList = state => state.vesselMachinery.list;

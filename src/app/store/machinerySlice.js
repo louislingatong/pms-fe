@@ -52,7 +52,8 @@ export const machinerySlice = createSlice({
   reducers: {
     setMachinery: (state, action) => {
       state.data = action.payload;
-    }
+    },
+    resetMachinery: (state, action) => initialState
   },
   extraReducers: (builder) => {
     builder
@@ -100,7 +101,7 @@ export const machinerySlice = createSlice({
   },
 });
 
-export const {setMachinery} = machinerySlice.actions;
+export const {setMachinery, resetMachinery} = machinerySlice.actions;
 
 export const machineryData = state => state.machinery.data;
 export const machineryList = state => state.machinery.list;
