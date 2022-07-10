@@ -45,6 +45,9 @@ function NavbarMenu() {
     if (!vessels.length) {
       initVessels();
     }
+  }, []);
+
+  useEffect(() => {
     if (vessels.length && localVessels && !localVessels.length) {
       setLocalVessels(vessels);
     }
