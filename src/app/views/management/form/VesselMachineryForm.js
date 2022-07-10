@@ -12,7 +12,7 @@ import {
 import {profileData} from '../../../store/profileSlice';
 import Transform from '../../../utils/Transformer';
 import VesselMachinery from '../../../core/models/VesselMachinery';
-import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
+import {activeVessel as defaultActiveVessel} from '../../../store/navbarMenuSlice';
 import MachinerySelect from '../../../components/select/MachinerySelect';
 import InchargeRankSelect from '../../../components/select/InchargeRankSelect';
 import MachineryModelAutoSuggest from '../../../components/auto-suggest/MachineryModelAutoSuggest';
@@ -31,7 +31,7 @@ function VesselMachineryForm({data: localVesselMachinery}) {
 
   const dispatch = useDispatch();
   const status = useSelector(reqDataStatus);
-  const activeVessel = useSelector(activeVesselSubMenu);
+  const activeVessel = useSelector(defaultActiveVessel);
   const profile = useSelector(profileData);
 
   const [isViewing, setIsViewing] = useState(false);

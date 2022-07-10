@@ -4,7 +4,7 @@ import {useHistory} from 'react-router-dom';
 import {Content, Infobox2} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
 import {workCount, workCountAsync} from '../store/workSlice';
-import {activeVesselSubMenu} from '../store/navbarMenuSlice';
+import {activeVessel as defaultActiveVessel} from '../store/navbarMenuSlice';
 import {usePrevious} from '../utils/Hooks';
 
 function Dashboard(props) {
@@ -12,7 +12,7 @@ function Dashboard(props) {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const activeVessel = useSelector(activeVesselSubMenu);
+  const activeVessel = useSelector(defaultActiveVessel);
   const count = useSelector(workCount);
 
   const [localCount, setLocalCount] = useState(count);

@@ -2,16 +2,17 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useHistory} from 'react-router-dom';
 import {
-  metaData,
   reqListStatus,
   workDoneList,
   workList,
+  workMeta,
   workListAsync,
   workHistoryExportAsync,
-  worksExportAsync, fileDownloadAsync
+  worksExportAsync,
+  fileDownloadAsync
 } from '../../../store/workSlice';
 import {profileData} from '../../../store/profileSlice';
-import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
+import {activeVessel as defaultActiveVessel} from '../../../store/navbarMenuSlice';
 import {Box, Button, Col, Content, Inputs, Row} from 'adminlte-2-react';
 import DataTable from '../../../components/DataTable';
 import {usePrevious} from '../../../utils/Hooks';
@@ -26,10 +27,10 @@ function WorkList({name}) {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const activeVessel = useSelector(activeVesselSubMenu);
+  const activeVessel = useSelector(defaultActiveVessel);
   const workDone = useSelector(workDoneList);
   const works = useSelector(workList);
-  const meta = useSelector(metaData);
+  const metaData = useSelector(workMeta);
   const status = useSelector(reqListStatus);
   const profile = useSelector(profileData);
 
@@ -300,7 +301,7 @@ function WorkList({name}) {
                     fixed
                     responsive
                     border
-                    meta={meta}
+                    metaData={metaData}
                     multiple
                     onSelect={handleRowSelect}
                     onPageChange={handlePageChange}

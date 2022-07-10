@@ -10,7 +10,7 @@ import {
   machineryData,
   machineryList,
   machineryListAsync,
-  metaData,
+  machineryMeta,
   reqListStatus,
 } from '../../../store/machinerySlice';
 import {profileData} from '../../../store/profileSlice';
@@ -23,7 +23,7 @@ function MachineryList({name}) {
 
   const machineries = useSelector(machineryList);
   const machinery = useSelector(machineryData);
-  const meta = useSelector(metaData);
+  const metaData = useSelector(machineryMeta);
   const status = useSelector(reqListStatus);
   const profile = useSelector(profileData);
 
@@ -197,7 +197,7 @@ function MachineryList({name}) {
                     striped
                     fixed
                     responsive
-                    meta={meta}
+                    metaData={metaData}
                     multiple
                     rowSelect
                     onSelect={handleRowSelect}

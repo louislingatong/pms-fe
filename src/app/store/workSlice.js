@@ -130,7 +130,7 @@ export const {resetWork} = workSlice.actions;
 export const workCount = state => state.work.count;
 export const workDoneList = state => state.work.doneList;
 export const workList = state => state.work.list;
-export const metaData = state => state.work.meta;
+export const workMeta = state => state.work.meta;
 export const reqCountStatus = state => state.work.countStatus;
 export const reqDoneListStatus = state => state.work.doneListStatus;
 export const reqListStatus = state => state.work.listStatus;

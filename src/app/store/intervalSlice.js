@@ -87,7 +87,7 @@ export const {setInterval, resetInterval} = intervalSlice.actions;
 
 export const intervalData = state => state.interval.data;
 export const intervalList = state => state.interval.list;
-export const metaData = state => state.interval.meta;
+export const intervalMeta = state => state.interval.meta;
 export const reqListStatus = state => state.interval.listStatus;
 export const reqDataStatus = state => state.interval.dataStatus;
 

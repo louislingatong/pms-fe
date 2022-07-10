@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {Inputs} from 'adminlte-2-react';
 import {resetAuth, logoutAsync} from '../../store/authSlice';
@@ -15,24 +14,26 @@ import {resetVessel} from '../../store/vesselSlice';
 import {resetWork} from '../../store/workSlice';
 import {Entry} from '../../components';
 import {
-  activeVesselSubMenu,
-  reqVesselSubMenusStatus,
+  activeVessel as defaultActiveVessel,
   setSelectedVessel,
   vesselListAsync,
-  vesselSubMenus,
+  vesselList,
+  vesselMeta,
   resetNavbarMenu
 } from '../../store/navbarMenuSlice';
 import {useDebounce} from '../../utils/Hooks';
 import Vessel from '../../core/models/Vessel';
+
+const queryLimit = 5;
 
 function NavbarMenu() {
   const {Text} = Inputs;
 
   const dispatch = useDispatch();
 
-  const vessels = useSelector(vesselSubMenus);
-  const activeVessel = useSelector(activeVesselSubMenu);
-  const vesselsStatus = useSelector(reqVesselSubMenusStatus);
+  const vessels = useSelector(vesselList);
+  const meta  = useSelector(vesselMeta);
+  const activeVessel = useSelector(defaultActiveVessel);
 
   const [localVessels, setLocalVessels] = useState([]);
   const [localActiveVessel, setLocalActiveVessel] = useState(new Vessel());
@@ -66,12 +67,20 @@ function NavbarMenu() {
   };
 
   const handleSearchVessel = () => {
-    const params = !!vesselSearchString ? {keyword: vesselSearchString} : {};
+    let params = {limit: queryLimit};
+    params = !!vesselSearchString ? {...params, keyword: vesselSearchString} : {...params};
     initVessels(params);
   }
 
-  const initVessels = (params = {}) => {
+  const initVessels = (params = {limit: queryLimit}) => {
     dispatch(vesselListAsync(params));
+  };
+
+  const handleLoadMoreVessels = (e) => {
+    e.stopPropagation();
+    let params = {limit: meta.per_page + queryLimit};
+    params = !!vesselSearchString ? {...params, keyword: vesselSearchString} : {...params};
+    initVessels({params});
   };
 
   const handleLogout = () => {
@@ -105,7 +114,7 @@ function NavbarMenu() {
             onChange={handleSearchVesselChange}
           />
         }
-        footer={<Link to="/vessels">see all vessels</Link>}
+        footer={(meta.last_page !== meta.current_page) && <a href="javascript:" onClick={handleLoadMoreVessels}>see more vessels</a>}
       >
         {
           vessels && vessels.map(vessel => (

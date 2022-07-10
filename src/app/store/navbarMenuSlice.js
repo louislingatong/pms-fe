@@ -1,19 +1,23 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import Vessel from '../core/models/Vessel';
+import Meta from '../core/models/Meta';
 import {fetchAll} from '../services/vesselService';
 import Transform from '../utils/Transformer';
 
 const initialState = {
-  vesselSubMenus: [],
-  activeVesselSubMenu: new Vessel(),
-  vesselSubMenusStatus: 'idle'
+  vesselList: [],
+  vesselMeta: new Meta(),
+  activeVessel: new Vessel(),
+  status: 'idle'
 };
 
 export const vesselListAsync = createAsyncThunk(
   'navbarMenu/fetchAllVessels',
   async (params) => {
     const response = await fetchAll(params);
-    return Transform.fetchCollection(response.data, Vessel);
+    const data = Transform.fetchCollection(response.data, Vessel);
+    const meta = Transform.fetchObject(response.meta, Meta);
+    return {data, meta};
   }
 );
 
@@ -29,23 +33,27 @@ export const navbarMenuSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(vesselListAsync.pending, (state) => {
-        state.vesselSubMenusStatus = 'loading';
+        state.status = 'loading';
       })
       .addCase(vesselListAsync.fulfilled, (state, action) => {
-        state.vesselSubMenusStatus = 'idle';
-        state.vesselSubMenus = action.payload;
-        state.activeVesselSubMenu = action.payload.length ? action.payload[0] : new Vessel();
+        state.status = 'idle';
+        state.vesselList = action.payload.data;
+        state.vesselMeta = action.payload.meta
+        if (state.activeVessel.id === 0) {
+          state.activeVessel = action.payload.data.length ? action.payload.data[0] : new Vessel();
+        }
       })
       .addCase(vesselListAsync.rejected, (state, action) => {
-        state.vesselSubMenusStatus = 'idle';
+        state.status = 'idle';
       });
   },
 });
 
 export const {setSelectedVessel, resetNavbarMenu} = navbarMenuSlice.actions;
 
-export const vesselSubMenus = state => state.navbarMenu.vesselSubMenus;
-export const activeVesselSubMenu = state => state.navbarMenu.activeVesselSubMenu;
-export const reqVesselSubMenusStatus = state => state.navbarMenu.vesselSubMenusStatus;
+export const vesselList = state => state.navbarMenu.vesselList;
+export const vesselMeta = state => state.navbarMenu.vesselMeta;
+export const activeVessel= state => state.navbarMenu.activeVessel;
+export const reqStatus = state => state.navbarMenu.status;
 
 export default navbarMenuSlice.reducer;

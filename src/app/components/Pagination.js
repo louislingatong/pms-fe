@@ -3,7 +3,7 @@ import {Pagination as BsPagination} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 function Pagination({meta, onPageChange}) {
-  const {totalElements, activePage, lastPage, pageSize,} = meta;
+  const {totalElements, activePage, lastPage, pageSize} = meta;
 
   const totalPages = Math.ceil(totalElements / pageSize);
   const firstFourPages = activePage < 4;

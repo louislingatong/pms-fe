@@ -5,12 +5,12 @@ import {usePrevious} from '../../../utils/Hooks';
 import {Box, Button, Content} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
 import {
-  metaData,
   reqListStatus,
   setVesselData,
   vesselData,
   vesselList,
-  vesselListAsync,
+  vesselMeta,
+  vesselListAsync
 } from '../../../store/vesselSlice';
 import {profileData} from '../../../store/profileSlice';
 import {DataTable, Divider, Modal} from '../../../components';
@@ -23,7 +23,7 @@ function VesselList({name}) {
 
   const vessel = useSelector(vesselData);
   const vessels = useSelector(vesselList);
-  const meta = useSelector(metaData);
+  const metaData = useSelector(vesselMeta);
   const status = useSelector(reqListStatus);
   const profile = useSelector(profileData);
 
@@ -158,7 +158,7 @@ function VesselList({name}) {
                     striped
                     fixed
                     responsive
-                    meta={meta}
+                    metaData={metaData}
                     multiple
                     rowSelect
                     onSelect={handleRowSelect}

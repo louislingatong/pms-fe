@@ -5,14 +5,14 @@ import {Col, Row} from 'react-bootstrap';
 import {Box, Button, Content} from 'adminlte-2-react';
 import DataTable from '../../../components/DataTable';
 import {
-  metaData,
-  reqListStatus,
   vesselMachineryData,
   vesselMachineryList,
-  vesselMachineryListAsync
+  vesselMachineryMeta,
+  vesselMachineryListAsync,
+  reqListStatus
 } from '../../../store/vesselMachinerySlice';
 import {profileData} from '../../../store/profileSlice';
-import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
+import {activeVessel as defaultActiveVessel} from '../../../store/navbarMenuSlice';
 import VesselMachinery from '../../../core/models/VesselMachinery';
 import Divider from '../../../components/Divider';
 import VesselMachineryView from './VesselMachineryView';
@@ -22,10 +22,10 @@ import VesselDepartmentSelect from '../../../components/select/VesselDepartmentS
 function VesselMachineryList({name}) {
   const dispatch = useDispatch();
 
-  const activeVessel = useSelector(activeVesselSubMenu);
+  const activeVessel = useSelector(defaultActiveVessel);
   const vesselMachinery = useSelector(vesselMachineryData);
   const vesselMachineries = useSelector(vesselMachineryList);
-  const meta = useSelector(metaData);
+  const metaData = useSelector(vesselMachineryMeta);
   const status = useSelector(reqListStatus);
   const profile = useSelector(profileData);
 
@@ -218,7 +218,7 @@ function VesselMachineryList({name}) {
                     fixed
                     responsive
                     border
-                    meta={meta}
+                    metaData={metaData}
                     multiple
                     rowSelect
                     onSelect={handleRowSelect}

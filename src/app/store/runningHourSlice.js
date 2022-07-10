@@ -91,7 +91,7 @@ export const {resetRunningHour} = runningHourSlice.actions;
 
 export const runningHourData = state => state.runningHour.data;
 export const runningHourList = state => state.runningHour.list;
-export const metaData = state => state.runningHour.meta;
+export const runningHourMeta = state => state.runningHour.meta;
 export const reqListStatus = state => state.runningHour.listStatus;
 export const reqDataStatus = state => state.runningHour.dataStatus;
 

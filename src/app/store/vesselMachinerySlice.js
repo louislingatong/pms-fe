@@ -131,7 +131,7 @@ export const {resetVesselMachinery} = vesselMachinerySlice.actions;
 
 export const vesselMachineryData = state => state.vesselMachinery.data;
 export const vesselMachineryList = state => state.vesselMachinery.list;
-export const metaData = state => state.vesselMachinery.meta;
+export const vesselMachineryMeta = state => state.vesselMachinery.meta;
 export const reqListStatus = state => state.vesselMachinery.listStatus;
 export const reqDataStatus = state => state.vesselMachinery.dataStatus;
 

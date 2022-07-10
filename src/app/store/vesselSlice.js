@@ -105,7 +105,7 @@ export const {setVesselData, resetVessel} = vesselSlice.actions;
 
 export const vesselData = state => state.vessel.data;
 export const vesselList = state => state.vessel.list;
-export const metaData = state => state.vessel.meta;
+export const vesselMeta = state => state.vessel.meta;
 export const reqListStatus = state => state.vessel.listStatus;
 export const reqDataStatus = state => state.vessel.dataStatus;
 

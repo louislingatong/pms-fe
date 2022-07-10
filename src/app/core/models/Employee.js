@@ -1,5 +1,7 @@
 import UserStatus from './UserStatus';
 import EmployeeDepartment from './EmployeeDepartment';
+import VesselMachinerySubCategory from "./VesselMachinerySubCategory";
+import Vessel from "./Vessel";
 
 export default function User(data = {}) {
   this.id = data.id ? data.id : 0;
@@ -13,5 +15,10 @@ export default function User(data = {}) {
   this.id_number = data.id_number ? data.id_number : '';
   this.position = data.position ? data.position : '';
   this.is_admin = data.is_admin ? 1 : 0;
-  this.permissions = data.permissions ? data.permissions : {};
+  this.permissions = data.permissions
+    ? data.permissions.map(permission => permission.name)
+    : [];
+  this.vessels = data.vessels
+    ? data.vessels.map(vessel => vessel.id)
+    : [];
 }

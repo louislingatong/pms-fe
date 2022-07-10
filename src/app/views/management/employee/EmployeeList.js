@@ -8,7 +8,7 @@ import {
   employeeData,
   employeeList,
   employeeListAsync,
-  metaData,
+  employeeMeta,
   reqListStatus,
   setEmployeeData,
 } from '../../../store/employeeSlice';
@@ -23,7 +23,7 @@ function EmployeeList({name}) {
 
   const employee = useSelector(employeeData);
   const employees = useSelector(employeeList);
-  const meta = useSelector(metaData);
+  const metaData = useSelector(employeeMeta);
   const status = useSelector(reqListStatus);
   const profile = useSelector(profileData);
 
@@ -165,7 +165,7 @@ function EmployeeList({name}) {
                     striped
                     fixed
                     responsive
-                    meta={meta}
+                    metaData={metaData}
                     multiple
                     rowSelect
                     onSelect={handleRowSelect}

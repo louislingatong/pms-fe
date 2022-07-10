@@ -105,7 +105,7 @@ export const {setMachinery, resetMachinery} = machinerySlice.actions;
 
 export const machineryData = state => state.machinery.data;
 export const machineryList = state => state.machinery.list;
-export const metaData = state => state.machinery.meta;
+export const machineryMeta = state => state.machinery.meta;
 export const reqListStatus = state => state.machinery.listStatus;
 export const reqDataStatus = state => state.machinery.dataStatus;
 

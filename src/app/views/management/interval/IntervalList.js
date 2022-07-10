@@ -6,8 +6,8 @@ import {Col, Row} from 'react-bootstrap';
 import {
   intervalData,
   intervalList,
+  intervalMeta,
   intervalListAsync,
-  metaData,
   reqListStatus
 } from '../../../store/intervalSlice';
 import {profileData} from '../../../store/profileSlice';
@@ -20,7 +20,7 @@ function IntervalList({name}) {
 
   const interval = useSelector(intervalData);
   const intervals = useSelector(intervalList);
-  const meta = useSelector(metaData);
+  const metaData = useSelector(intervalMeta);
   const status = useSelector(reqListStatus);
   const profile = useSelector(profileData);
 
@@ -158,7 +158,7 @@ function IntervalList({name}) {
                     striped
                     fixed
                     responsive
-                    meta={meta}
+                    metaData={metaData}
                     multiple
                     rowSelect
                     onSelect={handleRowSelect}

@@ -41,6 +41,7 @@ export const permissionSlice = createSlice({
 export const {resetPermission} = permissionSlice.actions;
 
 export const permissionList = state => state.permission.list;
+export const permissionMeta = state => state.permission.meta;
 export const reqListStatus = state => state.permission.listStatus;
 
 export default permissionSlice.reducer;

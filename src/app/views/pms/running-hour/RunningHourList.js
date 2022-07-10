@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  metaData,
   reqListStatus,
   runningHourData,
   runningHourList,
+  runningHourMeta,
   runningHourListAsync,
-  runningHourHistoryExportAsync, runningHoursExportAsync
+  runningHourHistoryExportAsync,
+  runningHoursExportAsync
 } from '../../../store/runningHourSlice';
 import {profileData} from '../../../store/profileSlice';
-import {activeVesselSubMenu} from '../../../store/navbarMenuSlice';
+import {activeVessel as defaultActiveVessel} from '../../../store/navbarMenuSlice';
 import {Box, Button, Col, Content, Row} from 'adminlte-2-react';
 import DataTable from '../../../components/DataTable';
 import {usePrevious} from '../../../utils/Hooks';
@@ -21,10 +22,10 @@ import VesselDepartmentSelect from '../../../components/select/VesselDepartmentS
 function RunningHourList({name}) {
   const dispatch = useDispatch();
 
-  const activeVessel = useSelector(activeVesselSubMenu);
+  const activeVessel = useSelector(defaultActiveVessel);
   const runningHour = useSelector(runningHourData);
   const runningHours = useSelector(runningHourList);
-  const meta = useSelector(metaData);
+  const metaData = useSelector(runningHourMeta);
   const status = useSelector(reqListStatus);
   const profile = useSelector(profileData);
 
@@ -245,7 +246,7 @@ function RunningHourList({name}) {
                     fixed
                     responsive
                     border
-                    meta={meta}
+                    metaData={metaData}
                     rowSelect
                     onSelect={handleRowSelect}
                     onPageChange={handlePageChange}

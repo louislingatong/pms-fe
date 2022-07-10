@@ -1,15 +1,23 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import Employee from '../core/models/Employee';
 import Meta from '../core/models/Meta';
-import {add, edit, editPermissions, fetchAll, fetchById} from '../services/employeeService';
+import {add, assignVessels, edit, editPermissions, fetchAll, fetchById} from '../services/employeeService';
+import {fetchAll as fetchAllPermissions} from '../services/permissionService';
+import {fetchAll as fetchAllVessels} from '../services/vesselService';
 import Transform from '../utils/Transformer';
+import Vessel from "../core/models/Vessel";
+import Permission from "../core/models/Permission";
 
 const initialState = {
   data: new Employee(),
   list: [],
   meta: new Meta(),
   listStatus: 'idle',
-  dataStatus: 'idle'
+  dataStatus: 'idle',
+  permissionList: [],
+  permissionMeta: new Meta(),
+  vesselList: [],
+  vesselMeta: new Meta(),
 };
 
 export const employeeListAsync = createAsyncThunk(
@@ -46,10 +54,38 @@ export const employeeEditAsync = createAsyncThunk(
   }
 );
 
+export const permissionListAsync = createAsyncThunk(
+  'employee/fetchAllPermissions',
+  async (params) => {
+    const response = await fetchAllPermissions(params);
+    const data = Transform.fetchCollection(response.data, Permission);
+    const meta = Transform.fetchObject(response.meta, Meta);
+    return {data, meta};
+  }
+);
+
 export const employeePermissionEditAsync = createAsyncThunk(
   'employee/editEmployeePermission',
   async (data) => {
     const response = await editPermissions(data);
+    return Transform.fetchObject(response.data, Employee);
+  }
+);
+
+export const vesselListAsync = createAsyncThunk(
+  'employee/fetchAllVessels',
+  async (params) => {
+    const response = await fetchAllVessels(params);
+    const data = Transform.fetchCollection(response.data, Vessel);
+    const meta = Transform.fetchObject(response.meta, Meta);
+    return {data, meta};
+  }
+);
+
+export const employeeVesselAssignAsync = createAsyncThunk(
+  'employee/assignEmployeeVessel',
+  async (data) => {
+    const response = await assignVessels(data);
     return Transform.fetchObject(response.data, Employee);
   }
 );
@@ -106,6 +142,17 @@ export const employeeSlice = createSlice({
       .addCase(employeeEditAsync.rejected, (state, action) => {
         state.dataStatus = 'idle';
       })
+      .addCase(permissionListAsync.pending, (state) => {
+        state.dataStatus = 'loading';
+      })
+      .addCase(permissionListAsync.fulfilled, (state, action) => {
+        state.dataStatus = 'idle';
+        state.permissionList = action.payload.data;
+        state.permissionMeta = action.payload.meta;
+      })
+      .addCase(permissionListAsync.rejected, (state, action) => {
+        state.dataStatus = 'idle';
+      })
       .addCase(employeePermissionEditAsync.pending, (state) => {
         state.dataStatus = 'loading';
       })
@@ -115,6 +162,27 @@ export const employeeSlice = createSlice({
       })
       .addCase(employeePermissionEditAsync.rejected, (state, action) => {
         state.dataStatus = 'idle';
+      })
+      .addCase(vesselListAsync.pending, (state) => {
+        state.dataStatus = 'loading';
+      })
+      .addCase(vesselListAsync.fulfilled, (state, action) => {
+        state.dataStatus = 'idle';
+        state.vesselList = action.payload.data;
+        state.vesselMeta = action.payload.meta;
+      })
+      .addCase(vesselListAsync.rejected, (state, action) => {
+        state.dataStatus = 'idle';
+      })
+      .addCase(employeeVesselAssignAsync.pending, (state) => {
+        state.dataStatus = 'loading';
+      })
+      .addCase(employeeVesselAssignAsync.fulfilled, (state, action) => {
+        state.dataStatus = 'idle';
+        state.data = action.payload;
+      })
+      .addCase(employeeVesselAssignAsync.rejected, (state, action) => {
+        state.dataStatus = 'idle';
       });
   },
 });
@@ -123,7 +191,11 @@ export const {setEmployeeData, resetEmployee} = employeeSlice.actions;
 
 export const employeeData = state => state.employee.data;
 export const employeeList = state => state.employee.list;
-export const metaData = state => state.employee.meta;
+export const employeeMeta = state => state.employee.meta;
+export const permissionList = state => state.employee.permissionList;
+export const permissionMeta = state => state.employee.permissionMeta;
+export const vesselList = state => state.employee.vesselList;
+export const vesselMeta = state => state.employee.vesselMeta;
 export const reqListStatus = state => state.employee.listStatus;
 export const reqDataStatus = state => state.employee.dataStatus;
 
