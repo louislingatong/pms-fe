@@ -316,7 +316,7 @@ function EmployeeView({match, name}) {
                             <input type="checkbox" name={`permission-${permission.id}`}
                                    checked={permissions.includes(permission.name)}
                                    onChange={(e) => handlePermissionChange(e, permission.name)}/>
-                            {permission.name?.replaceAll('_', ' ')}
+                            {permission.name}
                           </label>
                         </div>
                       </Col>
