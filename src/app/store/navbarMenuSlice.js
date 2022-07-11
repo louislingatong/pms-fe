@@ -26,7 +26,7 @@ export const navbarMenuSlice = createSlice({
   initialState,
   reducers: {
     setSelectedVessel: (state, action) => {
-      state.activeVesselSubMenu = action.payload;
+      state.activeVessel = action.payload;
     },
     resetNavbarMenu: (state, action) => initialState
   },
