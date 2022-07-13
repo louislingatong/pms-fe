@@ -125,7 +125,7 @@ function DataTable(props) {
     const {pageSize, activePage, totalElements} = localMeta;
 
     if (searchString) {
-      const filteredData = data.filter((item) => item.name.toLowerCase().includes(searchString.toLowerCase()));
+      const filteredData = data.filter((item) => item.name?.toLowerCase().includes(searchString?.toLowerCase()));
       newTotalElements += filteredData.length;
       setLocalData(filteredData);
     } else {
