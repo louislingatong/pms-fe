@@ -301,7 +301,7 @@ function WorkList({name}) {
                     fixed
                     responsive
                     border
-                    metaData={metaData}
+                    meta={metaData}
                     multiple
                     onSelect={handleRowSelect}
                     onPageChange={handlePageChange}

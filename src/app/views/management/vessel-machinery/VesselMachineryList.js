@@ -218,7 +218,7 @@ function VesselMachineryList({name}) {
                     fixed
                     responsive
                     border
-                    metaData={metaData}
+                    meta={metaData}
                     multiple
                     rowSelect
                     onSelect={handleRowSelect}

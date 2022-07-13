@@ -246,7 +246,7 @@ function RunningHourList({name}) {
                     fixed
                     responsive
                     border
-                    metaData={metaData}
+                    meta={metaData}
                     rowSelect
                     onSelect={handleRowSelect}
                     onPageChange={handlePageChange}

@@ -158,7 +158,7 @@ function VesselList({name}) {
                     striped
                     fixed
                     responsive
-                    metaData={metaData}
+                    meta={metaData}
                     multiple
                     rowSelect
                     onSelect={handleRowSelect}
