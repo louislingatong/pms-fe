@@ -65,7 +65,7 @@ export function addSubCategory(data) {
   }
   formData.append('_method', 'PUT');
   return new Promise((resolve, reject) => {
-    Http.post(`machineries/${machineryId}/add-sub-category`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+    Http.post(`machineries/${machineryId}/create-sub-category`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
       .then(res => {
         resolve(res.data);
       })

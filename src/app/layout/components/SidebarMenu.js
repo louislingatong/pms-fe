@@ -62,7 +62,6 @@ function SidebarMenu() {
     },
   ];
 
-
   return (
     <React.Fragment>
       <UserPanel imageUrl={user} username={profile.full_name} status="Online" statusType="success"/>

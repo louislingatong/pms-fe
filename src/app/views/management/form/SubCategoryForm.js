@@ -8,6 +8,7 @@ import Transform from '../../../utils/Transformer';
 import {machineryAddSubCategoryAsync, reqDataStatus} from '../../../store/machinerySlice';
 
 const validator = new ReeValidate({
+  code: 'required',
   name: 'required',
 });
 
@@ -18,6 +19,7 @@ function SubCategoryForm({machineryId}) {
   const status = useSelector(reqDataStatus);
 
   const [formData, setFormData] = useState({
+    code: '',
     name: ''
   });
   const [formError, setFormError] = useState({});
@@ -55,6 +57,7 @@ function SubCategoryForm({machineryId}) {
   const submit = () => {
     dispatch(machineryAddSubCategoryAsync({
       machinery_id: machineryId,
+      code: formData.code,
       name: formData.name,
     }));
   };
@@ -62,7 +65,19 @@ function SubCategoryForm({machineryId}) {
   return (
     <form onSubmit={handleSubmitForm} noValidate>
       <Row>
-        <Col xs={12}>
+        <Col xs={12} lg={3}>
+          <Text
+            name="code"
+            id="subCategoryCodeInput"
+            label="Code"
+            labelPosition="above"
+            onChange={handleInputChange}
+            value={formData.code}
+            type={formError['code'] ? 'error' : ''}
+            help={formError['code']}
+          />
+        </Col>
+        <Col xs={12} lg={9}>
           <Text
             name="name"
             id="subCategoryNameInput"
@@ -72,8 +87,10 @@ function SubCategoryForm({machineryId}) {
             value={formData.name}
             type={formError['name'] ? 'error' : ''}
             help={formError['name']}
-            buttonRight={<Button type="submit" bsStyle="primary" disabled={isLoading}>Add</Button>}
           />
+        </Col>
+        <Col xs={12}>
+          <Button type="submit" bsStyle="primary" disabled={isLoading} className="pull-right">Add</Button>
         </Col>
       </Row>
     </form>
