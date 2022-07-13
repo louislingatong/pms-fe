@@ -111,3 +111,39 @@ export function assignVessels(data) {
   })
 }
 
+export function activate(data) {
+  const formData = new FormData();
+  for (const [key, value] of Object.entries(data)) {
+    formData.append(key, value);
+  }
+  formData.append('_method', 'PATCH');
+  return new Promise((resolve, reject) => {
+    Http.post('employees/activate', formData, {headers: {'Content-Type': 'multipart/form-data'}})
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => {
+        console.log(err.response.data.error);
+        reject(err);
+      })
+  })
+}
+
+export function deactivate(data) {
+  const formData = new FormData();
+  for (const [key, value] of Object.entries(data)) {
+    formData.append(key, value);
+  }
+  formData.append('_method', 'PATCH');
+  return new Promise((resolve, reject) => {
+    Http.post('employees/deactivate', formData, {headers: {'Content-Type': 'multipart/form-data'}})
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => {
+        console.log(err.response.data.error);
+        reject(err);
+      })
+  })
+}
+

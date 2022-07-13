@@ -1,7 +1,16 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import Employee from '../core/models/Employee';
 import Meta from '../core/models/Meta';
-import {add, assignVessels, edit, editPermissions, fetchAll, fetchById} from '../services/employeeService';
+import {
+  activate,
+  add,
+  assignVessels,
+  deactivate,
+  edit,
+  editPermissions,
+  fetchAll,
+  fetchById
+} from '../services/employeeService';
 import {fetchAll as fetchAllPermissions} from '../services/permissionService';
 import {fetchAll as fetchAllVessels} from '../services/vesselService';
 import Transform from '../utils/Transformer';
@@ -18,6 +27,7 @@ const initialState = {
   permissionMeta: new Meta(),
   vesselList: [],
   vesselMeta: new Meta(),
+  statusChanged: false
 };
 
 export const employeeListAsync = createAsyncThunk(
@@ -51,6 +61,20 @@ export const employeeEditAsync = createAsyncThunk(
   async (data) => {
     const response = await edit(data);
     return Transform.fetchObject(response.data, Employee);
+  }
+);
+
+export const employeeActivateAsync = createAsyncThunk(
+  'employee/activateEmployee',
+  async (data) => {
+    return await activate(data);
+  }
+);
+
+export const employeeDeactivateAsync = createAsyncThunk(
+  'employee/deactivateEmployee',
+  async (data) => {
+    return await deactivate(data);
   }
 );
 
@@ -97,6 +121,9 @@ export const employeeSlice = createSlice({
     setEmployeeData: (state, action) => {
       state.data = action.payload;
     },
+    setEmployeeStatus: (state, action) => {
+      state.statusChanged = action.payload;
+    },
     resetEmployee: (state, action) => initialState
   },
   extraReducers: (builder) => {
@@ -141,6 +168,24 @@ export const employeeSlice = createSlice({
       })
       .addCase(employeeEditAsync.rejected, (state, action) => {
         state.dataStatus = 'idle';
+      })
+      .addCase(employeeActivateAsync.pending, (state) => {
+        state.listStatus = 'loading';
+      })
+      .addCase(employeeActivateAsync.fulfilled, (state, action) => {
+        state.statusChanged = action.payload.activated;
+      })
+      .addCase(employeeActivateAsync.rejected, (state, action) => {
+        state.listStatus = 'idle';
+      })
+      .addCase(employeeDeactivateAsync.pending, (state) => {
+        state.listStatus = 'loading';
+      })
+      .addCase(employeeDeactivateAsync.fulfilled, (state, action) => {
+        state.statusChanged = action.payload.deactivated;
+      })
+      .addCase(employeeDeactivateAsync.rejected, (state, action) => {
+        state.listStatus = 'idle';
       })
       .addCase(permissionListAsync.pending, (state) => {
         state.dataStatus = 'loading';
@@ -187,7 +232,7 @@ export const employeeSlice = createSlice({
   },
 });
 
-export const {setEmployeeData, resetEmployee} = employeeSlice.actions;
+export const {setEmployeeData, setEmployeeStatus, resetEmployee} = employeeSlice.actions;
 
 export const employeeData = state => state.employee.data;
 export const employeeList = state => state.employee.list;
@@ -198,5 +243,6 @@ export const vesselList = state => state.employee.vesselList;
 export const vesselMeta = state => state.employee.vesselMeta;
 export const reqListStatus = state => state.employee.listStatus;
 export const reqDataStatus = state => state.employee.dataStatus;
+export const statusChanged = state => state.employee.statusChanged;
 
 export default employeeSlice.reducer;

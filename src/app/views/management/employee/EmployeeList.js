@@ -5,12 +5,13 @@ import {usePrevious} from '../../../utils/Hooks';
 import {Box, Button, Content} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
 import {
-  employeeData,
+  employeeActivateAsync,
+  employeeData, employeeDeactivateAsync,
   employeeList,
   employeeListAsync,
   employeeMeta,
   reqListStatus,
-  setEmployeeData,
+  setEmployeeData, setEmployeeStatus, statusChanged,
 } from '../../../store/employeeSlice';
 import {profileData} from '../../../store/profileSlice';
 import {DataTable, Divider, Modal} from '../../../components';
@@ -26,13 +27,15 @@ function EmployeeList({name}) {
   const metaData = useSelector(employeeMeta);
   const status = useSelector(reqListStatus);
   const profile = useSelector(profileData);
+  const isStatusChanged = useSelector(statusChanged)
 
   const isLoading = status === 'loading';
 
   const [localEmployee, setLocalEmployee] = useState(new Employee());
   const [localEmployees, setLocalEmployees] = useState(employees);
   const [employeeModalShow, setEmployeeModalShow] = useState(false);
-  const [selectedRowIds, setSelectedRowIds] = useState([]);
+  const [selectedActivatedIds, setSelectedActivatedRowIds] = useState([]);
+  const [selectedDeactivatedIds, setSelectedDeactivatedRowIds] = useState([]);
   const [params, setParams] = useState({});
 
   const prevLocalEmployee = usePrevious(localEmployee);
@@ -62,30 +65,66 @@ function EmployeeList({name}) {
     }
   }, [params]);
 
+  useEffect(() => {
+    if (isStatusChanged) {
+      initList();
+      setSelectedDeactivatedRowIds([]);
+      setSelectedActivatedRowIds([]);
+      dispatch(setEmployeeStatus(false));
+    }
+  }, [isStatusChanged]);
+
   const initList = () => {
     dispatch(employeeListAsync(params));
   };
 
   const handleRowSelect = (selectedRow) => {
-    if (!!profile.permissions['employee_show']) {
-      let newSelectedRowIds = selectedRowIds.slice();
-      if (selectedRow.action === 'checked') {
-        newSelectedRowIds.push(selectedRow.id);
-      } else if (selectedRow.action === 'unchecked') {
-        const i = newSelectedRowIds.indexOf(selectedRow);
-        newSelectedRowIds.splice(i, 1)
-      } else if (selectedRow.action === 'checked_all') {
-        newSelectedRowIds = selectedRow.ids;
-      } else if (selectedRow.action === 'unchecked_all') {
-        newSelectedRowIds = [];
+    let newSelectedActivatedRowIds = selectedActivatedIds.slice();
+    let newSelectedDeactivatedRowIds = selectedDeactivatedIds.slice();
+    if (selectedRow.action === 'checked') {
+      if (isActivated(selectedRow.id)) {
+        newSelectedActivatedRowIds.push(selectedRow.id);
       } else {
+        newSelectedDeactivatedRowIds.push(selectedRow.id);
+      }
+      setSelectedActivatedRowIds(newSelectedActivatedRowIds);
+      setSelectedDeactivatedRowIds(newSelectedDeactivatedRowIds);
+    } else if (selectedRow.action === 'unchecked') {
+      if (isActivated(selectedRow.id)) {
+        const i = newSelectedActivatedRowIds.indexOf(selectedRow.id);
+        newSelectedActivatedRowIds.splice(i, 1);
+      } else {
+        const i = newSelectedDeactivatedRowIds.indexOf(selectedRow.id);
+        newSelectedDeactivatedRowIds.splice(i, 1);
+      }
+      setSelectedActivatedRowIds(newSelectedActivatedRowIds);
+      setSelectedDeactivatedRowIds(newSelectedDeactivatedRowIds);
+    } else if (selectedRow.action === 'checked_all') {
+      selectedRow.ids.forEach((id) => {
+        if (isActivated(id)) {
+          newSelectedActivatedRowIds.push(id);
+        } else {
+          newSelectedDeactivatedRowIds.push(id);
+        }
+      });
+      setSelectedActivatedRowIds(newSelectedActivatedRowIds);
+      setSelectedDeactivatedRowIds(newSelectedDeactivatedRowIds);
+    } else if (selectedRow.action === 'unchecked_all') {
+      setSelectedActivatedRowIds([]);
+      setSelectedDeactivatedRowIds([]);
+    } else {
+      if (!!profile.permissions['employee_show']) {
         setLocalEmployee(selectedRow);
         dispatch(setEmployeeData(selectedRow));
         history.push(`/employees/${selectedRow.id}`);
       }
-      setSelectedRowIds(newSelectedRowIds);
     }
-  }
+  };
+
+  const isActivated = (id) => {
+    const emp = localEmployees.find(employee => employee.id === id);
+    return emp.status.name.toLowerCase() === 'active'
+  };
 
   const handlePageChange = (page) => {
     setParams({...params, page});
@@ -111,6 +150,22 @@ function EmployeeList({name}) {
     setEmployeeModalShow(false);
   };
 
+  const handleActivate = () => {
+    const data = {};
+    selectedDeactivatedIds.forEach((id, i) => {
+      data[`employee_ids[${i}]`] = id;
+    });
+    dispatch(employeeActivateAsync(data));
+  }
+
+  const handleDeactivate = () => {
+    const data = {};
+    selectedActivatedIds.forEach((id, i) => {
+      data[`employee_ids[${i}]`] = id;
+    });
+    dispatch(employeeDeactivateAsync(data));
+  }
+
   const header = [
     {
       title: 'Employee ID',
@@ -128,6 +183,11 @@ function EmployeeList({name}) {
     {
       title: 'Position',
       data: 'position',
+    },
+    {
+      title: 'Status',
+      data: 'status',
+      render: status => status.name,
     },
   ];
 
@@ -154,7 +214,7 @@ function EmployeeList({name}) {
                     api
                     data={localEmployees}
                     columns={header}
-                    selectedRowIds={selectedRowIds}
+                    selectedRowIds={selectedActivatedIds.concat(selectedDeactivatedIds)}
                     options={{
                       page: true,
                       pageInfo: true,
@@ -165,7 +225,7 @@ function EmployeeList({name}) {
                     striped
                     fixed
                     responsive
-                    metaData={metaData}
+                    meta={metaData}
                     multiple
                     rowSelect
                     onSelect={handleRowSelect}
@@ -180,9 +240,22 @@ function EmployeeList({name}) {
                 </Col>
                 <Col xs={12}>
                   {
-                    !!selectedRowIds.length
-                      && !!profile.permissions['employee_delete']
-                      && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
+                    !!selectedActivatedIds.length
+                    && !!profile.permissions['employee_delete']
+                    && <Button type="danger"
+                               text={`Deactivate (${selectedActivatedIds.length})`}
+                               pullRight
+                               onClick={handleDeactivate}
+                               disabled={isLoading}/>
+                  }
+                  {
+                    !!selectedDeactivatedIds.length
+                    && !!profile.permissions['employee_delete']
+                    && <Button type="primary"
+                               text={`Activate (${selectedDeactivatedIds.length})`}
+                               pullRight
+                               onClick={handleActivate}
+                               disabled={isLoading}/>
                   }
                 </Col>
               </Row>
