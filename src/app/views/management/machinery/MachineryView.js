@@ -1,20 +1,28 @@
-import React, {useState} from 'react';
-import {useSelector} from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {Col, Row} from 'react-bootstrap';
 import {Button} from 'adminlte-2-react';
 import DataTable from '../../../components/DataTable';
 import Divider from '../../../components/Divider';
 import MachineryForm from '../form/MachineryForm';
 import SubCategoryForm from '../form/SubCategoryForm';
-import {reqDataStatus} from '../../../store/machinerySlice';
+import {
+  machineryRemoveSubCategoriesAsync,
+  reqDataStatus
+} from '../../../store/machinerySlice';
 import {profileData} from '../../../store/profileSlice';
 
 function MachineryView({data: localMachinery}) {
+  const dispatch = useDispatch();
   const status = useSelector(reqDataStatus);
   const profile = useSelector(profileData);
 
   const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [showSubCategoryForm, setShowSubCategoryForm] = useState(false);
+
+  useEffect(() => {
+    setSelectedRowIds([]);
+  }, [localMachinery])
 
   const handleRowSelect = (selectedRow) => {
     let newSelectedRowIds = selectedRowIds.slice();
@@ -33,6 +41,14 @@ function MachineryView({data: localMachinery}) {
 
   const hasId = !!localMachinery.id;
   const isLoading = status === 'loading';
+
+  const handleDelete = () => {
+    const data = {machinery_id: localMachinery.id};
+    selectedRowIds.forEach((id, i) => {
+      data[`sub_category_ids[${i}]`] = id;
+    });
+    dispatch(machineryRemoveSubCategoriesAsync(data));
+  };
 
   const header = [
     {
@@ -97,7 +113,11 @@ function MachineryView({data: localMachinery}) {
                 {
                   !!selectedRowIds.length
                     && profile.permissions['sub_category_delete']
-                    && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
+                    && <Button type="danger"
+                               text={`Delete (${selectedRowIds.length})`}
+                               onClick={handleDelete}
+                               pullRight
+                               disabled={isLoading}/>
                 }
               </Col>
             </Row>

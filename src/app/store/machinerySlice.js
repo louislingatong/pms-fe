@@ -1,15 +1,17 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {add, addSubCategory, edit, fetchAll} from '../services/machineryService';
+import {add, addSubCategory, edit, fetchAll, remove, removeSubCategory} from '../services/machineryService';
 import Machinery from '../core/models/Machinery';
 import Meta from '../core/models/Meta';
 import Transform from '../utils/Transformer';
+import {intervalsDeleteAsync} from "./intervalSlice";
 
 const initialState = {
   data: new Machinery(),
   list: [],
   meta: new Meta(),
   listStatus: 'idle',
-  dataStatus: 'idle'
+  dataStatus: 'idle',
+  deleted: false
 };
 
 export const machineryListAsync = createAsyncThunk(
@@ -38,10 +40,25 @@ export const machineryEditAsync = createAsyncThunk(
   }
 );
 
+export const machineriesDeleteAsync = createAsyncThunk(
+  'machinery/deleteMachineries',
+  async (data) => {
+    return await remove(data);
+  }
+);
+
 export const machineryAddSubCategoryAsync = createAsyncThunk(
   'machinery/addNewSubCategory',
   async (data) => {
     const response = await addSubCategory(data);
+    return Transform.fetchObject(response.data, Machinery);
+  }
+);
+
+export const machineryRemoveSubCategoriesAsync = createAsyncThunk(
+  'machinery/removeSubCategories',
+  async (data) => {
+    const response = await removeSubCategory(data);
     return Transform.fetchObject(response.data, Machinery);
   }
 );
@@ -52,6 +69,9 @@ export const machinerySlice = createSlice({
   reducers: {
     setMachinery: (state, action) => {
       state.data = action.payload;
+    },
+    setDeletedStatus: (state, action) => {
+      state.deleted = action.payload;
     },
     resetMachinery: (state, action) => initialState
   },
@@ -88,6 +108,15 @@ export const machinerySlice = createSlice({
       .addCase(machineryEditAsync.rejected, (state, action) => {
         state.dataStatus = 'idle';
       })
+      .addCase(machineriesDeleteAsync.pending, (state) => {
+        state.listStatus = 'loading';
+      })
+      .addCase(machineriesDeleteAsync.fulfilled, (state, action) => {
+        state.deleted = action.payload.delete;
+      })
+      .addCase(machineriesDeleteAsync.rejected, (state, action) => {
+        state.listStatus = 'idle';
+      })
       .addCase(machineryAddSubCategoryAsync.pending, (state) => {
         state.dataStatus = 'loading';
       })
@@ -97,15 +126,26 @@ export const machinerySlice = createSlice({
       })
       .addCase(machineryAddSubCategoryAsync.rejected, (state, action) => {
         state.dataStatus = 'idle';
+      })
+      .addCase(machineryRemoveSubCategoriesAsync.pending, (state) => {
+        state.listStatus = 'loading';
+      })
+      .addCase(machineryRemoveSubCategoriesAsync.fulfilled, (state, action) => {
+        state.dataStatus = 'idle';
+        state.data = action.payload;
+      })
+      .addCase(machineryRemoveSubCategoriesAsync.rejected, (state, action) => {
+        state.listStatus = 'idle';
       });
   },
 });
 
-export const {setMachinery, resetMachinery} = machinerySlice.actions;
+export const {setMachinery, setDeletedStatus, resetMachinery} = machinerySlice.actions;
 
 export const machineryData = state => state.machinery.data;
 export const machineryList = state => state.machinery.list;
 export const machineryMeta = state => state.machinery.meta;
+export const machineriesDeleted = state => state.machinery.deleted;
 export const reqListStatus = state => state.machinery.listStatus;
 export const reqDataStatus = state => state.machinery.dataStatus;
 

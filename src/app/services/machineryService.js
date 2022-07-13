@@ -53,6 +53,24 @@ export function edit(data) {
   })
 }
 
+export function remove(data) {
+  const formData = new FormData();
+  for (const [key, value] of Object.entries(data)) {
+    formData.append(key, value);
+  }
+  formData.append('_method', 'DELETE');
+  return new Promise((resolve, reject) => {
+    Http.post('machineries', formData, {headers: {'Content-Type': 'multipart/form-data'}})
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => {
+        console.log(err.response.data.error);
+        reject(err);
+      })
+  })
+}
+
 export function addSubCategory(data) {
   let machineryId;
   const formData = new FormData();
@@ -66,6 +84,29 @@ export function addSubCategory(data) {
   formData.append('_method', 'PUT');
   return new Promise((resolve, reject) => {
     Http.post(`machineries/${machineryId}/create-sub-category`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => {
+        console.log(err.response.data.error);
+        reject(err);
+      })
+  })
+}
+
+export function removeSubCategory(data) {
+  let machineryId;
+  const formData = new FormData();
+  for (const [key, value] of Object.entries(data)) {
+    if (key === 'machinery_id') {
+      machineryId = value;
+    } else {
+      formData.append(key, value);
+    }
+  }
+  formData.append('_method', 'PUT');
+  return new Promise((resolve, reject) => {
+    Http.post(`machineries/${machineryId}/delete-sub-category`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
       .then(res => {
         resolve(res.data);
       })

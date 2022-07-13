@@ -8,7 +8,9 @@ import {
   intervalList,
   intervalMeta,
   intervalListAsync,
-  reqListStatus
+  reqListStatus,
+  intervalsDeleted,
+  setDeletedStatus, intervalsDeleteAsync
 } from '../../../store/intervalSlice';
 import {profileData} from '../../../store/profileSlice';
 import {DataTable, Divider, Modal} from '../../../components';
@@ -23,6 +25,7 @@ function IntervalList({name}) {
   const metaData = useSelector(intervalMeta);
   const status = useSelector(reqListStatus);
   const profile = useSelector(profileData);
+  const isDeleted = useSelector(intervalsDeleted);
 
   const isLoading = status === 'loading';
 
@@ -67,27 +70,35 @@ function IntervalList({name}) {
     }
   }, [params]);
 
+  useEffect(() => {
+    if (isDeleted) {
+      initList();
+      dispatch(setDeletedStatus(false));
+      setSelectedRowIds([]);
+    }
+  }, [isDeleted]);
+
   const initList = () => {
     dispatch(intervalListAsync(params));
   };
 
   const handleRowSelect = (selectedRow) => {
-    if (!!profile.permissions['interval_show']) {
-      let newSelectedRowIds = selectedRowIds.slice();
-      if (selectedRow.action === 'checked') {
-        newSelectedRowIds.push(selectedRow.id);
-      } else if (selectedRow.action === 'unchecked') {
-        const i = newSelectedRowIds.indexOf(selectedRow);
-        newSelectedRowIds.splice(i, 1)
-      } else if (selectedRow.action === 'checked_all') {
-        newSelectedRowIds = selectedRow.ids;
-      } else if (selectedRow.action === 'unchecked_all') {
-        newSelectedRowIds = [];
-      } else {
-        newSelectedRowIds = [selectedRow.id];
+    let newSelectedRowIds = selectedRowIds.slice();
+    if (selectedRow.action === 'checked') {
+      newSelectedRowIds.push(selectedRow.id);
+      setSelectedRowIds(newSelectedRowIds);
+    } else if (selectedRow.action === 'unchecked') {
+      const i = newSelectedRowIds.indexOf(selectedRow);
+      newSelectedRowIds.splice(i, 1);
+      setSelectedRowIds(newSelectedRowIds);
+    } else if (selectedRow.action === 'checked_all') {
+      setSelectedRowIds(selectedRow.ids);
+    } else if (selectedRow.action === 'unchecked_all') {
+      setSelectedRowIds([]);
+    } else {
+      if (!!profile.permissions['interval_show']) {
         setLocalInterval(selectedRow);
       }
-      setSelectedRowIds(newSelectedRowIds);
     }
   }
 
@@ -115,6 +126,14 @@ function IntervalList({name}) {
     setSelectedRowIds([]);
     setLocalInterval(new Interval());
     setIntervalModalShow(false);
+  };
+
+  const handleDelete = () => {
+    const data = {};
+    selectedRowIds.forEach((id, i) => {
+      data[`interval_ids[${i}]`] = id;
+    });
+    dispatch(intervalsDeleteAsync(data));
   };
 
   const header = [
@@ -175,7 +194,11 @@ function IntervalList({name}) {
                   {
                     !!selectedRowIds.length
                       && !!profile.permissions['interval_delete']
-                      && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
+                      && <Button type="danger"
+                                 text={`Delete (${selectedRowIds.length})`}
+                                 onClick={handleDelete}
+                                 pullRight
+                                 disabled={isLoading}/>
                   }
                 </Col>
               </Row>

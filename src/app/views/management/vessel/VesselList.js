@@ -6,11 +6,13 @@ import {Box, Button, Content} from 'adminlte-2-react';
 import {Col, Row} from 'react-bootstrap';
 import {
   reqListStatus,
-  setVesselData,
+  setVessel,
   vesselData,
   vesselList,
   vesselMeta,
-  vesselListAsync
+  vesselListAsync,
+  vesselsDeleted,
+  setDeletedStatus, vesselsDeleteAsync
 } from '../../../store/vesselSlice';
 import {profileData} from '../../../store/profileSlice';
 import {DataTable, Divider, Modal} from '../../../components';
@@ -26,6 +28,7 @@ function VesselList({name}) {
   const metaData = useSelector(vesselMeta);
   const status = useSelector(reqListStatus);
   const profile = useSelector(profileData);
+  const isDeleted = useSelector(vesselsDeleted);
 
   const isLoading = status === 'loading';
 
@@ -63,28 +66,37 @@ function VesselList({name}) {
     }
   }, [params]);
 
+  useEffect(() => {
+    if (isDeleted) {
+      initList();
+      dispatch(setDeletedStatus(false));
+      setSelectedRowIds([]);
+    }
+  }, [isDeleted]);
+
   const initList = () => {
     dispatch(vesselListAsync(params));
   };
 
   const handleRowSelect = (selectedRow) => {
-    if (!!profile.permissions['vessel_show']) {
-      let newSelectedRowIds = selectedRowIds.slice();
-      if (selectedRow.action === 'checked') {
-        newSelectedRowIds.push(selectedRow.id);
-      } else if (selectedRow.action === 'unchecked') {
-        const i = newSelectedRowIds.indexOf(selectedRow);
-        newSelectedRowIds.splice(i, 1);
-      } else if (selectedRow.action === 'checked_all') {
-        newSelectedRowIds = selectedRow.ids;
-      } else if (selectedRow.action === 'unchecked_all') {
-        newSelectedRowIds = [];
-      } else {
+    let newSelectedRowIds = selectedRowIds.slice();
+    if (selectedRow.action === 'checked') {
+      newSelectedRowIds.push(selectedRow.id);
+      setSelectedRowIds(newSelectedRowIds);
+    } else if (selectedRow.action === 'unchecked') {
+      const i = newSelectedRowIds.indexOf(selectedRow);
+      newSelectedRowIds.splice(i, 1);
+      setSelectedRowIds(newSelectedRowIds);
+    } else if (selectedRow.action === 'checked_all') {
+      setSelectedRowIds(selectedRow.ids);
+    } else if (selectedRow.action === 'unchecked_all') {
+      setSelectedRowIds([]);
+    } else {
+      if (!!profile.permissions['vessel_show']) {
         setLocalVessel(selectedRow);
-        dispatch(setVesselData(selectedRow));
+        dispatch(setVessel(selectedRow));
         history.push(`/vessels/${selectedRow.id}`);
       }
-      setSelectedRowIds(newSelectedRowIds);
     }
   }
 
@@ -110,6 +122,14 @@ function VesselList({name}) {
 
   const handleModalClose = () => {
     setVesselModalShow(false);
+  };
+
+  const handleDelete = () => {
+    const data = {};
+    selectedRowIds.forEach((id, i) => {
+      data[`vessel_ids[${i}]`] = id;
+    });
+    dispatch(vesselsDeleteAsync(data));
   };
 
   const header = [
@@ -175,7 +195,11 @@ function VesselList({name}) {
                   {
                     !!selectedRowIds.length
                       && !!profile.permissions['vessel_delete']
-                      && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
+                      && <Button type="danger"
+                                 text={`Delete (${selectedRowIds.length})`}
+                                 onClick={handleDelete}
+                                 pullRight
+                                 disabled={isLoading}/>
                   }
                 </Col>
               </Row>

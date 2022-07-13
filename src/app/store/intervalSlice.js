@@ -1,15 +1,17 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import Interval from '../core/models/Interval';
 import Meta from '../core/models/Meta';
-import {add, edit, fetchAll} from '../services/intervalService';
+import {add, edit, fetchAll, remove} from '../services/intervalService';
 import Transform from '../utils/Transformer';
+import {employeeActivateAsync} from "./employeeSlice";
 
 const initialState = {
   data: new Interval(),
   list: [],
   meta: new Meta(),
   listStatus: 'idle',
-  dataStatus: 'idle'
+  dataStatus: 'idle',
+  deleted: false
 };
 
 export const intervalListAsync = createAsyncThunk(
@@ -38,12 +40,22 @@ export const intervalEditAsync = createAsyncThunk(
   }
 );
 
+export const intervalsDeleteAsync = createAsyncThunk(
+  'interval/deleteIntervals',
+  async (data) => {
+    return await remove(data);
+  }
+);
+
 export const intervalSlice = createSlice({
   name: 'interval',
   initialState,
   reducers: {
     setInterval: (state, action) => {
       state.data = action.payload;
+    },
+    setDeletedStatus: (state, action) => {
+      state.deleted = action.payload;
     },
     resetInterval: (state, action) => initialState
   },
@@ -79,15 +91,25 @@ export const intervalSlice = createSlice({
       })
       .addCase(intervalEditAsync.rejected, (state, action) => {
         state.dataStatus = 'idle';
+      })
+      .addCase(intervalsDeleteAsync.pending, (state) => {
+        state.listStatus = 'loading';
+      })
+      .addCase(intervalsDeleteAsync.fulfilled, (state, action) => {
+        state.deleted = action.payload.delete;
+      })
+      .addCase(intervalsDeleteAsync.rejected, (state, action) => {
+        state.listStatus = 'idle';
       });
   },
 });
 
-export const {setInterval, resetInterval} = intervalSlice.actions;
+export const {setInterval, setDeletedStatus, resetInterval} = intervalSlice.actions;
 
 export const intervalData = state => state.interval.data;
 export const intervalList = state => state.interval.list;
 export const intervalMeta = state => state.interval.meta;
+export const intervalsDeleted = state => state.interval.deleted;
 export const reqListStatus = state => state.interval.listStatus;
 export const reqDataStatus = state => state.interval.dataStatus;
 

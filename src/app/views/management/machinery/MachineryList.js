@@ -7,11 +7,14 @@ import DataTable from '../../../components/DataTable';
 import Modal from '../../../components/Modal';
 import Divider from '../../../components/Divider';
 import {
+  machineriesDeleteAsync,
+  machineriesDeleted,
   machineryData,
   machineryList,
   machineryListAsync,
   machineryMeta,
   reqListStatus,
+  setDeletedStatus
 } from '../../../store/machinerySlice';
 import {profileData} from '../../../store/profileSlice';
 import MachineryView from './MachineryView';
@@ -26,6 +29,7 @@ function MachineryList({name}) {
   const metaData = useSelector(machineryMeta);
   const status = useSelector(reqListStatus);
   const profile = useSelector(profileData);
+  const isDeleted = useSelector(machineriesDeleted);
 
   const isLoading = status === 'loading';
 
@@ -71,27 +75,35 @@ function MachineryList({name}) {
     }
   }, [params, filters]);
 
+  useEffect(() => {
+    if (isDeleted) {
+      initList();
+      dispatch(setDeletedStatus(false));
+      setSelectedRowIds([]);
+    }
+  }, [isDeleted]);
+
   const initList = () => {
     dispatch(machineryListAsync({...params, ...filters}));
   };
 
   const handleRowSelect = (selectedRow) => {
-    if (!!profile.permissions['machinery_show']) {
-      let newSelectedRowIds = selectedRowIds.slice();
-      if (selectedRow.action === 'checked') {
-        newSelectedRowIds.push(selectedRow.id);
-      } else if (selectedRow.action === 'unchecked') {
-        const i = newSelectedRowIds.indexOf(selectedRow);
-        newSelectedRowIds.splice(i, 1)
-      } else if (selectedRow.action === 'checked_all') {
-        newSelectedRowIds = selectedRow.ids;
-      } else if (selectedRow.action === 'unchecked_all') {
-        newSelectedRowIds = [];
-      } else {
-        newSelectedRowIds = [selectedRow.id];
+    let newSelectedRowIds = selectedRowIds.slice();
+    if (selectedRow.action === 'checked') {
+      newSelectedRowIds.push(selectedRow.id);
+      setSelectedRowIds(newSelectedRowIds);
+    } else if (selectedRow.action === 'unchecked') {
+      const i = newSelectedRowIds.indexOf(selectedRow);
+      newSelectedRowIds.splice(i, 1);
+      setSelectedRowIds(newSelectedRowIds);
+    } else if (selectedRow.action === 'checked_all') {
+      setSelectedRowIds(selectedRow.ids);
+    } else if (selectedRow.action === 'unchecked_all') {
+      setSelectedRowIds([]);
+    } else {
+      if (!!profile.permissions['machinery_show']) {
         setLocalMachinery(selectedRow);
       }
-      setSelectedRowIds(newSelectedRowIds);
     }
   };
 
@@ -131,6 +143,14 @@ function MachineryList({name}) {
     setSelectedRowIds([]);
     setLocalMachinery(new Machinery());
     setMachineryModalShow(false);
+  };
+
+  const handleDelete = () => {
+    const data = {};
+    selectedRowIds.forEach((id, i) => {
+      data[`machinery_ids[${i}]`] = id;
+    });
+    dispatch(machineriesDeleteAsync(data));
   };
 
   const header = [
@@ -214,7 +234,11 @@ function MachineryList({name}) {
                   {
                     !!selectedRowIds.length
                       && !!profile.permissions['machinery_delete']
-                      && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
+                      && <Button type="danger"
+                                 text={`Delete (${selectedRowIds.length})`}
+                                 onClick={handleDelete}
+                                 pullRight
+                                 disabled={isLoading}/>
                   }
                 </Col>
               </Row>

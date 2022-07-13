@@ -1,15 +1,17 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import Vessel from '../core/models/Vessel';
 import Meta from '../core/models/Meta';
-import {add, edit, fetchAll, fetchById} from '../services/vesselService';
+import {add, edit, fetchAll, fetchById, remove} from '../services/vesselService';
 import Transform from '../utils/Transformer';
+import {machineriesDeleteAsync} from "./machinerySlice";
 
 const initialState = {
   data: new Vessel(),
   list: [],
   meta: new Meta(),
   listStatus: 'idle',
-  dataStatus: 'idle'
+  dataStatus: 'idle',
+  deleted: false
 };
 
 export const vesselListAsync = createAsyncThunk(
@@ -46,12 +48,22 @@ export const vesselEditAsync = createAsyncThunk(
   }
 );
 
+export const vesselsDeleteAsync = createAsyncThunk(
+  'vessel/deleteVessels',
+  async (data) => {
+    return await remove(data);
+  }
+);
+
 export const vesselSlice = createSlice({
   name: 'vessel',
   initialState,
   reducers: {
-    setVesselData: (state, action) => {
+    setVessel: (state, action) => {
       state.data = action.payload;
+    },
+    setDeletedStatus: (state, action) => {
+      state.deleted = action.payload;
     },
     resetVessel: (state, action) => initialState
   },
@@ -97,15 +109,25 @@ export const vesselSlice = createSlice({
       })
       .addCase(vesselEditAsync.rejected, (state, action) => {
         state.dataStatus = 'idle';
+      })
+      .addCase(vesselsDeleteAsync.pending, (state) => {
+        state.listStatus = 'loading';
+      })
+      .addCase(vesselsDeleteAsync.fulfilled, (state, action) => {
+        state.deleted = action.payload.delete;
+      })
+      .addCase(vesselsDeleteAsync.rejected, (state, action) => {
+        state.listStatus = 'idle';
       });
   },
 });
 
-export const {setVesselData, resetVessel} = vesselSlice.actions;
+export const {setVessel, setDeletedStatus, resetVessel} = vesselSlice.actions;
 
 export const vesselData = state => state.vessel.data;
 export const vesselList = state => state.vessel.list;
 export const vesselMeta = state => state.vessel.meta;
+export const vesselsDeleted = state => state.vessel.deleted;
 export const reqListStatus = state => state.vessel.listStatus;
 export const reqDataStatus = state => state.vessel.dataStatus;
 

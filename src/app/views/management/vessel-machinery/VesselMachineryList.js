@@ -9,7 +9,9 @@ import {
   vesselMachineryList,
   vesselMachineryMeta,
   vesselMachineryListAsync,
-  reqListStatus
+  reqListStatus,
+  vesselMachineriesDeleted,
+  setDeletedStatus, vesselMachineriesDeleteAsync
 } from '../../../store/vesselMachinerySlice';
 import {profileData} from '../../../store/profileSlice';
 import {activeVessel as defaultActiveVessel} from '../../../store/navbarMenuSlice';
@@ -28,6 +30,7 @@ function VesselMachineryList({name}) {
   const metaData = useSelector(vesselMachineryMeta);
   const status = useSelector(reqListStatus);
   const profile = useSelector(profileData);
+  const isDeleted = useSelector(vesselMachineriesDeleted);
 
   const isLoading = status === 'loading';
 
@@ -77,27 +80,35 @@ function VesselMachineryList({name}) {
     }
   }, [params, filters]);
 
+  useEffect(() => {
+    if (isDeleted) {
+      initList();
+      dispatch(setDeletedStatus(false));
+      setSelectedRowIds([]);
+    }
+  }, [isDeleted]);
+
   const initList = () => {
     dispatch(vesselMachineryListAsync({...params, ...filters}));
   };
 
   const handleRowSelect = (selectedRow) => {
-    if (!!profile.permissions['vessel_machinery_show']) {
-      let newSelectedRowIds = selectedRowIds.slice();
-      if (selectedRow.action === 'checked') {
-        newSelectedRowIds.push(selectedRow.id);
-      } else if (selectedRow.action === 'unchecked') {
-        const i = newSelectedRowIds.indexOf(selectedRow);
-        newSelectedRowIds.splice(i, 1)
-      } else if (selectedRow.action === 'checked_all') {
-        newSelectedRowIds = selectedRow.ids;
-      } else if (selectedRow.action === 'unchecked_all') {
-        newSelectedRowIds = [];
-      } else {
-        newSelectedRowIds = [selectedRow.id];
+    let newSelectedRowIds = selectedRowIds.slice();
+    if (selectedRow.action === 'checked') {
+      newSelectedRowIds.push(selectedRow.id);
+      setSelectedRowIds(newSelectedRowIds);
+    } else if (selectedRow.action === 'unchecked') {
+      const i = newSelectedRowIds.indexOf(selectedRow);
+      newSelectedRowIds.splice(i, 1);
+      setSelectedRowIds(newSelectedRowIds);
+    } else if (selectedRow.action === 'checked_all') {
+      setSelectedRowIds(selectedRow.ids);
+    } else if (selectedRow.action === 'unchecked_all') {
+      setSelectedRowIds([]);
+    } else {
+      if (!!profile.permissions['vessel_machinery_show']) {
         setLocalVesselMachinery(selectedRow);
       }
-      setSelectedRowIds(newSelectedRowIds);
     }
   };
 
@@ -141,6 +152,14 @@ function VesselMachineryList({name}) {
     setSelectedRowIds([]);
     setLocalVesselMachinery(new VesselMachinery());
     setVesselMachineryModalShow(false);
+  };
+
+  const handleDelete = () => {
+    const data = {};
+    selectedRowIds.forEach((id, i) => {
+      data[`vessel_machinery_ids[${i}]`] = id;
+    });
+    dispatch(vesselMachineriesDeleteAsync(data));
   };
 
   const header = [
@@ -235,7 +254,11 @@ function VesselMachineryList({name}) {
                   {
                     !!selectedRowIds.length
                       && !!profile.permissions['vessel_machinery_delete']
-                      && <Button type="danger" text={`Delete (${selectedRowIds.length})`} pullRight/>
+                      && <Button type="danger"
+                                 text={`Delete (${selectedRowIds.length})`}
+                                 onClick={handleDelete}
+                                 pullRight
+                                 disabled={isLoading}/>
                   }
                 </Col>
               </Row>

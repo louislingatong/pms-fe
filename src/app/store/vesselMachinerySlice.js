@@ -1,8 +1,17 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {add, edit, editSubCategories, fetchAll, fetchById, exportVesselMachinery} from '../services/vesselMachineryService';
+import {
+  add,
+  edit,
+  editSubCategories,
+  fetchAll,
+  fetchById,
+  exportVesselMachinery,
+  remove
+} from '../services/vesselMachineryService';
 import VesselMachinery from '../core/models/VesselMachinery';
 import Meta from '../core/models/Meta';
 import Transform from '../utils/Transformer';
+import {vesselsDeleteAsync} from "./vesselSlice";
 
 const FileDownload = require('js-file-download');
 
@@ -11,7 +20,8 @@ const initialState = {
   list: [],
   meta: new Meta(),
   listStatus: 'idle',
-  dataStatus: 'idle'
+  dataStatus: 'idle',
+  deleted: false
 };
 
 export const vesselMachineryListAsync = createAsyncThunk(
@@ -48,6 +58,13 @@ export const vesselMachineryEditAsync = createAsyncThunk(
   }
 );
 
+export const vesselMachineriesDeleteAsync = createAsyncThunk(
+  'vesselMachinery/deleteVesselMachineries',
+  async (data) => {
+    return await remove(data);
+  }
+);
+
 export const vesselMachineryEditSubCategoriesAsync = createAsyncThunk(
   'vesselMachinery/editSubCategories',
   async (data) => {
@@ -69,6 +86,9 @@ export const vesselMachinerySlice = createSlice({
   name: 'vesselMachinery',
   initialState,
   reducers: {
+    setDeletedStatus: (state, action) => {
+      state.deleted = action.payload;
+    },
     resetVesselMachinery: (state, action) => initialState
   },
   extraReducers: (builder) => {
@@ -114,6 +134,15 @@ export const vesselMachinerySlice = createSlice({
       .addCase(vesselMachineryEditAsync.rejected, (state, action) => {
         state.dataStatus = 'idle';
       })
+      .addCase(vesselMachineriesDeleteAsync.pending, (state) => {
+        state.listStatus = 'loading';
+      })
+      .addCase(vesselMachineriesDeleteAsync.fulfilled, (state, action) => {
+        state.deleted = action.payload.delete;
+      })
+      .addCase(vesselMachineriesDeleteAsync.rejected, (state, action) => {
+        state.listStatus = 'idle';
+      })
       .addCase(vesselMachineryEditSubCategoriesAsync.pending, (state) => {
         state.dataStatus = 'loading';
       })
@@ -127,11 +156,12 @@ export const vesselMachinerySlice = createSlice({
   },
 });
 
-export const {resetVesselMachinery} = vesselMachinerySlice.actions;
+export const {setDeletedStatus, resetVesselMachinery} = vesselMachinerySlice.actions;
 
 export const vesselMachineryData = state => state.vesselMachinery.data;
 export const vesselMachineryList = state => state.vesselMachinery.list;
 export const vesselMachineryMeta = state => state.vesselMachinery.meta;
+export const vesselMachineriesDeleted = state => state.vesselMachinery.deleted;
 export const reqListStatus = state => state.vesselMachinery.listStatus;
 export const reqDataStatus = state => state.vesselMachinery.dataStatus;
 
