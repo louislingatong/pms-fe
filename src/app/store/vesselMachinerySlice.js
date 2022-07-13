@@ -6,7 +6,7 @@ import {
   fetchAll,
   fetchById,
   exportVesselMachinery,
-  remove
+  remove, exportAllVesselMachinery
 } from '../services/vesselMachineryService';
 import VesselMachinery from '../core/models/VesselMachinery';
 import Meta from '../core/models/Meta';
@@ -70,6 +70,15 @@ export const vesselMachineryEditSubCategoriesAsync = createAsyncThunk(
   async (data) => {
     const response = await editSubCategories(data);
     return Transform.fetchObject(response.data, VesselMachinery);
+  }
+);
+
+export const vesselMachineryExportAllAsync = createAsyncThunk(
+  'vesselMachinery/exportAllVesselMachinery',
+  async (params) => {
+    const allVesselMachinery = await exportAllVesselMachinery(params);
+    FileDownload(allVesselMachinery, 'All Vessel Machinery.xls');
+    return allVesselMachinery;
   }
 );
 

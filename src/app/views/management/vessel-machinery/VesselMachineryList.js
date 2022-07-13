@@ -11,7 +11,7 @@ import {
   vesselMachineryListAsync,
   reqListStatus,
   vesselMachineriesDeleted,
-  setDeletedStatus, vesselMachineriesDeleteAsync
+  setDeletedStatus, vesselMachineriesDeleteAsync, vesselMachineryExportAllAsync
 } from '../../../store/vesselMachinerySlice';
 import {profileData} from '../../../store/profileSlice';
 import {activeVessel as defaultActiveVessel} from '../../../store/navbarMenuSlice';
@@ -162,6 +162,10 @@ function VesselMachineryList({name}) {
     dispatch(vesselMachineriesDeleteAsync(data));
   };
 
+  const handleExportAllVesselMachinery = () => {
+    dispatch(vesselMachineryExportAllAsync({...params}));
+  };
+
   const header = [
     {
       title: 'Department',
@@ -208,14 +212,29 @@ function VesselMachineryList({name}) {
           <Col xs={12}>
             <Box>
               <Row>
-                <Col xs={12} md={4} lg={2}>
-                  <VesselDepartmentSelect
-                    name="department"
-                    id="departmentFilterSelect"
-                    placeholder="Department"
-                    allowClear={true}
-                    onChange={handleFilterChange}
-                  />
+                <Col xs={12}>
+                  <Row>
+                    <Col xs={12} md={5} lg={3}>
+                      <VesselDepartmentSelect
+                        name="department"
+                        id="departmentFilterSelect"
+                        placeholder="Department"
+                        allowClear={true}
+                        onChange={handleFilterChange}
+                      />
+                    </Col>
+                    <Col xs={12} md={7} lg={9}>
+                      {
+                        !!profile.permissions['vessel_machinery_export']
+                        && <Button
+                          type="primary"
+                          text="Export"
+                          onClick={handleExportAllVesselMachinery}
+                          pullRight
+                        />
+                      }
+                    </Col>
+                  </Row>
                 </Col>
                 <Col xs={12}>
                   <Divider type="line"/>
