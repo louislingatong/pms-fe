@@ -1,17 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Inputs} from 'adminlte-2-react';
-import {resetAuth, logoutAsync} from '../../store/authSlice';
-import {resetEmployee} from '../../store/employeeSlice';
-import {resetInterval} from '../../store/intervalSlice';
-import {resetMachinery} from '../../store/machinerySlice';
-import {resetOption} from '../../store/optionSlice';
-import {resetPermission} from '../../store/permissionSlice';
-import {resetProfile} from '../../store/profileSlice';
-import {resetRunningHour} from '../../store/runningHourSlice';
-import {resetVesselMachinery} from '../../store/vesselMachinerySlice';
-import {resetVessel} from '../../store/vesselSlice';
-import {resetWork} from '../../store/workSlice';
+import {logoutAsync} from '../../store/authSlice';
 import {Entry} from '../../components';
 import {
   activeVessel as defaultActiveVessel,
@@ -88,19 +78,7 @@ function NavbarMenu() {
 
   const handleLogout = () => {
     dispatch(logoutAsync());
-    dispatch(resetAuth());
-    dispatch(resetEmployee());
-    dispatch(resetInterval());
-    dispatch(resetMachinery());
-    dispatch(resetNavbarMenu());
-    dispatch(resetOption());
-    dispatch(resetPermission());
-    dispatch(resetProfile());
-    dispatch(resetRunningHour());
-    dispatch(resetVesselMachinery());
-    dispatch(resetVessel());
-    dispatch(resetWork());
-  }
+  };
 
   return (
     <React.Fragment>

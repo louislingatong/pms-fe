@@ -27,9 +27,9 @@ export const loginAsync = createAsyncThunk(
 export const logoutAsync = createAsyncThunk(
   'auth/logout',
   async () => {
+    await logout();
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    await logout();
   }
 );
 
@@ -121,8 +121,8 @@ export const authCheck = () => dispatch => {
   const accessToken = localStorage.getItem('accessToken');
   if (!!accessToken) {
     Http.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-    dispatch(authenticate(!!accessToken));
   }
+  dispatch(authenticate(!!accessToken));
 };
 
 export const authenticated = state => state.auth.isAuthenticated;

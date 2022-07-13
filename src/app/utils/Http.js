@@ -1,6 +1,6 @@
 import axios from 'axios';
 import store from '../store';
-import {logoutAsync} from '../store/authSlice';
+import {authCheck} from '../store/authSlice';
 
 // create new instance
 const Http = axios.create();
@@ -31,7 +31,9 @@ Http.interceptors.response.use(
       case 403:
         const state = store.getState();
         if (state.auth.isAuthenticated) {
-          store.dispatch(logoutAsync());
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          store.dispatch(authCheck());
         }
         break;
       case 500:
