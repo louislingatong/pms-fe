@@ -5,6 +5,8 @@ import {Inputs} from 'adminlte-2-react';
 import Transform from '../../utils/Transformer';
 import {machineriesAsync} from '../../store/optionSlice';
 
+const DEFAULT_LIMIT = 1000;
+
 function MachinerySelect(props) {
   const {name, id, label, labelPosition = 'none', placeholder = '', allowClear, filter = {}} = props;
   const {form = false, value, disabled, type, help} = props;
@@ -29,7 +31,7 @@ function MachinerySelect(props) {
   const fetchOptions = (data, success) => {
     const currentLocalValue = localValue.current;
     const currentLocalFilter = localFilter.current;
-    const params = {...currentLocalFilter};
+    const params = {limit: DEFAULT_LIMIT, ...currentLocalFilter};
     if (!data.searchValue && currentLocalValue) {
       params['keyword'] = currentLocalValue;
     }
