@@ -6,7 +6,7 @@ import Transform from '../../utils/Transformer';
 import {machineriesAsync} from '../../store/optionSlice';
 
 function MachinerySelect(props) {
-  const {name, id, label, labelPosition = 'none', placeholder = '', allowClear} = props;
+  const {name, id, label, labelPosition = 'none', placeholder = '', allowClear, filter = {}} = props;
   const {form = false, value, disabled, type, help} = props;
   const {onChange} = props;
 
@@ -15,14 +15,21 @@ function MachinerySelect(props) {
   const dispatch = useDispatch();
 
   const localValue = useRef(value);
+  const localFilter = useRef(filter);
 
   const openOptions = (e) => {
     localValue.current = Array.isArray(e.params.data) ? e.params.data[0] : e.params.data;
+
+  };
+
+  const beforeOpeningOptions = () => {
+    localFilter.current = filter;
   };
 
   const fetchOptions = (data, success) => {
     const currentLocalValue = localValue.current;
-    const params = {};
+    const currentLocalFilter = localFilter.current;
+    const params = {...currentLocalFilter};
     if (!data.searchValue && currentLocalValue) {
       params['keyword'] = currentLocalValue;
     }
@@ -50,6 +57,7 @@ function MachinerySelect(props) {
       onChange={onChange}
       onOpen={openOptions}
       onFetchData={fetchOptions}
+      onBeforeOpening={beforeOpeningOptions}
       fetchDataDelay={1000}
       {...formProps}
     />
@@ -73,6 +81,7 @@ MachinerySelect.propTypes = {
   help: PropTypes.string,
   form: PropTypes.bool,
   onChange: PropTypes.func,
+  filter: PropTypes.object
 };
 
 export default MachinerySelect;

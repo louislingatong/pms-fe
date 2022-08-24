@@ -253,6 +253,7 @@ function WorkList({name}) {
                     placeholder="Machinery"
                     allowClear={true}
                     value={filters.machinery}
+                    filter={filters}
                     onChange={handleFilterChange}
                   />
                 </Col>
