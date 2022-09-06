@@ -68,7 +68,6 @@ function ResetPasswordForm({token}) {
                 id="passwordInput"
                 labelPosition="none"
                 placeholder="New Password"
-                iconRight="fa-lock"
                 onChange={handleInputChange}
                 type={formErrors['password'] ? 'error' : ''}
                 help={formErrors['password']}
@@ -80,7 +79,6 @@ function ResetPasswordForm({token}) {
                 id="confirmPasswordInput"
                 labelPosition="none"
                 placeholder="Confirm New Password"
-                iconRight="fa-lock"
                 onChange={handleInputChange}
                 type={formErrors['password_confirmation'] ? 'error' : ''}
                 help={formErrors['password_confirmation']}

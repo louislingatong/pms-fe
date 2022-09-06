@@ -66,7 +66,6 @@ function ForgotPasswordForm(props) {
                 id="emailInput"
                 labelPosition="none"
                 placeholder="Email"
-                iconRight="fa-envelope"
                 onChange={handleInputChange}
                 type={formErrors['email'] ? 'error' : ''}
                 help={formErrors['email']}
