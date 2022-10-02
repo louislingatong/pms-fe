@@ -402,7 +402,7 @@ function VesselMachineryList({name}) {
                           type="primary"
                           text={
                             isCopyingVesselMachinery
-                              ? <React.Fragment><strong>Copying</strong><PulseLoader size={3} color="fff"/></React.Fragment>
+                              ? <React.Fragment><strong>Copying</strong><PulseLoader size={3} color="#fff"/></React.Fragment>
                               : `Copy All Machinery of ${vesselToCopy}`}
                           onClick={handleCopyMachinery}
                           disabled={isCopyingVesselMachinery}/>
