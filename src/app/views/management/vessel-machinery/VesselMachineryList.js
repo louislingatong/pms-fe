@@ -11,7 +11,15 @@ import {
   vesselMachineryListAsync,
   reqListStatus,
   vesselMachineriesDeleted,
-  setDeletedStatus, vesselMachineriesDeleteAsync, vesselMachineryExportAllAsync
+  setDeletedStatus,
+  vesselMachineriesDeleteAsync,
+  vesselMachineryExportAllAsync,
+  vesselList,
+  vesselMeta,
+  reqVesselListStatus,
+  vesselListAsync,
+  vesselMachineryCopyAsync,
+  reqCopyStatus
 } from '../../../store/vesselMachinerySlice';
 import {profileData} from '../../../store/profileSlice';
 import {activeVessel as defaultActiveVessel} from '../../../store/navbarMenuSlice';
@@ -20,6 +28,9 @@ import Divider from '../../../components/Divider';
 import VesselMachineryView from './VesselMachineryView';
 import Modal from '../../../components/Modal';
 import VesselDepartmentSelect from '../../../components/select/VesselDepartmentSelect';
+import {PulseLoader} from 'react-spinners';
+
+const queryLimit = 20;
 
 function VesselMachineryList({name}) {
   const dispatch = useDispatch();
@@ -31,15 +42,24 @@ function VesselMachineryList({name}) {
   const status = useSelector(reqListStatus);
   const profile = useSelector(profileData);
   const isDeleted = useSelector(vesselMachineriesDeleted);
+  const allVessels = useSelector(vesselList);
+  const vesselMetaData = useSelector(vesselMeta);
+  const vesselListStatus = useSelector(reqVesselListStatus);
+  const copyStatus = useSelector(reqCopyStatus);
 
   const isLoading = status === 'loading';
+  const isFetchingVessels = vesselListStatus === 'loading';
+  const isCopyingVesselMachinery = copyStatus === 'loading';
 
   const [localVesselMachinery, setLocalVesselMachinery] = useState(new VesselMachinery());
   const [localVesselMachineries, setLocalVesselMachineries] = useState(vesselMachineries);
   const [vesselMachineryModalShow, setVesselMachineryModalShow] = useState(false);
+  const [vesselSelectionModalShow, setVesselSelectionModalShow] = useState(false);
   const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [params, setParams] = useState({vessel: activeVessel.name});
   const [filters, setFilters] = useState({});
+  const [localAllVessels, setLocalAllVessels] = useState([]);
+  const [vesselToCopy, setVesselToCopy] = useState('');
 
   const prevLocalVesselMachinery = usePrevious(localVesselMachinery);
   const prevParams = usePrevious(params);
@@ -87,6 +107,12 @@ function VesselMachineryList({name}) {
       setSelectedRowIds([]);
     }
   }, [isDeleted]);
+
+  useEffect(() => {
+    if (allVessels.length) {
+      setLocalAllVessels(allVessels);
+    }
+  }, [allVessels]);
 
   const initList = () => {
     dispatch(vesselMachineryListAsync({...params, ...filters}));
@@ -148,11 +174,20 @@ function VesselMachineryList({name}) {
     setVesselMachineryModalShow(true);
   };
 
+  const handleVesselSelectionModalOpen = () => {
+    setVesselSelectionModalShow(true);
+    dispatch(vesselListAsync({limit: queryLimit}));
+  };
+
   const handleModalClose = () => {
     setSelectedRowIds([]);
     setLocalVesselMachinery(new VesselMachinery());
     setVesselMachineryModalShow(false);
   };
+
+  const handleVesselSelectionModalClose = () => {
+    setVesselSelectionModalShow(false);
+  }
 
   const handleDelete = () => {
     const data = {};
@@ -165,6 +200,27 @@ function VesselMachineryList({name}) {
   const handleExportAllVesselMachinery = () => {
     dispatch(vesselMachineryExportAllAsync({...params}));
   };
+
+  const handleVesselChange = (vessel) => {
+    setVesselToCopy(vessel);
+  };
+
+  const handleLoadMoreVessels = () => {
+    dispatch(vesselListAsync({limit: vesselMetaData.per_page + queryLimit}));
+  };
+
+  const handleCopyMachinery = () => {
+    dispatch(vesselMachineryCopyAsync({
+      vesselFrom: vesselToCopy,
+      vesselTo: activeVessel.name
+    }))
+      .then(({payload}) => {
+        if (payload) {
+          handleVesselSelectionModalClose();
+          initList();
+        }
+      });
+  }
 
   const header = [
     {
@@ -201,11 +257,19 @@ function VesselMachineryList({name}) {
           <Col xs={12}>
             {
               !!profile.permissions['vessel_machinery_create']
-                && <Button
-                  type="primary"
-                  text="Add New Vessel Machinery"
-                  onClick={handleModalOpen}
-                  pullRight/>
+                && <React.Fragment>
+                    <Button
+                        type="primary"
+                        text="Add New Vessel Machinery"
+                        onClick={handleModalOpen}
+                        pullRight/>
+                    <Button
+                        type="default"
+                        text="Copy Vessel Machinery"
+                        className="margin-r-5"
+                        onClick={handleVesselSelectionModalOpen}
+                        pullRight/>
+                </React.Fragment>
             }
           </Col>
           <Divider/>
@@ -292,6 +356,62 @@ function VesselMachineryList({name}) {
           onHide={handleModalClose}
         >
           <VesselMachineryView data={localVesselMachinery}/>
+        </Modal>
+        <Modal
+          show={vesselSelectionModalShow}
+          title="Copy Vessel Machinery"
+          modalSize="sm"
+          closeButton
+          onHide={handleVesselSelectionModalClose}
+        >
+          <Row>
+            <Col xs={12}>
+              {
+                isFetchingVessels
+                  ? <div className="text-center"><strong>Loading</strong><PulseLoader size={3}/></div>
+                  : <React.Fragment>
+                    <div className="form-group">
+                      {
+                        localAllVessels.map(vessel => {
+                          if (vessel.id !== activeVessel.id) {
+                            return (
+                              <div key={vessel.name} className="radio">
+                                <label>
+                                  <input type="radio" name="optionsVessels"
+                                         onChange={(e) => handleVesselChange(vessel.name)}/>
+                                  {vessel.name}
+                                </label>
+                              </div>
+                            )
+                          }
+                        })
+                      }
+                    </div>
+                    {
+                      (vesselMetaData.last_page !== vesselMetaData.current_page)
+                      && (
+                        <div className="text-center">
+                          <a href="javascript:" onClick={handleLoadMoreVessels}>Load More Vessels</a>
+                        </div>
+                      )
+                    }
+                    {
+                      vesselToCopy &&
+                      <Col xs={12} className="text-center">
+                        <Button
+                          type="primary"
+                          text={
+                            isCopyingVesselMachinery
+                              ? <React.Fragment><strong>Copying</strong><PulseLoader size={3} color="fff"/></React.Fragment>
+                              : `Copy All Machinery of ${vesselToCopy}`}
+                          onClick={handleCopyMachinery}
+                          disabled={isCopyingVesselMachinery}/>
+                      </Col>
+                    }
+                  </React.Fragment>
+              }
+            </Col>
+          </Row>
         </Modal>
       </Content>
     </React.Fragment>

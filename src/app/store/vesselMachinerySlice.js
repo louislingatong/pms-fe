@@ -6,12 +6,15 @@ import {
   fetchAll,
   fetchById,
   exportVesselMachinery,
-  remove, exportAllVesselMachinery
+  remove,
+  exportAllVesselMachinery,
+  copyAllMachinery
 } from '../services/vesselMachineryService';
+import {fetchAll as fetchAllVessels} from '../services/vesselService';
 import VesselMachinery from '../core/models/VesselMachinery';
 import Meta from '../core/models/Meta';
 import Transform from '../utils/Transformer';
-import {vesselsDeleteAsync} from "./vesselSlice";
+import Vessel from '../core/models/Vessel';
 
 const FileDownload = require('js-file-download');
 
@@ -21,7 +24,11 @@ const initialState = {
   meta: new Meta(),
   listStatus: 'idle',
   dataStatus: 'idle',
-  deleted: false
+  deleted: false,
+  vesselList: [],
+  vesselMeta: new Meta(),
+  vesselListStatus: 'idle',
+  copyStatus: 'idle'
 };
 
 export const vesselMachineryListAsync = createAsyncThunk(
@@ -88,6 +95,24 @@ export const vesselMachineryExportAsync = createAsyncThunk(
     const vesselMachinery = await exportVesselMachinery(id);
     FileDownload(vesselMachinery, 'Vessel Machinery.xls');
     return vesselMachinery;
+  }
+);
+
+export const vesselListAsync = createAsyncThunk(
+  'vesselMachinery/fetchAllVessels',
+  async (params) => {
+    const response = await fetchAllVessels(params);
+    const data = Transform.fetchCollection(response.data, Vessel);
+    const meta = Transform.fetchObject(response.meta, Meta);
+    return {data, meta};
+  }
+);
+
+export const vesselMachineryCopyAsync = createAsyncThunk(
+  'vesselMachinery/copyAllMachinery',
+  async (params) => {
+    const response = await copyAllMachinery(params);
+    return response.data;
   }
 );
 
@@ -161,6 +186,26 @@ export const vesselMachinerySlice = createSlice({
       })
       .addCase(vesselMachineryEditSubCategoriesAsync.rejected, (state, action) => {
         state.dataStatus = 'idle';
+      })
+      .addCase(vesselListAsync.pending, (state) => {
+        state.vesselListStatus = 'loading';
+      })
+      .addCase(vesselListAsync.fulfilled, (state, action) => {
+        state.vesselListStatus = 'idle';
+        state.vesselList = action.payload.data;
+        state.vesselMeta = action.payload.meta;
+      })
+      .addCase(vesselListAsync.rejected, (state, action) => {
+        state.vesselListStatus = 'idle';
+      })
+      .addCase(vesselMachineryCopyAsync.pending, (state) => {
+        state.copyStatus = 'loading';
+      })
+      .addCase(vesselMachineryCopyAsync.fulfilled, (state, action) => {
+        state.copyStatus = 'idle';
+      })
+      .addCase(vesselMachineryCopyAsync.rejected, (state, action) => {
+        state.copyStatus = 'idle';
       });
   },
 });
@@ -173,5 +218,9 @@ export const vesselMachineryMeta = state => state.vesselMachinery.meta;
 export const vesselMachineriesDeleted = state => state.vesselMachinery.deleted;
 export const reqListStatus = state => state.vesselMachinery.listStatus;
 export const reqDataStatus = state => state.vesselMachinery.dataStatus;
+export const vesselList = state => state.vesselMachinery.vesselList;
+export const vesselMeta = state => state.vesselMachinery.vesselMeta;
+export const reqVesselListStatus = state => state.vesselMachinery.vesselListStatus;
+export const reqCopyStatus = state => state.vesselMachinery.copyStatus;
 
 export default vesselMachinerySlice.reducer;

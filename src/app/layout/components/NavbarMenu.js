@@ -9,7 +9,6 @@ import {
   vesselListAsync,
   vesselList,
   vesselMeta,
-  resetNavbarMenu
 } from '../../store/navbarMenuSlice';
 import {useDebounce} from '../../utils/Hooks';
 import Vessel from '../../core/models/Vessel';
