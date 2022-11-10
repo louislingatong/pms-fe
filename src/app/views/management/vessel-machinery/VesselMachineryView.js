@@ -83,8 +83,8 @@ function VesselMachineryView({data: localVesselMachinery}) {
       const state = {...prevState};
       localVesselMachinery.sub_categories.forEach((subCategory) => {
         state[subCategory.sub_category.id] = {
-          machinery_sub_category_id: subCategory.id,
-          code: subCategory.code,
+          machinery_sub_category_id: subCategory.sub_category.id,
+          code: subCategory.sub_category.code,
           installed_date: subCategory.installed_date,
           description: subCategory.description.name,
           interval: subCategory.interval.name
@@ -140,7 +140,7 @@ function VesselMachineryView({data: localVesselMachinery}) {
     const subCategory = localVesselMachinery.sub_categories.find(subCategory => subCategory.sub_category.id === id);
     return {
       machinery_sub_category_id: id,
-      code: subCategory ? subCategory.code : machineryCode + '-',
+      code: subCategory ? subCategory.sub_category.code : machineryCode + '-',
       installed_date: subCategory
         ? localVesselMachinery.installed_date
         : '',

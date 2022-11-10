@@ -210,12 +210,12 @@ function WorkList({name}) {
       data: 'status',
     },
     {
-      title: 'Instructions',
+      title: 'Instructions/References',
       data: 'instructions',
       render: (instruction, row) => row.current_work.instructions,
     },
     {
-      title: 'Remarks',
+      title: 'Remarks/Filing Instructions',
       data: 'remarks',
       render: (remarks, row) => row.current_work.remarks,
     },
