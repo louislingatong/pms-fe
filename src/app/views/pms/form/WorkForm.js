@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
@@ -17,7 +17,7 @@ const validator = new ReeValidate({
   file: 'max:10000'
 });
 
-function WorkForm({ids}) {
+function WorkForm({ids, lastDoneDate}) {
   const {Date, Text} = Inputs;
 
   const dispatch = useDispatch();
@@ -32,6 +32,16 @@ function WorkForm({ids}) {
     file: ''
   });
   const [formErrors, setFormErrors] = useState({});
+
+  useEffect(() => {
+    if (lastDoneDate) {
+      setFormData(prevState => {
+        const state = {...prevState};
+        state.last_done = lastDoneDate;
+        return state;
+      })
+    }
+  }, [lastDoneDate]);
 
   const isLoading = status === 'loading';
 

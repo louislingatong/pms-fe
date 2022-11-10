@@ -1,9 +1,19 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Col, Row} from 'react-bootstrap';
 import WorkForm from '../form/WorkForm';
 import DataTable from '../../../components/DataTable';
 
 function WorkView({rows}) {
+  const [lastDoneDate, setLastDoneDate] = useState();
+
+  useEffect(() => {
+    const lastDoneDates = Object.values(rows).map(row => row.current_work.last_done);
+    const uniqueLastDoneDates = [...new Set(lastDoneDates)];
+    if (uniqueLastDoneDates.length && uniqueLastDoneDates.length === 1) {
+      setLastDoneDate(uniqueLastDoneDates[0]);
+    }
+  }, []);
+
   const header = [
     {
       title: 'Code',
@@ -46,7 +56,7 @@ function WorkView({rows}) {
           />
         </Col>
         <Col xs={4}>
-          <WorkForm ids={Object.keys(rows).map(Number)}/>
+          <WorkForm ids={Object.keys(rows).map(Number)} lastDoneDate={lastDoneDate}/>
         </Col>
       </Row>
     </React.Fragment>
