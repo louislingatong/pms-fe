@@ -17,7 +17,7 @@ const validator = new ReeValidate({
   file: 'max:10000'
 });
 
-function WorkForm({ids, lastDoneDate}) {
+function WorkForm({ids, lastDoneDate, instructions = '', remarks = ''}) {
   const {Date, Text} = Inputs;
 
   const dispatch = useDispatch();
@@ -38,10 +38,12 @@ function WorkForm({ids, lastDoneDate}) {
       setFormData(prevState => {
         const state = {...prevState};
         state.last_done = lastDoneDate;
+        state.instructions = instructions;
+        state.remarks = remarks;
         return state;
       })
     }
-  }, [lastDoneDate]);
+  }, [lastDoneDate, instructions, remarks]);
 
   const isLoading = status === 'loading';
 

@@ -5,12 +5,33 @@ import DataTable from '../../../components/DataTable';
 
 function WorkView({rows}) {
   const [lastDoneDate, setLastDoneDate] = useState();
+  const [instructions, setInstructions] = useState();
+  const [remarks, setRemarks] = useState();
 
   useEffect(() => {
-    const lastDoneDates = Object.values(rows).map(row => row.current_work.last_done);
-    const uniqueLastDoneDates = [...new Set(lastDoneDates)];
-    if (uniqueLastDoneDates.length && uniqueLastDoneDates.length === 1) {
-      setLastDoneDate(uniqueLastDoneDates[0]);
+    console.log(rows);
+    let tempLastDone = [];
+    let tempInstructions = [];
+    let tempRemarks = [];
+    Object.values(rows).forEach((row) => {
+      if (!tempLastDone.includes(row.current_work.last_done)) {
+        tempLastDone.push(row.current_work.last_done)
+      }
+      if (!tempInstructions.includes(row.current_work.instructions)) {
+        tempInstructions.push(row.current_work.instructions)
+      }
+      if (!tempRemarks.includes(row.current_work.remarks)) {
+        tempRemarks.push(row.current_work.remarks)
+      }
+    })
+    if (tempLastDone.length && tempLastDone.length === 1) {
+      setLastDoneDate(tempLastDone[0]);
+    }
+    if (tempInstructions.length && tempInstructions.length === 1) {
+      setInstructions(tempInstructions[0]);
+    }
+    if (tempRemarks.length && tempRemarks.length === 1) {
+      setRemarks(tempRemarks[0]);
     }
   }, []);
 
@@ -56,7 +77,10 @@ function WorkView({rows}) {
           />
         </Col>
         <Col xs={4}>
-          <WorkForm ids={Object.keys(rows).map(Number)} lastDoneDate={lastDoneDate}/>
+          <WorkForm ids={Object.keys(rows).map(Number)}
+                    lastDoneDate={lastDoneDate}
+                    instructions={instructions}
+                    remarks={remarks}/>
         </Col>
       </Row>
     </React.Fragment>
