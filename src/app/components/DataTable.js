@@ -345,7 +345,8 @@ function DataTable(props) {
       <Row>
         <Col sm={12}>
           <div className="table-container">
-            <div className={classnames({'table-responsive': responsive})}>
+            <div className={classnames({'table-responsive': responsive})}
+                 style={{maxHeight: localData.length ? '450px' : 'calc(100vh - 450px)'}}>
               <table className={classNames}>
                 {
                   hasHeaders && (

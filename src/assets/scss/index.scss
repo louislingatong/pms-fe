@@ -28,8 +28,11 @@ table {
 
 .table-responsive {
   overflow-y: auto;
-  max-height: calc(100vh - 450px);
   margin-bottom: 15px;
+}
+
+.table-min-height {
+
 }
 
 .table-fixed thead tr {
