@@ -192,12 +192,12 @@ function WorkList({name}) {
       data: 'installed_date',
     },
     {
-      title: 'Last Done (DD-MMM-YYYY)',
+      title: 'Last Done',
       data: 'last_done',
       render: (lastDone, row) => row.current_work.last_done,
     },
     {
-      title: 'Last Done (Run Hours)',
+      title: 'Last Done (RH)',
       data: 'running_hours',
       render: (runningHours, row) => row.current_work.running_hours,
     },
@@ -236,55 +236,6 @@ function WorkList({name}) {
           <Col xs={12}>
             <Box>
               <Row>
-                <Col xs={12} sm={4} md={3} lg={2}>
-                  <VesselDepartmentSelect
-                    name="department"
-                    id="departmentFilterSelect"
-                    placeholder="Department"
-                    allowClear={true}
-                    value={filters.department}
-                    onChange={handleFilterChange}
-                  />
-                </Col>
-                <Col xs={12} sm={4} md={6} lg={4}>
-                  <MachinerySelect
-                    name="machinery"
-                    id="machineryFilterSelect"
-                    placeholder="Machinery"
-                    allowClear={true}
-                    value={filters.machinery}
-                    filter={filters}
-                    onChange={handleFilterChange}
-                  />
-                </Col>
-                <Col xs={12} sm={4} md={3} lg={2}>
-                  <Select2
-                    name="status"
-                    id="statusFilterSelect"
-                    placeholder="Status"
-                    labelPosition="none"
-                    options={['WARNING', 'DUE', 'OVERDUE', 'JOBS DONE', 'DRY DOCK']}
-                    allowClear={true}
-                    value={filters.status}
-                    onChange={handleFilterChange}
-                  />
-                </Col>
-                <Col xs={12}>
-                  <Divider type="line"/>
-                </Col>
-                <Col xs={12}>
-                  {
-                    !!profile.permissions['jobs_export']
-                      && <Button
-                            type="primary"
-                            text="Export"
-                            onClick={handleExportWorks}
-                            pullRight/>
-                  }
-                </Col>
-                <Col xs={12}>
-                  <Divider/>
-                </Col>
                 <Col xs={12}>
                   <DataTable
                     api
@@ -309,6 +260,53 @@ function WorkList({name}) {
                     onSearchChange={handleSearchChange}
                     onPageLengthChange={handlePageLengthChange}
                     isLoading={isLoading}
+                    filters={
+                      <>
+                        <Col xs={12} sm={12} md={3} lg={2}>
+                            <VesselDepartmentSelect
+                                name="department"
+                                id="departmentFilterSelect"
+                                placeholder="Department"
+                                allowClear={true}
+                                value={filters.department}
+                                onChange={handleFilterChange}
+                            />
+                        </Col>
+                        <Col xs={12} sm={12} md={5} lg={6}>
+                            <MachinerySelect
+                                name="machinery"
+                                id="machineryFilterSelect"
+                                placeholder="Machinery"
+                                allowClear={true}
+                                value={filters.machinery}
+                                filter={filters}
+                                onChange={handleFilterChange}
+                            />
+                        </Col>
+                        <Col xs={12} sm={12} md={3} lg={2}>
+                            <Select2
+                                name="status"
+                                id="statusFilterSelect"
+                                placeholder="Status"
+                                labelPosition="none"
+                                options={['WARNING', 'DUE', 'OVERDUE', 'JOBS DONE', 'DRY DOCK']}
+                                allowClear={true}
+                                value={filters.status}
+                                onChange={handleFilterChange}
+                            />
+                        </Col>
+                        <Col xs={12} sm={12} md={1} lg={2}>
+                            {
+                                !!profile.permissions['jobs_export']
+                                && <Button
+                                    type="primary"
+                                    text="Export"
+                                    onClick={handleExportWorks}
+                                    pullRight/>
+                            }
+                        </Col>
+                      </>
+                    }
                   />
                 </Col>
                 <Divider/>

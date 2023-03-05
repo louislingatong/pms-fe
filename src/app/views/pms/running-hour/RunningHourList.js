@@ -203,32 +203,6 @@ function RunningHourList({name}) {
           <Col xs={12}>
             <Box>
               <Row>
-                <Col xs={12} sm={4} md={3} lg={2}>
-                  <VesselDepartmentSelect
-                    name="department"
-                    id="departmentFilterSelect"
-                    placeholder="Department"
-                    allowClear={true}
-                    onChange={handleFilterChange}
-                  />
-                </Col>
-                <Col xs={12}>
-                  <Divider type="line"/>
-                </Col>
-                <Col xs={12}>
-                  {
-                    !!profile.permissions['running_hours_export']
-                    && <Button
-                      type="primary"
-                      text="Export"
-                      onClick={handleExportRunningHours}
-                      pullRight
-                    />
-                  }
-                </Col>
-                <Col xs={12}>
-                  <Divider/>
-                </Col>
                 <Col xs={12}>
                   <DataTable
                     api
@@ -253,6 +227,30 @@ function RunningHourList({name}) {
                     onSearchChange={handleSearchChange}
                     onPageLengthChange={handlePageLengthChange}
                     isLoading={isLoading}
+                    filters={
+                      <>
+                        <Col xs={12} sm={4} md={3} lg={2}>
+                          <VesselDepartmentSelect
+                            name="department"
+                            id="departmentFilterSelect"
+                            placeholder="Department"
+                            allowClear={true}
+                            onChange={handleFilterChange}
+                          />
+                        </Col>
+                        <Col xs={12} sm={8} md={9} lg={10}>
+                          {
+                            !!profile.permissions['running_hours_export']
+                            && <Button
+                              type="primary"
+                              text="Export"
+                              onClick={handleExportRunningHours}
+                              pullRight
+                            />
+                          }
+                        </Col>
+                      </>
+                    }
                   />
                 </Col>
               </Row>

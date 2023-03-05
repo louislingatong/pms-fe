@@ -277,33 +277,6 @@ function VesselMachineryList({name}) {
             <Box>
               <Row>
                 <Col xs={12}>
-                  <Row>
-                    <Col xs={12} md={5} lg={3}>
-                      <VesselDepartmentSelect
-                        name="department"
-                        id="departmentFilterSelect"
-                        placeholder="Department"
-                        allowClear={true}
-                        onChange={handleFilterChange}
-                      />
-                    </Col>
-                    <Col xs={12} md={7} lg={9}>
-                      {
-                        !!profile.permissions['vessel_machinery_export']
-                        && <Button
-                          type="primary"
-                          text="Export"
-                          onClick={handleExportAllVesselMachinery}
-                          pullRight
-                        />
-                      }
-                    </Col>
-                  </Row>
-                </Col>
-                <Col xs={12}>
-                  <Divider type="line"/>
-                </Col>
-                <Col xs={12}>
                   <DataTable
                     api
                     data={localVesselMachineries}
@@ -328,6 +301,30 @@ function VesselMachineryList({name}) {
                     onSearchChange={handleSearchChange}
                     onPageLengthChange={handlePageLengthChange}
                     isLoading={isLoading}
+                    filters={
+                      <>
+                        <Col xs={12} md={5} lg={3}>
+                          <VesselDepartmentSelect
+                            name="department"
+                            id="departmentFilterSelect"
+                            placeholder="Department"
+                            allowClear={true}
+                            onChange={handleFilterChange}
+                          />
+                        </Col>
+                        <Col xs={12} md={7} lg={9}>
+                          {
+                            !!profile.permissions['vessel_machinery_export']
+                            && <Button
+                              type="primary"
+                              text="Export"
+                              onClick={handleExportAllVesselMachinery}
+                              pullRight
+                            />
+                          }
+                        </Col>
+                      </>
+                    }
                   />
                 </Col>
                 <Col xs={12}>

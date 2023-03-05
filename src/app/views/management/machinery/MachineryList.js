@@ -189,18 +189,6 @@ function MachineryList({name}) {
           <Col xs={12}>
             <Box>
               <Row>
-                <Col xs={12} sm={4} md={3} lg={2}>
-                  <VesselDepartmentSelect
-                    name="department"
-                    id="departmentFilterSelect"
-                    placeholder="Department"
-                    allowClear={true}
-                    onChange={handleFilterChange}
-                  />
-                </Col>
-                <Col xs={12}>
-                  <Divider type="line"/>
-                </Col>
                 <Col xs={12}>
                   <DataTable
                     api
@@ -225,6 +213,17 @@ function MachineryList({name}) {
                     onSearchChange={handleSearchChange}
                     onPageLengthChange={handlePageLengthChange}
                     isLoading={isLoading}
+                    filters={
+                      <Col xs={12} sm={4} md={3} lg={2}>
+                        <VesselDepartmentSelect
+                          name="department"
+                          id="departmentFilterSelect"
+                          placeholder="Department"
+                          allowClear={true}
+                          onChange={handleFilterChange}
+                        />
+                      </Col>
+                    }
                   />
                 </Col>
                 <Col xs={12}>

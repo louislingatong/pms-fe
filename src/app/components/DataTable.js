@@ -20,7 +20,8 @@ function DataTable(props) {
     border,
     responsive,
     fixed,
-    noMargin
+    noMargin,
+    filters
   } = props;
   const {api, options = {}, meta, multiple = false, rowSelect = false, isLoading = false} = props;
   const {onPageLengthChange, onSearchChange, onPageChange, onSelect} = props;
@@ -303,32 +304,9 @@ function DataTable(props) {
     <React.Fragment>
       <Row>
         {
-          pageLength && (
-            <Col sm={6}>
-              <div className="comp-custom-datatable-page-length">
-                <span style={{margin: '6px 5px 0 0'}}>Show</span>
-                <Select
-                  name="page_length"
-                  id="pageLengthSelect"
-                  labelPosition="none"
-                  options={[
-                    {text: '20', value: 20},
-                    {text: '50', value: 50},
-                    {text: '100', value: 100},
-                  ]}
-                  value={pageSize || 20}
-                  onChange={handlePageLengthChange}
-                  width={70}
-                />
-                <span style={{margin: '6px 0 0 5px'}}>Entries</span>
-              </div>
-            </Col>
-          )
-        }
-        {
           search && (
-            <Col sm={6}>
-              <div className="pull-right">
+            <Col sm={12} md={4} lg={3}>
+              <div>
                 <Text
                   name="search"
                   id="searchInput"
@@ -341,6 +319,9 @@ function DataTable(props) {
             </Col>
           )
         }
+        <Col sm={12} md={8} lg={9}>
+          <Row>{filters}</Row>
+        </Col>
       </Row>
       <Row>
         <Col sm={12}>
@@ -389,9 +370,32 @@ function DataTable(props) {
       </Row>
       <Row>
         {
+          pageLength && (
+            <Col sm={12} md={4}>
+              <div className="comp-custom-datatable-page-length">
+                <span style={{margin: '6px 5px 0 0'}}>Show</span>
+                <Select
+                  name="page_length"
+                  id="pageLengthSelect"
+                  labelPosition="none"
+                  options={[
+                    {text: '20', value: 20},
+                    {text: '50', value: 50},
+                    {text: '100', value: 100},
+                  ]}
+                  value={pageSize || 20}
+                  onChange={handlePageLengthChange}
+                  width={70}
+                />
+                <span style={{margin: '6px 0 0 5px'}}>Entries</span>
+              </div>
+            </Col>
+          )
+        }
+        {
           pageInfo && (
-            <Col sm={5}>
-              <div>
+            <Col sm={12} md={4}>
+              <div style={{marginTop: '6px', textAlign: 'center'}}>
                 {renderInfo()}
               </div>
             </Col>
@@ -399,7 +403,7 @@ function DataTable(props) {
         }
         {
           page && (
-            <Col sm={7}>
+            <Col sm={12} md={4}>
               <div className="pull-right">
                 <Pagination
                   meta={localMeta}
