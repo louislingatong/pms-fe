@@ -92,6 +92,11 @@ function VesselMachineryForm({data: localVesselMachinery}) {
     }
   };
 
+  const enableEdit = (e) => {
+    e.preventDefault();
+    setIsViewing(false);
+  }
+
   return (
     <form onSubmit={handleSubmitForm} noValidate>
       <Row>
@@ -168,7 +173,7 @@ function VesselMachineryForm({data: localVesselMachinery}) {
           {
             isViewing
               ? !!profile.permissions['vessel_machinery_edit']
-                && <Button bsStyle="primary" onClick={() => setIsViewing(false)} className="pull-right">Edit</Button>
+                && <Button bsStyle="primary" onClick={(e) => enableEdit(e)} className="pull-right">Edit</Button>
               : <Button type="submit"
                         bsStyle="primary"
                         id="loginButton"
