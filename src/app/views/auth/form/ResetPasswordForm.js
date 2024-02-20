@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Col, Row, Button} from 'react-bootstrap';
 import {Inputs} from 'adminlte-2-react';
@@ -6,10 +6,7 @@ import ReeValidate from 'ree-validate';
 import {resetPasswordAsync, reqResetPasswordStatus} from '../../../store/authSlice';
 import Transform from '../../../utils/Transformer';
 
-const validator = new ReeValidate({
-  password: 'required',
-  password_confirmation: 'required',
-});
+let validator;
 
 function ResetPasswordForm({token}) {
   const {Text} = Inputs;
@@ -24,6 +21,13 @@ function ResetPasswordForm({token}) {
   const [formErrors, setFormErrors] = useState({});
 
   const isLoading = status === 'loading';
+
+  useEffect(() => {
+    validator = new ReeValidate({
+      password: 'required',
+      password_confirmation: 'required',
+    });
+  }, []);
 
   const handleInputChange = (e) => {
     const name = e.target.name;

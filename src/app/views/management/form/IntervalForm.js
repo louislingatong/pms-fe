@@ -14,11 +14,7 @@ import {profileData} from '../../../store/profileSlice';
 import Interval from '../../../core/models/Interval';
 import IntervalUnitSelect from '../../../components/select/IntervalUnitSelect';
 
-const validator = new ReeValidate({
-  value: 'numeric|min_value:1',
-  unit: '',
-  name: ''
-});
+let validator;
 
 function IntervalForm({data: localInterval}) {
   const {Text} = Inputs;
@@ -37,6 +33,14 @@ function IntervalForm({data: localInterval}) {
   const [formErrors, setFormErrors] = useState({});
 
   const isLoading = status === 'loading';
+
+  useEffect(() => {
+    validator = new ReeValidate({
+      value: 'numeric|min_value:1',
+      unit: '',
+      name: ''
+    });
+  }, []);
 
   useEffect(() => {
     if (localInterval.id) {

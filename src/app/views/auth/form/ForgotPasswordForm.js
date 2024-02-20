@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Col, Row, Button} from 'react-bootstrap';
 import {Inputs} from 'adminlte-2-react';
@@ -6,9 +6,7 @@ import ReeValidate from 'ree-validate';
 import {forgotPasswordAsync, reqForgotPasswordStatus} from '../../../store/authSlice';
 import Transform from '../../../utils/Transformer';
 
-const validator = new ReeValidate({
-  email: 'required|email'
-});
+let validator;
 
 function ForgotPasswordForm(props) {
   const {Text} = Inputs;
@@ -22,6 +20,12 @@ function ForgotPasswordForm(props) {
   const [formErrors, setFormErrors] = useState({});
 
   const isLoading = status === 'loading';
+
+  useEffect(() => {
+    validator = new ReeValidate({
+      email: 'required|email'
+    });
+  }, []);
 
   const handleInputChange = (e) => {
     const name = e.target.name;

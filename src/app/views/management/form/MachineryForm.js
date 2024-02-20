@@ -14,11 +14,7 @@ import Transform from '../../../utils/Transformer';
 import Machinery from '../../../core/models/Machinery';
 import VesselDepartmentSelect from '../../../components/select/VesselDepartmentSelect';
 
-const validator = new ReeValidate({
-  department: 'required',
-  name: 'required',
-  code: 'required'
-});
+let validator;
 
 function MachineryForm({data: localMachinery}) {
   const {Text} = Inputs;
@@ -36,6 +32,14 @@ function MachineryForm({data: localMachinery}) {
   const [formErrors, setFormErrors] = useState({});
 
   const isLoading = status === 'loading';
+
+  useEffect(() => {
+    validator = new ReeValidate({
+      department: 'required',
+      name: 'required',
+      code: 'required'
+    });
+  }, []);
 
   useEffect(() => {
     if (localMachinery.id) {

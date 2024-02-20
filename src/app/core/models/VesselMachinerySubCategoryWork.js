@@ -11,6 +11,7 @@ export default function VesselMachinerySubCategoryWork(data = {}) {
   this.interval = data.interval
     ? new Interval(data.interval)
     : new Interval();
+  this.isEngineMachinery = data.isEngineMachinery ?? false
   this.sub_category = data.sub_category
     ? new MachinerySubCategory(data.sub_category)
     : new MachinerySubCategory();

@@ -20,12 +20,7 @@ import ReeValidate from 'ree-validate';
 import moment from 'moment';
 import {usePrevious} from '../../../utils/Hooks';
 
-const validator = new ReeValidate({
-  code: 'required',
-  installed_date: 'required|date_format:DD-MMM-YYYY',
-  description: '',
-  interval: '',
-});
+let validator;
 
 function VesselMachineryView({data: localVesselMachinery}) {
   const {Date, Text} = Inputs;
@@ -47,6 +42,15 @@ function VesselMachineryView({data: localVesselMachinery}) {
   const hasId = !!localVesselMachinery.id;
   const machineryCode = localVesselMachinery.machinery.code_name;
   const isLoading = status === 'loading';
+
+  useEffect(() => {
+    validator = new ReeValidate({
+      code: 'required',
+      installed_date: 'required|date_format:DD-MMM-YYYY',
+      description: '',
+      interval: '',
+    });
+  }, []);
 
   useEffect(() => {
     if (!prevLocalVesselMachinery) {

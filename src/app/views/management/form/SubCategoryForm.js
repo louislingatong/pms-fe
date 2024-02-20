@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
@@ -7,10 +7,7 @@ import {Button, Col, Row} from 'react-bootstrap';
 import Transform from '../../../utils/Transformer';
 import {machineryAddSubCategoryAsync, reqDataStatus} from '../../../store/machinerySlice';
 
-const validator = new ReeValidate({
-  code: 'required',
-  name: 'required',
-});
+let validator;
 
 function SubCategoryForm({machineryId}) {
   const {Text} = Inputs;
@@ -25,6 +22,14 @@ function SubCategoryForm({machineryId}) {
   const [formError, setFormError] = useState({});
 
   const isLoading = status === 'loading';
+
+  useEffect(() => {
+    validator = new ReeValidate({
+      code: 'required',
+      name: 'required',
+    });
+  }, []);
+
 
   const handleInputChange = (e) => {
     const name = e.target.name;

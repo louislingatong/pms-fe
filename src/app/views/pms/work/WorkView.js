@@ -9,7 +9,6 @@ function WorkView({rows}) {
   const [remarks, setRemarks] = useState();
 
   useEffect(() => {
-    console.log(rows);
     let tempLastDone = [];
     let tempInstructions = [];
     let tempRemarks = [];
@@ -80,7 +79,8 @@ function WorkView({rows}) {
           <WorkForm ids={Object.keys(rows).map(Number)}
                     lastDoneDate={lastDoneDate}
                     instructions={instructions}
-                    remarks={remarks}/>
+                    remarks={remarks}
+                    isEngineMachinery={Object.values(rows).some(row => row.isEngineMachinery)}/>
         </Col>
       </Row>
     </React.Fragment>

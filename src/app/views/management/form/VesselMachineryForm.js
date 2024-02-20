@@ -18,13 +18,7 @@ import InchargeRankSelect from '../../../components/select/InchargeRankSelect';
 import MachineryModelAutoSuggest from '../../../components/auto-suggest/MachineryModelAutoSuggest';
 import MachineryMakerAutoSuggest from '../../../components/auto-suggest/MachineryMakerAutoSuggest';
 
-const validator = new ReeValidate({
-  vessel: 'required',
-  machinery: 'required',
-  model: '',
-  maker: '',
-  incharge_rank: 'required'
-});
+let validator;
 
 function VesselMachineryForm({data: localVesselMachinery}) {
   const {Text} = Inputs;
@@ -45,6 +39,16 @@ function VesselMachineryForm({data: localVesselMachinery}) {
   const [formErrors, setFormErrors] = useState({});
 
   const isLoading = status === 'loading';
+
+  useEffect(() => {
+    validator = new ReeValidate({
+      vessel: 'required',
+      machinery: 'required',
+      model: '',
+      maker: '',
+      incharge_rank: 'required'
+    });
+  }, []);
 
   useEffect(() => {
     if (localVesselMachinery.id) {

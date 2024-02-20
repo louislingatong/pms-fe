@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
@@ -10,15 +10,7 @@ import EmployeeDepartmentSelect from '../../../components/select/EmployeeDepartm
 import Employee from '../../../core/models/Employee';
 import InchargeRankSelect from "../../../components/select/InchargeRankSelect";
 
-const validator = new ReeValidate({
-  email: 'required|email',
-  first_name: 'required',
-  middle_name: '',
-  last_name: 'required',
-  department: 'required',
-  id_number: '',
-  position: '',
-});
+let validator;
 
 const placeholderPassword = 'E5DywsaXsMmlzqstXBScQ9YnLJOI4X55OlQbWM2d';
 
@@ -42,6 +34,18 @@ function EmployeeForm({data: employee}) {
   const [formErrors, setFormErrors] = useState({});
 
   const isLoading = status === 'loading';
+
+  useEffect(() => {
+    validator = new ReeValidate({
+      email: 'required|email',
+      first_name: 'required',
+      middle_name: '',
+      last_name: 'required',
+      department: 'required',
+      id_number: '',
+      position: '',
+    });
+  }, []);
 
   const handleInputChange = (e) => {
     const name = e.target.name;

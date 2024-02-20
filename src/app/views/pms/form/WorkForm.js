@@ -9,15 +9,9 @@ import {reqDoneListStatus, workAddAsync} from '../../../store/workSlice';
 import {profileData} from '../../../store/profileSlice';
 import moment from 'moment';
 
-const validator = new ReeValidate({
-  last_done: 'required',
-  running_hours: '',
-  instructions: '',
-  remarks: '',
-  file: 'max:10000'
-});
+let validator;
 
-function WorkForm({ids, lastDoneDate, instructions = '', remarks = ''}) {
+function WorkForm({ids, lastDoneDate, instructions = '', remarks = '', isEngineMachinery}) {
   const {Date, Text} = Inputs;
 
   const dispatch = useDispatch();
@@ -33,6 +27,18 @@ function WorkForm({ids, lastDoneDate, instructions = '', remarks = ''}) {
   });
   const [formErrors, setFormErrors] = useState({});
 
+  const isLoading = status === 'loading';
+
+  useEffect(() => {
+    validator = new ReeValidate({
+      last_done: 'required',
+      running_hours: isEngineMachinery ? 'required' : '',
+      instructions: '',
+      remarks: '',
+      file: 'max:10000'
+    });
+  }, []);
+
   useEffect(() => {
     if (lastDoneDate) {
       setFormData(prevState => {
@@ -44,8 +50,6 @@ function WorkForm({ids, lastDoneDate, instructions = '', remarks = ''}) {
       })
     }
   }, [lastDoneDate, instructions, remarks]);
-
-  const isLoading = status === 'loading';
 
   const handleInputChange = (e) => {
     const type = e.target.type;
@@ -111,10 +115,12 @@ function WorkForm({ids, lastDoneDate, instructions = '', remarks = ''}) {
           <Text
             name="running_hours"
             id="runningHoursInput"
-            label="Running Hours (optional)"
+            label={`Running Hours${isEngineMachinery ? '' : ' (optional)'}`}
             labelPosition="above"
             onChange={handleInputChange}
             value={formData.running_hours}
+            type={formErrors['running_hours'] ? 'error' : ''}
+            help={formErrors['running_hours']}
           />
         </Col>
         <Col xs={12}>

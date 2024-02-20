@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Col, Row, Button} from 'react-bootstrap';
 import {Inputs} from 'adminlte-2-react';
@@ -6,10 +6,7 @@ import ReeValidate from 'ree-validate';
 import {loginAsync, reqLoginStatus} from '../../../store/authSlice';
 import Transform from '../../../utils/Transformer';
 
-const validator = new ReeValidate({
-  username: 'required|email',
-  password: 'required',
-});
+let validator;
 
 function LoginForm(props) {
   const {Text} = Inputs;
@@ -24,6 +21,13 @@ function LoginForm(props) {
   const [formErrors, setFormErrors] = useState({});
 
   const isLoading = status === 'loading';
+
+  useEffect(() => {
+    validator = new ReeValidate({
+      username: 'required|email',
+      password: 'required',
+    });
+  }, []);
 
   const handleInputChange = (e) => {
     const name = e.target.name;

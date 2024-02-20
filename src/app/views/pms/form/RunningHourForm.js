@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReeValidate from 'ree-validate';
@@ -9,10 +9,7 @@ import {reqDataStatus, runningHourAddAsync} from '../../../store/runningHourSlic
 import {profileData} from '../../../store/profileSlice';
 import moment from 'moment';
 
-const validator = new ReeValidate({
-  updating_date: 'required',
-  running_hours: 'required|min_value:1',
-});
+let validator;
 
 function RunningHourForm({id}) {
   const {Date, Text} = Inputs;
@@ -29,6 +26,13 @@ function RunningHourForm({id}) {
   const [formErrors, setFormErrors] = useState({});
 
   const isLoading = status === 'loading';
+
+  useEffect(() => {
+    validator = new ReeValidate({
+      updating_date: 'required',
+      running_hours: 'required|min_value:1',
+    });
+  }, []);
 
   const handleInputChange = (e) => {
     const name = e.target.name;
